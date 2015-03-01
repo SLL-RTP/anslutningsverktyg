@@ -46,16 +46,6 @@ angular.module('avApp')
       $scope.linkLogicalAddressChoice = 'sameForAllContracts';
 
       $scope.requestForCallPermissionInSeparateOrder = true; //Default
-      $scope.gridOptions = {
-        enableRowSelection: true,
-        enableSelectAll: true,
-        multiSelect: true,
-        columnDefs: [
-          {name: 'Namn', field: 'getName()'},
-          {name: 'version', field: 'getVersion()'}
-        ],
-        rowTemplate: 'templates/ui-grid/update-service-producer-grid-row.html'
-      };
 
       $scope.removedLogicalAddressesForAllContracts = [];
       $scope.removedLogicalAddressesPerContract = {};
@@ -183,21 +173,6 @@ angular.module('avApp')
               serviceContract.onOrder = _isServiceContractSelected(serviceContract);
               return serviceContract;
             });
-            $scope.gridOptions.data = contracts;
-            _.each($scope.gridOptions.data, function(contractData) { //ui-grid doesn't seem to support composite field values in any other way
-              contractData.getVersion = function() {
-                return this.majorVersion + '.' + this.minorVersion;
-              };
-              contractData.getName = function() {
-                var statusText = '';
-                if (!this.installedInEnvironment) {
-                  statusText = ' (ej installerat)';
-                } else if (!this.installedForProducerHsaId) {
-                  statusText = ' (ej ansluten)';
-                }
-                return this.namn + statusText;
-              };
-            });
           });
           LogicalAddress.getLogicalAddressesForEnvironmentAndServiceDomain(environmentId, serviceDomainId).then(function(logicalAddresses) {
             $scope.existingLogicalAddresses = logicalAddresses;
@@ -293,33 +268,6 @@ angular.module('avApp')
       $scope.sendServiceProducerConnectionUpdateOrder = function() {
         Order.createServiceProducerConnectionUpdateOrder($scope.updateServiceProducerRequest);
         $state.go('serviceProducerUpdateOrderConfirmed');
-      };
-
-      /*
-       Grid config
-       */
-
-      $scope.gridOptions.onRegisterApi = function (gridApi) {
-        //set gridApi on scope
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          checkNotInstalledAndUpdate(gridApi, row);
-        });
-
-        gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
-          _.forEach(rows, function (row) {
-            checkNotInstalledAndUpdate(gridApi, row);
-          });
-        });
-      };
-
-      var checkNotInstalledAndUpdate = function(gridApi, row) {
-        var serviceContract = row.entity;
-        if (!serviceContract.installedInEnvironment || !serviceContract.installedForProducerHsaId) {
-          gridApi.selection.unSelectRow(serviceContract);
-        } else {
-          row.isSelected ? addSelectedServiceContract(serviceContract) : removeSelectedServiceContract(serviceContract);
-        }
       };
 
       var _addLogicalAddressToAllServiceContracts = function(logicalAddress) {
@@ -471,7 +419,6 @@ angular.module('avApp')
           otherInfo: '',
           client: $scope.updateServiceProducerRequest.client //keep client info
         };
-        $scope.gridOptions.data = [];
         $scope.selectedExistingLogicalAddresses = [];
         $scope.selectedServiceContracts = [];
         $scope.linkLogicalAddressChoice = 'sameForAllContracts';
