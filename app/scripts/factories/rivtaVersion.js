@@ -8,12 +8,12 @@ angular.module('avApp')
         var deferred = $q.defer();
         var data = [
           {
-            id: 'RIVTA_2_0',
-            name: 'RIVTA 2.0'
+            id: 'RIVTABP20',
+            name: 'RIVTABP20'
           },
           {
-            id: 'RIVTA_2_1',
-            name: 'RIVTA 2.1'
+            id: 'RIVTABP21',
+            name: 'RIVTABP21'
           }
         ];
         deferred.resolve(data);

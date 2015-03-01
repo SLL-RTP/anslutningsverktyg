@@ -1,11 +1,12 @@
 <div class="container-fluid">
   <div class="page-header">
-    <h1>Tjänsteproducent: Anslut till nya tjänstekontrakt
+    <h1>Tjänsteproducent: Anslut till tjänstekontrakt
     </h1>
-    <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+    <p>Här ansluter du en tjänsteproducent till ett tjänstekontrakt som är installerat i Regional tjänsteplattform.
+      För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat.
+      Om du inte redan har certifikat, kan du läsa mer om certifikat <a href="http://www.inera.se/siths" target="_blank">här</a>.
+      Ofta behövs även brandväggsöppning/ar hos producenten.</p>
+    <p>RTP-förvaltningen konfigurerar upp angiven producent i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>
   </div>
 
   <!-- välj tjänsteproducent panel -->
@@ -110,6 +111,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label class="control-label" for="brevladaEmailInput">Funktionsbrevlåda</label>
+                <i class="fa fa-info-circle" popover="RTP-förvaltningen använder funktionsbrevlådan för att kontakta tjänsteproducentens tekniska support." popover-trigger="mouseenter" popover-placement="right"></i>
                 <input type="email" class="form-control" id="brevladaEmailInput" name="brevladaEmail"
                        placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.funktionsBrevladaEpost" required>
                 <span class="help-block" ng-if="serviceComponentForm.brevladaEmail.$error.required">E-postadress måste vara ifyllt</span>
@@ -130,6 +132,12 @@
           <div class="col-md-5 col-md-offset-2">
             <div class="row">
               <h4>Teknisk kontaktperson</h4>
+            </div>
+
+            <div class="row">
+              <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" ng-click="copyPersonInChargeToTekniskKontakt()" value="Kopiera från huvudansvarig">
+              </div>
             </div>
 
             <div class="row">
@@ -167,6 +175,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label class="control-label" for="ipAddressInput">IP-adress</label>
+                <i class="fa fa-info-circle" popover="RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress." popover-trigger="mouseenter" popover-placement="right"></i>
                 <input type="text" class="form-control" id="ipAddressInput" name="ipAddress"
                        placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.ipadress" required>
                 <span class="help-block" ng-if="serviceComponentForm.ipAddress.$error.required">IP-adress måste vara ifyllt</span>
@@ -176,6 +185,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label class="control-label" for="pingForConfigurationInput">URL till övervakningstjänst</label>
+                <i class="fa fa-info-circle" popover="Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten." popover-trigger="mouseenter" popover-placement="right"></i>
                 <input type="url" class="form-control" id="pingForConfigurationInput" name="pingForConfiguration"
                        placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.pingForConfiguration" required>
                 <span class="help-block" ng-if="serviceComponentForm.pingForConfiguration.$error.required">URL måste vara ifyllt</span>
@@ -193,14 +203,14 @@
   <!-- välj driftmiljö panel -->
   <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && connectServiceProducerRequest.serviceComponent.namn">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj driftmiljö</h3>
+      <h3 class="panel-title">Välj miljö</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5 form-group">
-          <label for="environment">Driftmiljö</label>
+          <label for="environment">Miljö</label>
           <select id="environment" class="form-control" ng-model="selectedTargetEnvironment" ng-change="targetEnvironmentSelected()" ng-options="environment.namn for environment in targetEnvironments">
-            <option value="">Välj driftmiljö</option>
+            <option value="">Välj miljö</option>
           </select>
         </div>
       </div>
@@ -210,29 +220,104 @@
   <!-- välj tjänstekontrakt panel -->
   <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && connectServiceProducerRequest.serviceComponent.namn && selectedTargetEnvironment.id">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj tjänstekontrakt</h3>
+      <h3 class="panel-title">Välj tjänstekontrakt att ansluta till</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5 form-group">
-          <label for="service-domain">Tjänstedomän eller informationsmängd</label>
+          <label for="service-domain">Tjänstedomän</label>
           <select class="form-control" ng-model="selectedServiceDomain" ng-change="serviceDomainSelected()" ng-options="serviceDomain.tjansteDomanId for serviceDomain in serviceDomains" id="service-domain">
             <option value="">Välj tjänstedomän</option>
           </select>
         </div>
       </div>
       <div class="row">
+        <div class="col-md-5">
+          <label>Tillgängliga tjänstekontrakt</label>
+          <table class="table table-condensed table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-1"></th>
+                <th class="col-md-9">Namn</th>
+                <th class="col-md-2">Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-hide="serviceContractsInSelectedDomain.length">
+                <td colspan="3">
+                  <em>inga tillgängliga tjänstekontrakt</em>
+                </td>
+              </tr>
+              <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain" ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}">
+                <td class="contract-button" style="text-align: center" ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId">
+                  <span class="glyphicon" ng-class="{'glyphicon-ok': !serviceContract.selected, 'glyphicon-remove': serviceContract.selected}" aria-hidden="true"></span>
+                </td>
+                <td>
+                  <span>{{serviceContract.namn}}</span>
+                  <span ng-show="!serviceContract.installedInEnvironment">(ej installerat)</span>
+                  <span ng-show="serviceContract.installedForProducerHsaId">(redan ansluten)</span>
+                  <span ng-show="serviceContract.onOrder">(tillagd)</span>
+                </td>
+                <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-2">
+          <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="serviceContractsInSelectedDomain.length" ng-click="updateSelectedServiceContracts()">
+            <!-- <span class="glyphicon glyphicon-forward" aria-hidden="true"></span> -->
+            <span>Lägg till markerade</span>
+          </button>
+        </div>
+        <div class="col-md-5">
+          <label>Valda tjänstekontrakt</label>
+          <table class="table table-condensed table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-1"></th>
+                <th class="col-md-9">Namn</th>
+                <th class="col-md-2">Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-hide="selectedServiceContracts.length">
+                <td colspan="3">
+                  <em>inga tjänstekontrakt valda</em>
+                </td>
+              </tr>
+              <tr ng-repeat="serviceContract in selectedServiceContracts | orderBy:'serviceDomainId'">
+                <td class="contract-button" style="text-align: center" ng-click="removeServiceContract(serviceContract)">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </td>
+                <td>
+                  <p style="margin-bottom: -5px">{{serviceContract.namn}}</p>
+                  <span>
+                    <small>({{serviceContract.serviceDomainId}})</small>
+                  </span>
+                </td>
+                <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="serviceContract in selectedServiceContracts | orderBy:'serviceDomainId'">
+            <button type="button" class="close" data-dismiss="alert" ng-click="removeServiceContract(serviceContract)">×</button>
+            <p>{{serviceContract.serviceDomainId}}</p>
+            <p>{{serviceContract.namn}} {{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</p>
+          </div> -->
+        </div>
+      </div>
+      <!-- <div class="row">
         <div class="col-md-12">
           <div ui-grid="gridOptions" ui-grid-selection class="grid"></div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <!-- / välj tjänstekontrakt panel -->
   <!-- konfigurera tjänstekontrakt panel -->
   <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
     <div class="panel-heading">
-      <h3 class="panel-title">Konfigurera tjänstekontrakt</h3>
+      <h3 class="panel-title">Konfigurera åtkomst till producentens tjänst/er</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -257,8 +342,7 @@
           <div class="radio">
             <label>
               <input ng-model="linkLogicalAddressChoice" value="sourceSystemBased" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios3">
-              Källsystemsbaserad addressering tillämpas och den logiska adressen är densamma
-              som Tjänsteproducenten
+              Tjänstekontrakt tillämpar Källsystemsbaserad adressering, en logisk adress används (Tjänsteproducentens)
             </label>
           </div>
         </div>
@@ -269,7 +353,7 @@
   <!-- samma logiska adresser panel -->
   <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length && linkLogicalAddressChoice === 'sameForAllContracts' || linkLogicalAddressChoice === 'sourceSystemBased'">
     <div class="panel-heading">
-      <h3 class="panel-title">Lägg till samma logiska adresser för alla tjänstekontrakt</h3>
+      <h3 class="panel-title">Konsument ska ha åtkomst till följande adress/er</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -385,15 +469,16 @@
        ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length"
        ng-repeat="contract in connectServiceProducerRequest.serviceContracts">
     <div class="panel-heading">
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllContracts'">Välj RIVTA-profil och URL för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualForContract'">Välj RIVTA-profil, URL och logiska adresser för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllContracts'">Välj version av RIVTA-profil och URL för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualForContract'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
           <form name="serviceContractForm">
             <div class="col-md-3">
-              <label for="rivtaVersion">RIVTA-profil</label>
+              <label for="rivtaVersion">Version av RIVTA-profil</label>
+              <i class="fa fa-info-circle" popover="Välj den version av RIV TA Basic Profile som kontraktet implementerar." popover-trigger="mouseenter" popover-placement="right"></i>
               <select id="rivtaVersion" class="form-control" ng-model="contract.rivtaVersion"
                       ng-options="rivtaVersion.name for rivtaVersion in rivtaVersions | orderBy:'name':true"
                       ng-init="contract.rivtaVersion = (rivtaVersions | orderBy:'name':true)[0]"></select>
@@ -401,6 +486,7 @@
             <div class="form-group" show-errors>
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">URL</label>
+                <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
                 <input type="url" class="form-control" id="urlInput" name="url" ng-model="contract.url" placeholder="skriv in url" required>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
@@ -532,7 +618,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <p>För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontraten, samt ha anropsbehörighet till de logiska adresserna.
+          <p>För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna.
             Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.</p>
         </div>
       </div>
@@ -572,7 +658,7 @@
       </div>
       <div class="row" ng-show="!requestForCallPermissionInSeparateOrder && selectedServiceConsumer.selected.namn">
         <div class="col-md-12">
-          <p>Denna tjänstekonsument ({{selectedServiceConsumer.selected.namn}}) ska få anropsbehörighet för valda tjänstekontrakt på de valda logiska adresser.</p>
+          <p>Vald tjänstekonsument ({{selectedServiceConsumer.selected.namn}}) ska få anropsbehörighet för valda tjänstekontrakt.</p>
         </div>
       </div>
     </div>
@@ -595,12 +681,26 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <h4>Beställare</h4>
-      </div>
+    </div>
+  </div>
+  <!-- / övrigt panel -->
+  <!-- beställare panel -->
+  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+    <div class="panel-heading">
+      <h3 class="panel-title">Beställare</h3>
+    </div>
+    <div class="panel-body">
+      <!--<div class="row">-->
+        <!--<h4>Beställare</h4>-->
+      <!--</div>-->
       <form name="bestallareForm" role="form">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
+            <div class="row">
+              <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" ng-click="copyPersonInChargeToClient()" value="Kopiera från huvudansvarig">
+              </div>
+            </div>
             <div class="row">
               <div class="form-group" show-errors>
                 <label class=" control-label" for="bestallareNamnInput">För- och efternamn</label>
@@ -627,12 +727,20 @@
                 <span class="help-block" ng-if="bestallareForm.bestallareTelefon.$error.required">Telefon måste vara ifyllt</span>
               </div>
             </div>
+            <div class="row">
+              <div class="form-group" show-errors>
+                <label for="bestallareHsaIdInput" class="control-label">HSA-ID</label>
+                <input ng-model="connectServiceProducerRequest.client.hsaId" type="text" class="form-control"
+                       id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" required>
+                <span class="help-block" ng-if="bestallareForm.bestallareHsaId.$error.required">HSA-ID måste vara ifyllt</span>
+              </div>
+            </div>
           </div>
         </div>
       </form>
     </div>
   </div>
-  <!-- / övrigt panel -->
+  <!-- / beställare panel -->
   <div class="row" ng-show="!orderValid && connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
     <div class="col-md-4 col-md-offset-8">
       <div class="alert alert-dismissable alert-danger">
@@ -643,7 +751,7 @@
   </div>
   <div class="row" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
     <div class="col-md-4 col-md-offset-8">
-      <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="sendServiceProducerConnectionOrder()">Bekräfta</button>
+      <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="sendServiceProducerConnectionOrder()">Skicka</button>
     </div>
   </div>
 
@@ -651,6 +759,7 @@
   <h3 ng-show="showDevStuff">sammanfattning:</h3>
   <div ng-show="showDevStuff" class="jumbotron">
     <pre>
+        {{serviceContractsInSelectedDomain}}
         {{connectServiceProducerRequest | json}}
     </pre>
   </div>

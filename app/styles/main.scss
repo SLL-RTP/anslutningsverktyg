@@ -1,4 +1,5 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+$fa-font-path: "../bower_components/components-font-awesome/fonts";
 @import "variables";
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
@@ -89,6 +90,25 @@ body {
   margin-bottom: 2px;
 }
 
+$uiGridRowDisabledBackgroundColor: rgb(237, 237, 237);
+$uiGridRowDisabledTextColor: rgb(163, 163, 163);
+$uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
+
+.table {
+
+  .contract-button {
+    cursor: pointer;
+  }
+  .contract-disabled {
+    background-color: $uiGridRowDisabledBackgroundColor !important;
+    color: $uiGridRowDisabledTextColor;
+
+    .contract-button {
+      color: $uiGridRowDisabledButtonTextColor !important;
+    }
+  }
+}
+
 .individual-logical-address-choices {
   margin-top: 20px;
 }
@@ -129,4 +149,3 @@ body {
 .top75 {
   margin-top: 75px;
 }
-

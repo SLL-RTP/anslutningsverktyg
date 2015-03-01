@@ -14,8 +14,19 @@ angular.module('avApp')
           }
         }).success(function(data) {
           var serviceContracts = _.map(data, function(serviceContract) {
+            if (!!Math.floor(Math.random() * 2)) {
+              serviceContract.installedInEnvironment = true;
+              serviceContract.installedForProducerHsaId = true;
+            } else if (!!Math.floor(Math.random() * 2)) {
+              serviceContract.installedInEnvironment = true;
+              serviceContract.installedForProducerHsaId = false;
+            } else {
+              serviceContract.installedInEnvironment = false;
+              serviceContract.installedForProducerHsaId = false;
+            }
             //serviceContract.installedInEnvironment = !!Math.floor(Math.random() * 2);
             //serviceContract.installedForProducerHsaId = !!Math.floor(Math.random() * 2);
+            serviceContract.serviceDomainId = serviceDomainId;
             return serviceContract;
           });
           deferred.resolve(serviceContracts);

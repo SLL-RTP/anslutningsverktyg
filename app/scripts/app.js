@@ -16,6 +16,7 @@ angular
     'ngResource',
     'ngSanitize',
     'ui.router',
+    'ui.bootstrap',
     'ui.grid',
     'ui.grid.selection',
     'ui.select',
@@ -72,6 +73,10 @@ angular
             }
           ]
         }
+      })
+      .state('serviceProducerUpdateOrderConfirmed', {
+        url: '/updateServiceProducer/confirmed',
+        templateUrl: 'views/serviceProducer/confirmed.html'
       });
   }])
   .config(['uiSelectConfig', function(uiSelectConfig) {
