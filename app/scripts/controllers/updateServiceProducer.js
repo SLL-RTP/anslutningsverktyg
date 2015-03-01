@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('UpdateServiceProducerCtrl', ['$rootScope', '$scope', '$log', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'environments', 'rivtaVersions', 'LogicalAddress', 'Order', 'configuration',
-    function ($rootScope, $scope, $log, ServiceDomain, ServiceContract, ServiceComponent, environments, rivtaVersions, LogicalAddress, Order, configuration) {
+  .controller('UpdateServiceProducerCtrl', ['$rootScope', '$scope', '$log', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'environments', 'rivtaVersions', 'LogicalAddress', 'Order', 'configuration', '$state',
+    function ($rootScope, $scope, $log, ServiceDomain, ServiceContract, ServiceComponent, environments, rivtaVersions, LogicalAddress, Order, configuration, $state) {
       $scope.environments = environments;
       $scope.rivtaVersions = rivtaVersions;
 
@@ -116,6 +116,18 @@ angular.module('avApp')
       $scope.$watchCollection('selectedServiceContracts', function () {
         _updateConnectedLogicalAddresses();
       });
+
+      $scope.copyPersonInChargeToClient = function() {
+        $scope.updateServiceProducerRequest.client.name = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigNamn;
+        $scope.updateServiceProducerRequest.client.email = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigEpost;
+        $scope.updateServiceProducerRequest.client.phone = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigTelefon;
+      };
+
+      $scope.copyPersonInChargeToTekniskKontakt = function() {
+        $scope.updateServiceProducerRequest.serviceComponent.tekniskKontaktNamn = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigNamn;
+        $scope.updateServiceProducerRequest.serviceComponent.tekniskKontaktEpost = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigEpost;
+        $scope.updateServiceProducerRequest.serviceComponent.tekniskKontaktTelefon = $scope.updateServiceProducerRequest.serviceComponent.huvudAnsvarigTelefon;
+      };
 
       var _updateConnectedLogicalAddresses = function() {
         var serviceComponentHsaId = $scope.updateServiceProducerRequest.serviceComponent.hsaId;
@@ -257,8 +269,9 @@ angular.module('avApp')
         _removeLogicalAddressFromServiceContract(logicalAddress, serviceContract);
       };
 
-      $scope.sendOrder = function() {
+      $scope.sendServiceProducerConnectionUpdateOrder = function() {
         Order.createServiceProducerConnectionUpdateOrder($scope.updateServiceProducerRequest);
+        $state.go('serviceProducerUpdateOrderConfirmed');
       };
 
       /*
