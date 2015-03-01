@@ -165,7 +165,6 @@ angular.module('avApp')
 
       $scope.environmentSelected = function () {
         if ($scope.selectedEnvironment && $scope.updateServiceProducerRequest.serviceComponent) {
-          resetContracts();
           $scope.updateServiceProducerRequest.environment = $scope.selectedEnvironment;
           ServiceDomain.listDomains().then(function (domains) {
             $scope.serviceDomains = domains;
@@ -175,12 +174,15 @@ angular.module('avApp')
 
       $scope.serviceDomainSelected = function () {
         if ($scope.selectedEnvironment && $scope.updateServiceProducerRequest.serviceComponent && $scope.selectedServiceDomain) {
-          resetContracts();
           var serviceComponentId = $scope.updateServiceProducerRequest.serviceComponent.hsaId;
           var environmentId = $scope.selectedEnvironment.id;
           var serviceDomainId = $scope.selectedServiceDomain.tjansteDomanId;
           $scope.updateServiceProducerRequest.serviceDomain = $scope.selectedServiceDomain;
           ServiceContract.listContracts(serviceComponentId, environmentId, serviceDomainId).then(function (contracts) {
+            $scope.serviceContractsInSelectedDomain = _.map(contracts, function(serviceContract) {
+              serviceContract.onOrder = _isServiceContractSelected(serviceContract);
+              return serviceContract;
+            });
             $scope.gridOptions.data = contracts;
             _.each($scope.gridOptions.data, function(contractData) { //ui-grid doesn't seem to support composite field values in any other way
               contractData.getVersion = function() {
@@ -203,6 +205,25 @@ angular.module('avApp')
 
         }
       };
+
+      $scope.$watchCollection('selectedServiceContracts', function(newSelected, oldSelected) {
+        $scope.serviceContractsInSelectedDomain = _.map(_.clone($scope.serviceContractsInSelectedDomain, true), function(serviceContract) {
+          serviceContract.onOrder = _isServiceContractSelected(serviceContract);
+          return serviceContract;
+        });
+      });
+
+      $scope.updateSelectedServiceContracts = function() {
+        _.chain($scope.serviceContractsInSelectedDomain)
+          .filter('selected')
+          .forEach(function(serviceContract) {
+            _addServiceContractToOrder(serviceContract);
+          });
+      };
+
+      $scope.removeServiceContract = function(serviceContract) {
+        _removeServiceContractFromOrder(serviceContract);
+      }
 
       $scope.filterLogicalAddresses = function (logicalAddressQuery) {
         LogicalAddress.getFilteredLogicalAddresses(logicalAddressQuery).then(function (logicalAddresses) {
@@ -396,6 +417,42 @@ angular.module('avApp')
             serviceContract.minorVersion;
       };
 
+      var _addServiceContractToOrder = function(serviceContract) {
+        console.log('add: ' + serviceContract.namnrymd);
+        if (!_isServiceContractSelected(serviceContract)) {
+          $scope.selectedServiceContracts.push(serviceContract);
+          var newServiceContract = _getCleanServiceContract(serviceContract);
+          if ($scope.linkLogicalAddressChoice !== 'individualForContract' && $scope.logicalAddressesForAllServiceContracts) {
+            newServiceContract.logicalAddresses = _.map($scope.logicalAddressesForAllServiceContracts, function(logicalAddress) {
+              return _.clone(logicalAddress);
+            });
+          }
+          $scope.updateServiceProducerRequest.serviceContracts.push(newServiceContract);
+        }
+      };
+
+      var _removeServiceContractFromOrder = function(serviceContract) {
+        console.log('remove: ' + serviceContract.namnrymd);
+        var serviceContractIdentifier = {
+          namnrymd: serviceContract.namnrymd,
+          majorVersion: serviceContract.majorVersion,
+          minorVersion: serviceContract.minorVersion
+        };
+        if (_isServiceContractSelected(serviceContract)) {
+          _.remove($scope.selectedServiceContracts, serviceContractIdentifier);
+          _.remove($scope.updateServiceProducerRequest.serviceContracts, serviceContractIdentifier);
+        }
+      };
+
+      var _isServiceContractSelected = function(serviceContract) {
+        var serviceContractIdentifier = {
+          namnrymd: serviceContract.namnrymd,
+          majorVersion: serviceContract.majorVersion,
+          minorVersion: serviceContract.minorVersion
+        };
+        return _.find($scope.selectedServiceContracts, serviceContractIdentifier);
+      };
+
       var _getCleanServiceContract = function(serviceContract) {
         return _.cloneDeep(serviceContract);
       };
@@ -427,12 +484,6 @@ angular.module('avApp')
       var resetServiceComponent = function() {
         delete $scope.selectedServiceComponent.selected;
         $scope.updateServiceProducerRequest.serviceComponent = {};
-      };
-
-      var resetContracts = function() {
-        $scope.gridOptions.data = [];
-        $scope.selectedServiceContracts = [];
-        $scope.updateServiceProducerRequest.serviceContracts = [];
       };
 
       var resetLogicalAddressesForServiceContracts = function() {

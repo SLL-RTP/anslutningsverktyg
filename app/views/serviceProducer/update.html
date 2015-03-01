@@ -194,8 +194,72 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
-        <div ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+        <div class="col-md-5">
+          <label>Tillgängliga tjänstekontrakt</label>
+          <table class="table table-condensed table-bordered contract-selector">
+            <thead>
+            <tr>
+              <th class="col-md-9">Namn</th>
+              <th class="col-md-2">Version</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-hide="serviceContractsInSelectedDomain.length">
+              <td colspan="2">
+                <em>inga tillgängliga tjänstekontrakt</em>
+              </td>
+            </tr>
+            <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain"
+                ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}"
+                ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId"
+                class="contract-row">
+              <td>
+                <span>{{serviceContract.namn}}</span>
+                <span class="label label-default" ng-show="!serviceContract.installedInEnvironment">ej installerat</span>
+                <span class="label label-default" ng-show="serviceContract.installedForProducerHsaId">redan ansluten</span>
+                <span class="label label-success" ng-show="serviceContract.onOrder">tillagd</span>
+              </td>
+              <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-2">
+          <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="serviceContractsInSelectedDomain.length" ng-click="updateSelectedServiceContracts()">
+            <!-- <span class="glyphicon glyphicon-forward" aria-hidden="true"></span> -->
+            <span>Lägg till markerade</span>
+          </button>
+        </div>
+        <div class="col-md-5">
+          <label>Valda tjänstekontrakt</label>
+          <table class="table table-condensed table-bordered">
+            <thead>
+            <tr>
+              <th class="col-md-1"></th>
+              <th class="col-md-9">Namn</th>
+              <th class="col-md-2">Version</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-hide="selectedServiceContracts.length">
+              <td colspan="3">
+                <em>inga tjänstekontrakt valda</em>
+              </td>
+            </tr>
+            <tr ng-repeat="serviceContract in selectedServiceContracts | orderBy:'serviceDomainId'">
+              <td class="contract-button" style="text-align: center" ng-click="removeServiceContract(serviceContract)">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </td>
+              <td>
+                <p style="margin-bottom: -5px">{{serviceContract.namn}}</p>
+                  <span>
+                    <small>({{serviceContract.serviceDomainId}})</small>
+                  </span>
+              </td>
+              <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
