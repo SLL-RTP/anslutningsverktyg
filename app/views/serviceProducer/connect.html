@@ -468,8 +468,8 @@
        ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length"
        ng-repeat="contract in connectServiceProducerRequest.serviceContracts">
     <div class="panel-heading">
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllContracts'">Välj version av RIVTA-profil och URL för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualForContract'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}}</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllContracts'">Välj version av RIVTA-profil och URL för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}} ({{contract.serviceDomainId}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualForContract'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}} ({{contract.serviceDomainId}})</h3>
     </div>
     <div class="panel-body">
       <div class="row">
