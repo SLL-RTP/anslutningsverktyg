@@ -234,29 +234,28 @@
       <div class="row">
         <div class="col-md-5">
           <label>Tillgängliga tjänstekontrakt</label>
-          <table class="table table-condensed table-bordered">
+          <table class="table table-condensed table-bordered contract-selector">
             <thead>
               <tr>
-                <th class="col-md-1"></th>
                 <th class="col-md-9">Namn</th>
                 <th class="col-md-2">Version</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-hide="serviceContractsInSelectedDomain.length">
-                <td colspan="3">
+                <td colspan="2">
                   <em>inga tillgängliga tjänstekontrakt</em>
                 </td>
               </tr>
-              <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain" ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}">
-                <td class="contract-button" style="text-align: center" ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId">
-                  <span class="glyphicon" ng-class="{'glyphicon-ok': !serviceContract.selected, 'glyphicon-remove': serviceContract.selected}" aria-hidden="true"></span>
-                </td>
+              <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain"
+                  ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}"
+                  ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId"
+                  class="contract-row">
                 <td>
                   <span>{{serviceContract.namn}}</span>
-                  <span ng-show="!serviceContract.installedInEnvironment">(ej installerat)</span>
-                  <span ng-show="serviceContract.installedForProducerHsaId">(redan ansluten)</span>
-                  <span ng-show="serviceContract.onOrder">(tillagd)</span>
+                  <span class="label label-default" ng-show="!serviceContract.installedInEnvironment">ej installerat</span>
+                  <span class="label label-default" ng-show="serviceContract.installedForProducerHsaId">redan ansluten</span>
+                  <span class="label label-success" ng-show="serviceContract.onOrder">tillagd</span>
                 </td>
                 <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
               </tr>

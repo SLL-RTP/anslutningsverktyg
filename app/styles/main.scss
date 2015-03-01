@@ -95,17 +95,13 @@ $uiGridRowDisabledTextColor: rgb(163, 163, 163);
 $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
 
 .table {
-
-  .contract-button {
+  .contract-row {
     cursor: pointer;
   }
   .contract-disabled {
     background-color: $uiGridRowDisabledBackgroundColor !important;
     color: $uiGridRowDisabledTextColor;
-
-    .contract-button {
-      color: $uiGridRowDisabledButtonTextColor !important;
-    }
+    cursor: default;
   }
 }
 
