@@ -264,8 +264,7 @@
         </div>
         <div class="col-md-2">
           <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="serviceContractsInSelectedDomain.length" ng-click="updateSelectedServiceContracts()">
-            <!-- <span class="glyphicon glyphicon-forward" aria-hidden="true"></span> -->
-            <span>Lägg till markerade</span>
+            <span>Lägg till<br>markerade</span>
           </button>
         </div>
         <div class="col-md-5">
@@ -478,15 +477,15 @@
             <div class="col-md-3">
               <label for="rivtaVersion">Version av RIVTA-profil</label>
               <i class="fa fa-info-circle" popover="Välj den version av RIV TA Basic Profile som kontraktet implementerar." popover-trigger="mouseenter" popover-placement="right"></i>
-              <select id="rivtaVersion" class="form-control" ng-model="contract.rivtaVersion"
-                      ng-options="rivtaVersion.name for rivtaVersion in rivtaVersions | orderBy:'name':true"
-                      ng-init="contract.rivtaVersion = (rivtaVersions | orderBy:'name':true)[0]"></select>
+              <select id="rivtaVersion" class="form-control" ng-model="contract.address.rivProfil"
+                      ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
+                      ng-init="contract.address.rivProfil = (rivProfiles | orderBy:'toString()':true)[0]"></select>
             </div>
             <div class="form-group" show-errors>
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="url" class="form-control" id="urlInput" name="url" ng-model="contract.url" placeholder="skriv in url" required>
+                <input type="url" class="form-control" id="urlInput" name="url" ng-model="contract.address.url" placeholder="skriv in url" required>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
               </div>
@@ -732,6 +731,14 @@
                 <input ng-model="connectServiceProducerRequest.client.hsaId" type="text" class="form-control"
                        id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareHsaId.$error.required">HSA-ID måste vara ifyllt</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group" show-errors>
+                <label for="bestallareRoll" class="control-label">Roll</label>
+                <input ng-model="connectServiceProducerRequest.client.role" type="text" class="form-control"
+                       id="bestallareRoll" name="bestallareRoll" placeholder="" required>
+                <span class="help-block" ng-if="bestallareForm.bestallareRoll.$error.required">Roll måste vara ifyllt</span>
               </div>
             </div>
           </div>
