@@ -47,9 +47,9 @@ angular
             function(EnvironmentFactory) {
               return EnvironmentFactory.getAvailableEnvironments();
             }],
-          rivtaVersions: ['RivtaVersion',
-            function(RivtaVersionFactory) {
-              return RivtaVersionFactory.getAvailableVersions();
+          rivProfiles: ['RivProfile',
+            function(RivProfileFactory) {
+              return RivProfileFactory.getAvailableProfiles();
             }
           ]
         }
@@ -67,9 +67,9 @@ angular
             function(EnvironmentFactory) {
               return EnvironmentFactory.getAvailableEnvironments();
             }],
-          rivtaVersions: ['RivtaVersion',
-            function(RivtaVersionFactory) {
-              return RivtaVersionFactory.getAvailableVersions();
+          rivProfiles: ['RivProfile',
+            function(RivProfileFactory) {
+              return RivProfileFactory.getAvailableProfiles();
             }
           ]
         }

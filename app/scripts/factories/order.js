@@ -16,7 +16,11 @@ angular.module('avApp')
         createServiceProducerConnectionUpdateOrder: function (order) {
           var deferred = $q.defer();
           console.log(order);
-          deferred.resolve(418);
+          $http.post(configuration.apiHost + '/anslutningsplattform/api/updateServiceProducerConnectionOrders', order).success(function (data, status, headers) {
+            deferred.resolve(status);
+          }).error(function (data, status, headers) { //TODO: handle errors
+            deferred.reject();
+          });
           return deferred.promise;
         }
       };
