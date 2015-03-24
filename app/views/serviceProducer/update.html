@@ -225,13 +225,13 @@
               </td>
             </tr>
             <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain"
-                ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}"
-                ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId"
+                ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || !serviceContract.installedForProducerHsaId}"
+                ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && serviceContract.installedForProducerHsaId"
                 class="contract-row">
               <td>
                 <span>{{serviceContract.namn}}</span>
                 <span class="label label-default" ng-show="!serviceContract.installedInEnvironment">ej installerat</span>
-                <span class="label label-default" ng-show="serviceContract.installedForProducerHsaId">redan ansluten</span>
+                <span class="label label-default" ng-show="!serviceContract.installedForProducerHsaId && serviceContract.installedInEnvironment">ej ansluten</span>
                 <span class="label label-success" ng-show="serviceContract.onOrder">tillagd</span>
               </td>
               <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
