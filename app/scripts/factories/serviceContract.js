@@ -6,7 +6,7 @@ angular.module('avApp')
         listContracts: function (serviceComponentId, environmentId, serviceDomainId) {
           console.log('serviceComponentId: ' + serviceComponentId + ', environmentId: ' + environmentId + ', serviceDomainId: ' + serviceDomainId);
           var deferred = $q.defer();
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceContracts', {
+          $http.get(configuration.basePath + '/api/serviceContracts', {
             params: {
               hsaId: serviceComponentId,
               environmentId: environmentId,

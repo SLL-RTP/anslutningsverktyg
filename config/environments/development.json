@@ -1,5 +1,5 @@
 {
-  "apiHost": "http://localhost:8080",
+  "basePath": "http://localhost:8080/anslutningsplattform",
   "apiToken": "secret-token",
   "devDebug": "false"
 }

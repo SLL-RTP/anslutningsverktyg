@@ -7,7 +7,7 @@ angular.module('avApp')
         getUrlAndProfile: function(serviceComponentId, environmentId, serviceContractId, majorVersion, minorVersion) {
           console.log('getUrl: serviceComponentId[' + serviceComponentId + '], environmentId[' + environmentId + '], serviceContractId[' + serviceContractId + '], majorVersion[' + majorVersion + '], minorVersion[' + minorVersion + ']');
           var deferred = $q.defer();
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceComponents/' + serviceComponentId + '/' + environmentId + '/' + serviceContractId + '/' + majorVersion + '/' + minorVersion + '/address')
+          $http.get(configuration.basePath + '/api/serviceComponents/' + serviceComponentId + '/' + environmentId + '/' + serviceContractId + '/' + majorVersion + '/' + minorVersion + '/address')
             .success(function (data) {
               console.log(data);
               deferred.resolve(data);

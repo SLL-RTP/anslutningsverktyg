@@ -9,7 +9,7 @@ angular.module('avApp')
           console.log('getFilteredServiceComponents: ' + query);
           if (query) {
             var lowerCaseQuery = query.toLowerCase();
-            $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceComponents', {
+            $http.get(configuration.basePath + '/api/serviceComponents', {
               params: {
                 query: lowerCaseQuery
               }
@@ -26,7 +26,7 @@ angular.module('avApp')
         getServiceComponent: function (serviceComponentId) {
           var deferred = $q.defer();
           console.log('getServiceComponent: ' + serviceComponentId);
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceComponents/'+serviceComponentId).success(function (data) {
+          $http.get(configuration.basePath + '/api/serviceComponents/'+serviceComponentId).success(function (data) {
             deferred.resolve(data);
           }).error(function (data, status, headers) { //TODO: error handling
             deferred.reject();
@@ -37,7 +37,7 @@ angular.module('avApp')
           var clonedSc = _.clone(serviceComponent);
           delete clonedSc.class; //TODO: we should handle this in backend
           var deferred = $q.defer();
-          $http.put(configuration.apiHost + '/anslutningsplattform/api/serviceComponents/' + clonedSc.hsaId , clonedSc).success(function() {
+          $http.put(configuration.basePath + '/api/serviceComponents/' + clonedSc.hsaId , clonedSc).success(function() {
             deferred.resolve();
           }).error(function(data, status, headers) { //TODO: handle errors
 

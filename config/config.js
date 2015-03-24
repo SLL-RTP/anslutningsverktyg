@@ -2,7 +2,7 @@
 
 angular.module('services.config', [])
   .constant('configuration', {
-    apiHost: '@@apiHost',
+    basePath: '@@basePath',
     apiToken: '@@apiToken',
     devDebug: '@@devDebug'
   });

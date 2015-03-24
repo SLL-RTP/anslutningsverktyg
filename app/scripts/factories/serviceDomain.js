@@ -6,7 +6,7 @@ angular.module('avApp')
         listDomains: function (serviceComponentHsaId) {
           console.log('listDomains');
           var deferred = $q.defer();
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceDomains').success(function(data) {
+          $http.get(configuration.basePath + '/api/serviceDomains').success(function(data) {
             console.log(data);
             deferred.resolve(data);
           }).error(function(data, status, headers) { //TODO: handle errors

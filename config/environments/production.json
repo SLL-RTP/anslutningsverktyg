@@ -1,5 +1,5 @@
 {
-  "apiHost": "",
+  "basePath" : "/anslutningsplattform",
   "apiToken": "secret-token",
   "devDebug": "false"
 }

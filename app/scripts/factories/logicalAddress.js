@@ -8,7 +8,7 @@ angular.module('avApp')
         console.log('getFilteredLogicalAddresses query[' + query + ']');
         if (query) {
           var lowerCaseQuery = query.toLowerCase();
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/logicalAddresses', {
+          $http.get(configuration.basePath + '/api/logicalAddresses', {
             params: {
               query: lowerCaseQuery
             }
@@ -24,7 +24,7 @@ angular.module('avApp')
         var deferred = $q.defer();
         console.log('getLogicalAddressesForEnvironmentAndServiceDomain: environmentId[' + environmentId + '], serviceDomainId[' + serviceDomainId + ']');
         if (environmentId && serviceDomainId) {
-          $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceComponents/', {
+          $http.get(configuration.basePath + '/api/serviceComponents/', {
             params: {
               environmentId: environmentId,
               serviceDomainId: serviceDomainId
@@ -40,7 +40,7 @@ angular.module('avApp')
       getConnectedLogicalAddressesForContract: function(serviceComponentId, environmentId, serviceContractId, majorVersion, minorVersion) {
         console.log('getConnectedLogicalAddressesForContract: serviceComponentId[' + serviceComponentId + '], environmentId[' + environmentId + '], serviceContractId[' + serviceContractId + '], majorVersion[' + majorVersion + '], minorVersion[' + minorVersion + ']');
         var deferred = $q.defer();
-        $http.get(configuration.apiHost + '/anslutningsplattform/api/serviceComponents/' + serviceComponentId + '/' + environmentId + '/' + serviceContractId + '/' + majorVersion + '/' + minorVersion + '/logicalAddresses')
+        $http.get(configuration.basePath + '/api/serviceComponents/' + serviceComponentId + '/' + environmentId + '/' + serviceContractId + '/' + majorVersion + '/' + minorVersion + '/logicalAddresses')
           .success(function (data) {
             console.log(data);
           deferred.resolve(data);
