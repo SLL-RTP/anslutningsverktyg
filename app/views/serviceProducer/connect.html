@@ -20,13 +20,13 @@
           <div class="row">
             <div class="form-group">
               <ui-select ng-model="selectedServiceComponent.selected" theme="bootstrap" reset-search-input="false" ng-disabled="newComponent">
-                <ui-select-match placeholder="Sök befintlig tjänsteproducent">{{$select.selected.namn}} - {{$select.selected.hsaId}}</ui-select-match>
+                <ui-select-match placeholder="Sök befintlig tjänsteproducent"><span ng-if="$select.selected.namn">{{$select.selected.namn}} - </span>{{$select.selected.hsaId}}</ui-select-match>
                 <ui-select-choices
                   repeat="serviceComponent in filteredServiceComponents | filter: $select.search"
                   refresh="filterServiceComponents($select.search)"
                   refresh-delay="200"
                   >
-                  <div ng-bind-html="(serviceComponent.namn + ' - ' + serviceComponent.hsaId) | highlight: $select.search"></div>
+                  <div ng-bind-html="((serviceComponent.namn ? serviceComponent.namn + ' - ' : '') + serviceComponent.hsaId) | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
             </div>
@@ -201,7 +201,7 @@
   </div>
   <!-- / välj tjänsteproducent panel -->
   <!-- välj driftmiljö panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && connectServiceProducerRequest.serviceComponent.namn">
+  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId">
     <div class="panel-heading">
       <h3 class="panel-title">Välj miljö</h3>
     </div>
@@ -218,7 +218,7 @@
   </div>
   <!-- / välj driftmiljö panel -->
   <!-- välj tjänstekontrakt panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && connectServiceProducerRequest.serviceComponent.namn && selectedTargetEnvironment.id">
+  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && selectedTargetEnvironment.id">
     <div class="panel-heading">
       <h3 class="panel-title">Välj tjänstekontrakt att ansluta till</h3>
     </div>

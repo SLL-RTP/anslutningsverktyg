@@ -98,10 +98,15 @@ angular.module('avApp')
             reset();
             console.log('new service component selected:');
             console.log(newValue);
-            ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
-              console.log(result);
-              $scope.connectServiceProducerRequest.serviceComponent = result;
-            });
+            if (angular.isDefined(newValue.namn)) { //FIXME: fix until backend returns service components also from TAK on this query
+              ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
+                console.log(result);
+                $scope.connectServiceProducerRequest.serviceComponent = result;
+              });
+            } else {
+              console.log('detected producer from TAK');
+              $scope.connectServiceProducerRequest.serviceComponent = newValue;
+            }
           } else {
             reset();
           }

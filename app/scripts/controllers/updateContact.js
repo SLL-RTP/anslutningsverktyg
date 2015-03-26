@@ -16,9 +16,13 @@ angular.module('avApp')
       $scope.$watch('selectedServiceComponent.selected', function (newValue) {
           if (newValue) {
             reset();
-            ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
-              $scope.serviceComponent = _.cloneDeep(result);
-            });
+            if (angular.isDefined(newValue.namn)) { //FIXME: fix until backend returns a service component from TAK on this call
+              ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
+                $scope.serviceComponent = _.cloneDeep(result);
+              });
+            } else {
+              $scope.serviceComponent = _.cloneDeep(newValue);
+            }
           } else {
             reset();
           }
