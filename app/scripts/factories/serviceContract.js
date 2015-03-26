@@ -15,8 +15,8 @@ angular.module('avApp')
           }).success(function (data) {
             var serviceContracts = _.map(data, function (serviceContract) {
               serviceContract.serviceDomainId = serviceDomainId;
-              return serviceContract;
-              //return _mockInstalledStatus(serviceContract);
+              //return serviceContract;
+              return _mockInstalledStatus(serviceContract);
             });
             deferred.resolve(serviceContracts);
           }).error(function (data, status, headers) { //TODO: handle errors
