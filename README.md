@@ -1,5 +1,3 @@
-+**_Moved to https://github.com/skltp-incubator/anslutningsverktyg_**
-
 anslutningsverktyg
 ==================
 
