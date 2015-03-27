@@ -40,6 +40,15 @@
 
           <div class="col-md-5">
 
+            <div class="row" ng-if="!selectedServiceComponent.selected.namn">
+              <div class="form-group" show-errors>
+                <label class="control-label" for="komponentNamn">Tjänstekomponentens namn</label>
+                <input type="text" class="form-control" id="komponentNamn" name="komponentNamn" placeholder=""
+                       ng-model="updateServiceProducerRequest.serviceComponent.namn" required>
+                <span class="help-block" ng-if="serviceComponentForm.komponentNamn.$error.required">Namn för tjänstekomponent måste vara ifyllt</span>
+              </div>
+            </div>
+
             <div class="row">
               <div class="form-group" show-errors>
                 <label for="organisation">Organisation</label>
