@@ -44,17 +44,17 @@
         <div class="row">
 
           <div class="col-md-5">
-            <div class="row" ng-show="newComponent">
+            <div class="row" ng-if="newComponent || !selectedServiceComponent.selected.namn">
               <div class="form-group" show-errors>
                 <label class="control-label" for="komponentNamnInput">Tjänstekomponentens namn</label>
                 <input type="text" class="form-control" id="komponentNamnInput" name="komponentNamn" placeholder=""
                        ng-model="connectServiceProducerRequest.serviceComponent.namn" required>
-                <span class="help-block" ng-if="serviceComponentForm.komponentNamn.$error.required">Namn för ny tjänstekomponent måste vara ifyllt</span>
+                <span class="help-block" ng-if="serviceComponentForm.komponentNamn.$error.required">Namn för tjänstekomponent måste vara ifyllt</span>
               </div>
             </div>
 
 
-            <div class="row" ng-show="newComponent">
+            <div class="row" ng-if="newComponent">
               <div class="form-group" show-errors>
                 <label class="control-label" for="hsaIdInput">HSA-ID</label>
                 <input type="text" class="form-control" id="hsaIdInput" name="hsaId" placeholder=""

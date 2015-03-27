@@ -105,7 +105,7 @@ angular.module('avApp')
               });
             } else {
               console.log('detected producer from TAK');
-              $scope.connectServiceProducerRequest.serviceComponent = newValue;
+              $scope.connectServiceProducerRequest.serviceComponent = _.clone(newValue);
             }
           } else {
             reset();
@@ -176,11 +176,6 @@ angular.module('avApp')
               };
             });
           });
-          LogicalAddress.getLogicalAddressesForEnvironmentAndServiceDomain(environmentId, serviceDomainId).then(function(logicalAddresses) {
-            $scope.existingLogicalAddresses = logicalAddresses;
-            console.log(logicalAddresses);
-          });
-
         }
       };
 

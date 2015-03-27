@@ -91,7 +91,7 @@ angular.module('avApp')
               });
             } else {
               console.log('detected producer from TAK');
-              $scope.updateServiceProducerRequest.serviceComponent = newValue;
+              $scope.updateServiceProducerRequest.serviceComponent = _.clone(newValue);
             }
           } else {
             reset();

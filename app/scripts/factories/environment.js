@@ -6,7 +6,7 @@ angular.module('avApp')
     return {
       getAvailableEnvironments: function() {
         var deferred = $q.defer(); //forcing the use of a promise to set the interface for later
-        $http.get(configuration.basePath + '/api/environments').success(function(data) {
+        $http.get(configuration.basePath + '/api/driftmiljos').success(function(data) {
           deferred.resolve(data);
         }).error(function (data, status, headers) { //TODO: error handling
           deferred.reject();
