@@ -4,14 +4,15 @@ angular.module('avApp')
     function ($q, $http, configuration) {
 
       return {
-        getFilteredServiceComponents: function (query) {
+        getFilteredServiceComponents: function (query, driftmiljoId) {
           var deferred = $q.defer();
-          console.log('getFilteredServiceComponents: ' + query);
+          console.log('getFilteredServiceComponents query[' + query + '], driftmiljoId[' + driftmiljoId + ']');
           if (query) {
             var lowerCaseQuery = query.toLowerCase();
             $http.get(configuration.basePath + '/api/serviceComponents', {
               params: {
-                query: lowerCaseQuery
+                query: lowerCaseQuery,
+                takId: driftmiljoId
               }
             }).success(function (data) {
               deferred.resolve(data);

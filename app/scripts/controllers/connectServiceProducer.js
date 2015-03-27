@@ -72,13 +72,13 @@ angular.module('avApp')
       };
 
       $scope.filterServiceComponents = function (query) {
-        ServiceComponent.getFilteredServiceComponents(query).then(function (result) {
+        ServiceComponent.getFilteredServiceComponents(query, $scope.selectedTargetEnvironment.id).then(function (result) {
           $scope.filteredServiceComponents = result;
         });
       };
 
       $scope.filterServiceConsumers = function (query) {
-        ServiceComponent.getFilteredServiceComponents(query).then(function (result) {
+        ServiceComponent.getFilteredServiceComponents(query, $scope.selectedTargetEnvironment.id).then(function (result) {
           //This line effectively removes, from the search result
           // the previously chosen service component
           if($scope.selectedServiceComponent.selected) {
@@ -446,12 +446,10 @@ angular.module('avApp')
       };
 
       var reset = function () {
-        $scope.selectedTargetEnvironment = {};
         $scope.selectedServiceDomain = {};
         $scope.selectedLogicalAddress = {};
         $scope.connectServiceProducerRequest = {
           serviceComponent: {},
-          targetEnvironment: {},
           serviceDomain: {},
           serviceContracts: [],
           serviceConsumer: {},
