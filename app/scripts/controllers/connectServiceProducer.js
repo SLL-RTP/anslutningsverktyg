@@ -9,11 +9,11 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$log', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'environments', 'rivProfiles', 'LogicalAddress', 'Order', 'configuration', '$state',
-    function ($rootScope, $scope, $log, ServiceDomain, ServiceContract, ServiceComponent, environments, rivProfiles, LogicalAddress, Order, configuration, $state) {
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$log', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state',
+    function ($rootScope, $scope, $log, ServiceDomain, ServiceContract, ServiceComponent, environments, currentUser, rivProfiles, LogicalAddress, Order, configuration, $state) {
       $scope.targetEnvironments = environments;
       $scope.rivProfiles = rivProfiles;
-      console.log($scope.rivtaVersions);
+      $scope.currentUser = currentUser;
 
       $scope.newComponent = false;
 

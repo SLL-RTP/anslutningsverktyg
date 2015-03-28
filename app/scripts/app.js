@@ -51,6 +51,11 @@ angular
             function(RivProfileFactory) {
               return RivProfileFactory.getAvailableProfiles();
             }
+          ],
+          currentUser: ['User',
+            function(UserFactory) {
+              return UserFactory.getCurrentUser();
+            }
           ]
         }
       })
