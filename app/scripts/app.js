@@ -63,26 +63,6 @@ angular
         url: '/connectServiceProducer/confirmed',
         templateUrl: 'views/serviceProducer/confirmed.html'
       })
-      .state('updateServiceProducer', {
-        url: '/updateServiceProducer',
-        templateUrl: 'views/serviceProducer/update.html',
-        controller: 'UpdateServiceProducerCtrl',
-        resolve: {
-          environments: ['Environment',
-            function(EnvironmentFactory) {
-              return EnvironmentFactory.getAvailableEnvironments();
-            }],
-          rivProfiles: ['RivProfile',
-            function(RivProfileFactory) {
-              return RivProfileFactory.getAvailableProfiles();
-            }
-          ]
-        }
-      })
-      .state('serviceProducerUpdateOrderConfirmed', {
-        url: '/updateServiceProducer/confirmed',
-        templateUrl: 'views/serviceProducer/confirmed.html'
-      });
   }])
   .config(['uiSelectConfig', function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';

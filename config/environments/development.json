@@ -1,5 +1,6 @@
 {
   "basePath": "http://localhost:8080/anslutningsplattform",
   "apiToken": "secret-token",
+  "devMode": true,
   "devDebug": "false"
 }

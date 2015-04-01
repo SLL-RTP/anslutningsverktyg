@@ -18,7 +18,7 @@
       <div class="row">
         <div class="col-md-5 form-group">
           <label for="environment">Miljö</label>
-          <select id="environment" class="form-control" ng-model="selectedTargetEnvironment" ng-change="targetEnvironmentSelected()" ng-options="environment.namn for environment in targetEnvironments">
+          <select id="environment" class="form-control" ng-model="order.driftmiljo" ng-change="driftmiljoSelected()" ng-options="environment.namn for environment in targetEnvironments">
             <option value="">Välj miljö</option>
           </select>
         </div>
@@ -27,7 +27,7 @@
   </div>
   <!-- / välj driftmiljö panel -->
   <!-- välj tjänsteproducent panel -->
-  <div class="panel panel-primary" ng-show="selectedTargetEnvironment.id">
+  <div class="panel panel-primary" ng-show="order.driftmiljo.id">
     <div class="panel-heading">
       <h3 class="panel-title">Välj tjänsteproducent</h3>
     </div>
@@ -36,189 +36,93 @@
         <div class="col-md-5">
           <div class="row">
             <div class="form-group">
-              <ui-select ng-model="selectedServiceComponent.selected" theme="bootstrap" reset-search-input="false" ng-disabled="newComponent">
-                <ui-select-match placeholder="Sök befintlig tjänsteproducent"><span ng-if="$select.selected.namn">{{$select.selected.namn}} - </span>{{$select.selected.hsaId}}</ui-select-match>
+              <ui-select ng-model="$parent.selectedTjansteproducent" theme="bootstrap" reset-search-input="false">
+                <ui-select-match placeholder="Sök befintlig tjänsteproducent"><span ng-if="$select.selected.beskrivning">{{$select.selected.beskrivning}} - </span>{{$select.selected.hsaId}}</ui-select-match>
                 <ui-select-choices
-                  repeat="serviceComponent in filteredServiceComponents | filter: $select.search"
-                  refresh="filterServiceComponents($select.search)"
+                  repeat="tjanstekomponent in filteredTjansteproducenter | filter: $select.search"
+                  refresh="filterTjansteproducenter($select.search)"
                   refresh-delay="200"
                   >
-                  <div ng-bind-html="((serviceComponent.namn ? serviceComponent.namn + ' - ' : '') + serviceComponent.hsaId) | highlight: $select.search"></div>
+                  <div ng-bind-html="((tjanstekomponent.beskrivning ? tjanstekomponent.beskrivning + ' - ' : '') + tjanstekomponent.hsaId) | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
             </div>
 
           </div>
         </div>
-        <div class="col-md-7">
-          <div class="form-group">
-            <button ng-hide="newComponent" type="button" class="btn btn-primary" ng-click="newComponent = true">Anslut ny tjänsteproducent</button>
-            <button ng-show="newComponent" type="button" class="btn btn-primary" ng-click="newComponent = false">Sök befintlig tjänsteproducent</button>
-          </div>
-        </div>
       </div>
-      <form role="form" ng-show="newComponent || selectedServiceComponent.selected" name="serviceComponentForm">
+      <div ng-show="order.producentbestallning.tjanstekomponent.hsaId">
         <div class="row">
-
-          <div class="col-md-5">
-            <div class="row" ng-if="newComponent || !selectedServiceComponent.selected.namn">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="komponentNamnInput">Tjänstekomponentens namn</label>
-                <input type="text" class="form-control" id="komponentNamnInput" name="komponentNamn" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.namn" required>
-                <span class="help-block" ng-if="serviceComponentForm.komponentNamn.$error.required">Namn för tjänstekomponent måste vara ifyllt</span>
-              </div>
-            </div>
-
-
-            <div class="row" ng-if="newComponent">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="hsaIdInput">HSA-ID</label>
-                <input type="text" class="form-control" id="hsaIdInput" name="hsaId" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.hsaId" required>
-                <span class="help-block" ng-if="serviceComponentForm.hsaId.$error.required">HsaId måste vara ifyllt</span>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="organisationInput">Organisation</label>
-                <input type="text" class="form-control" id="organisationInput" name="organisation" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.organisation" required>
-                <span class="help-block" ng-if="serviceComponentForm.organisation.$error.required">Organisation måste vara ifyllt</span>
-              </div>
-            </div>
-
+          <div class="col-md-3">
             <div class="row">
               <h4>Huvudansvarig</h4>
             </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="huvudansvarigNamnInput">För- och efternamn</label>
-                <input type="text" class="form-control" id="huvudansvarigNamnInput" name="huvudAnsvarig" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.huvudAnsvarigNamn" required>
-                <span class="help-block" ng-if="serviceComponentForm.huvudAnsvarig.$error.required">För- och efternamn måste vara ifyllt</span>
-              </div>
+            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
+              <dl>
+                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.namn}}</dd>
+                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.epost}}</dd>
+                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.telefon}}</dd>
+              </dl>
             </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="huvudansvarigEmailInput">E-postadress</label>
-                <input type="email" class="form-control" id="huvudansvarigEmailInput" name="huvudAnsvarigEmail"
-                       placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.huvudAnsvarigEpost" required>
-                <span class="help-block" ng-if="serviceComponentForm.huvudAnsvarigEmail.$error.required">E-postadress måste vara ifyllt</span>
-                <span class="help-block" ng-if="serviceComponentForm.huvudAnsvarigEmail.$error.email">E-postadress är ej giltig</span>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="huvudansvarigTelefonInput">Telefon</label>
-                <input type="text" class="form-control" id="huvudansvarigTelefonInput" name="huvudansvarigTelefon" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.huvudAnsvarigTelefon" required>
-                <span class="help-block" ng-if="serviceComponentForm.huvudansvarigTelefon.$error.required">Telefonnummer måste vara ifyllt</span>
-              </div>
-            </div>
-
-            <div class="row">
-              <h4>Teknisk support</h4>
-            </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="brevladaEmailInput">Funktionsbrevlåda</label>
-                <i class="fa fa-info-circle" popover="RTP-förvaltningen använder funktionsbrevlådan för att kontakta tjänsteproducentens tekniska support." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="email" class="form-control" id="brevladaEmailInput" name="brevladaEmail"
-                       placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.funktionsBrevladaEpost" required>
-                <span class="help-block" ng-if="serviceComponentForm.brevladaEmail.$error.required">E-postadress måste vara ifyllt</span>
-                <span class="help-block" ng-if="serviceComponentForm.brevladaEmail.$error.email">E-postadress är ej giltig</span>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="brevladaTelefonInput">Telefon</label>
-                <input type="text" class="form-control" id="brevladaTelefonInput" name="brevladaTelefon"
-                       placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.funktionsBrevladaTelefon" required>
-                <span class="help-block" ng-if="serviceComponentForm.brevladaTelefon.$error.required">Telefonnummer måste vara ifyllt</span>
-              </div>
+            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
+              <em>ingen information</em>
             </div>
           </div>
-
-          <div class="col-md-5 col-md-offset-2">
+          <div class="col-md-3">
             <div class="row">
               <h4>Teknisk kontaktperson</h4>
             </div>
-
-            <div class="row">
-              <div class="form-group">
-                <input type="button" class="btn btn-primary btn-sm" ng-click="copyPersonInChargeToTekniskKontakt()" value="Kopiera från huvudansvarig">
-              </div>
+            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.tekniskKontakt">
+              <dl>
+                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.namn}}</dd>
+                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.epost}}</dd>
+                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.telefon}}</dd>
+              </dl>
             </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="kontaktNamnInput">För- och efternamn</label>
-                <input type="text" class="form-control" id="kontaktNamnInput" name="kontaktNamn" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.tekniskKontaktNamn" required>
-                <span class="help-block" ng-if="serviceComponentForm.kontaktNamn.$error.required">För- och efternamn måste vara ifyllt</span>
-              </div>
+            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
+              <em>ingen information</em>
             </div>
-
+          </div>
+          <div class="col-md-3">
             <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="kontaktMailInput">E-postadress</label>
-                <input type="email" class="form-control" id="kontaktMailInput" name="kontaktMail" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.tekniskKontaktEpost" required>
-                <span class="help-block" ng-if="serviceComponentForm.kontaktMail.$error.required">E-postadress måste vara ifyllt</span>
-                <span class="help-block" ng-if="serviceComponentForm.kontaktMail.$error.email">E-postadress är ej giltig</span>
-              </div>
+              <h4>Teknisk support</h4>
             </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="kontaktTelefonInput">Telefon</label>
-                <input type="text" class="form-control" id="kontaktTelefonInput" name="kontaktTelefon" placeholder=""
-                       ng-model="connectServiceProducerRequest.serviceComponent.tekniskKontaktTelefon" required>
-                <span class="help-block" ng-if="serviceComponentForm.kontaktTelefon.$error.required">Telefonnummer måste vara ifyllt</span>
-              </div>
+            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.tekniskSupportKontakt">
+              <dl>
+                <dd>{{order.producentbestallning.tjanstekomponent.tekniskSupportKontakt.epost}}</dd>
+                <dd>{{order.producentbestallning.tjanstekomponent.tekniskSupportKontakt.telefon}}</dd>
+              </dl>
             </div>
-
+            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.tekniskSupportKontakt">
+              <em>ingen information</em>
+            </div>
+          </div>
+          <div class="col-md-3">
             <div class="row">
               <h4>Teknisk information</h4>
             </div>
-
             <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="ipAddressInput">IP-adress</label>
-                <i class="fa fa-info-circle" popover="RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="text" class="form-control" id="ipAddressInput" name="ipAddress"
-                       placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.ipadress" required>
-                <span class="help-block" ng-if="serviceComponentForm.ipAddress.$error.required">IP-adress måste vara ifyllt</span>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group" show-errors>
-                <label class="control-label" for="pingForConfigurationInput">URL till övervakningstjänst</label>
-                <i class="fa fa-info-circle" popover="Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="url" class="form-control" id="pingForConfigurationInput" name="pingForConfiguration"
-                       placeholder="" ng-model="connectServiceProducerRequest.serviceComponent.pingForConfiguration" required>
-                <span class="help-block" ng-if="serviceComponentForm.pingForConfiguration.$error.required">URL måste vara ifyllt</span>
-                <span class="help-block" ng-if="serviceComponentForm.pingForConfiguration.$error.url">URL är ej korrekt</span>
-              </div>
+              <dl>
+                <dt>IP-adress</dt>
+                <dd ng-show="order.producentbestallning.tjanstekomponent.ipadress">{{order.producentbestallning.tjanstekomponent.ipadress}}</dd>
+                <dd ng-hide="order.producentbestallning.tjanstekomponent.ipadress">
+                  <em>ingen information</em>
+                </dd>
+                <dt>URL till övervakningstjänst</dt>
+                <dd ng-show="order.producentbestallning.tjanstekomponent.pingForConfigurationURL">{{order.producentbestallning.tjanstekomponent.pingForConfigurationURL}}</dd>
+                <dd ng-hide="order.producentbestallning.tjanstekomponent.pingForConfigurationURL">
+                  <em>ingen information</em>
+                </dd>
+              </dl>
             </div>
           </div>
-
         </div>
-
-      </form>
+      </div>
     </div>
   </div>
   <!-- / välj tjänsteproducent panel -->
   <!-- välj tjänstekontrakt panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent.hsaId && selectedTargetEnvironment.id">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent.hsaId && order.driftmiljo.id">
     <div class="panel-heading">
       <h3 class="panel-title">Välj tjänstekontrakt att ansluta till</h3>
     </div>
@@ -226,7 +130,7 @@
       <div class="row">
         <div class="col-md-5 form-group">
           <label for="service-domain">Tjänstedomän</label>
-          <select class="form-control" ng-model="selectedServiceDomain" ng-change="serviceDomainSelected()" ng-options="serviceDomain.tjansteDomanId for serviceDomain in serviceDomains" id="service-domain">
+          <select class="form-control" ng-model="selectedTjanstedoman" ng-change="tjanstedomanSelected()" ng-options="serviceDomain.tjansteDomanId for serviceDomain in serviceDomains" id="service-domain">
             <option value="">Välj tjänstedomän</option>
           </select>
         </div>
@@ -237,39 +141,40 @@
           <table class="table table-condensed table-bordered contract-selector">
             <thead>
               <tr>
-                <th class="col-md-9">Namn</th>
-                <th class="col-md-2">Version</th>
+                <th class="col-md-11">Namn</th>
+                <th class="col-md-1">Version</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-hide="serviceContractsInSelectedDomain.length">
+              <tr ng-hide="anslutningarIValdTjanstedoman.length">
                 <td colspan="2">
                   <em>inga tillgängliga tjänstekontrakt</em>
                 </td>
               </tr>
-              <tr ng-repeat="serviceContract in serviceContractsInSelectedDomain"
-                  ng-class="{'success': serviceContract.selected, 'contract-disabled': !serviceContract.installedInEnvironment || serviceContract.installedForProducerHsaId}"
-                  ng-click="serviceContract.selected = !serviceContract.selected && serviceContract.installedInEnvironment && !serviceContract.installedForProducerHsaId"
+              <tr ng-repeat="anslutning in anslutningarIValdTjanstedoman"
+                  ng-class="{'success': anslutning._selected, 'contract-disabled': !anslutning._finnsIDriftmiljo}"
+                  ng-click="anslutning._selected = !anslutning._selected && anslutning._finnsIDriftmiljo"
                   class="contract-row">
                 <td>
-                  <span>{{serviceContract.namn}}</span>
-                  <span class="label label-default" ng-show="!serviceContract.installedInEnvironment">ej installerat</span>
-                  <span class="label label-default" ng-show="serviceContract.installedForProducerHsaId">redan ansluten</span>
-                  <span class="label label-success" ng-show="serviceContract.onOrder">tillagd</span>
+                  <span>{{anslutning._namn}}</span>
+                  <span class="label label-default" ng-show="!anslutning._finnsIDriftmiljo">ej installerat</span>
+                  <span class="label label-warning" ng-show="anslutning._finnsIDriftmiljo && !anslutning._anslutetForProducent">installerat, ej ansluten</span>
+                  <span class="label label-info" ng-show="anslutning._anslutetForProducent">ansluten</span>
+                  <span class="label label-success" ng-show="anslutning._paBestallning">för beställning</span>
                 </td>
-                <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+                <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="col-md-2">
-          <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="serviceContractsInSelectedDomain.length" ng-click="updateSelectedServiceContracts()">
-            <span>Lägg till<br>markerade</span>
+          <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="anslutningarIValdTjanstedoman.length" ng-click="updateValdaAnslutningar()">
+            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
           </button>
         </div>
         <div class="col-md-5">
-          <label>Valda tjänstekontrakt</label>
-          <table class="table table-condensed table-bordered">
+          <label>Tjänstekontrakt för beställning</label>
+          <table class="table table-condensed table-bordered contract-selector">
             <thead>
               <tr>
                 <th class="col-md-1"></th>
@@ -278,42 +183,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-hide="selectedServiceContracts.length">
+              <tr ng-hide="order.producentbestallning.producentanslutningar.length">
                 <td colspan="3">
                   <em>inga tjänstekontrakt valda</em>
                 </td>
               </tr>
-              <tr ng-repeat="serviceContract in selectedServiceContracts | orderBy:'serviceDomainId'">
-                <td class="contract-button" style="text-align: center" ng-click="removeServiceContract(serviceContract)">
+              <tr ng-repeat="anslutning in order.producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: '_namn'">
+                <td class="contract-button" style="text-align: center" ng-click="removeAnslutningFromOrder(anslutning)">
                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </td>
                 <td>
-                  <p style="margin-bottom: -5px">{{serviceContract.namn}}</p>
+                  <p style="margin-bottom: -5px">{{anslutning._namn}}</p>
                   <span>
-                    <small>({{serviceContract.serviceDomainId}})</small>
+                    <small>({{anslutning._tjanstedoman}})</small>
                   </span>
                 </td>
-                <td>{{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</td>
+                <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
               </tr>
             </tbody>
           </table>
-          <!-- <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="serviceContract in selectedServiceContracts | orderBy:'serviceDomainId'">
-            <button type="button" class="close" data-dismiss="alert" ng-click="removeServiceContract(serviceContract)">×</button>
-            <p>{{serviceContract.serviceDomainId}}</p>
-            <p>{{serviceContract.namn}} {{serviceContract.majorVersion}}.{{serviceContract.minorVersion}}</p>
-          </div> -->
         </div>
       </div>
-      <!-- <div class="row">
-        <div class="col-md-12">
-          <div ui-grid="gridOptions" ui-grid-selection class="grid"></div>
-        </div>
-      </div> -->
     </div>
   </div>
   <!-- / välj tjänstekontrakt panel -->
   <!-- konfigurera tjänstekontrakt panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent.hsaId && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
       <h3 class="panel-title">Konfigurera åtkomst till producentens tjänst/er</h3>
     </div>
@@ -325,22 +220,16 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="radio">
+          <div class="radio" ng-class="{'disabled': !canHandleLogiskaAdresserInUnity}">
             <label>
-              <input ng-model="linkLogicalAddressChoice" value="sameForAllContracts" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios1">
+              <input ng-model="linkLogicalAddressChoice" value="sameForAllAnslutningar" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios1" ng-disabled="!canHandleLogiskaAdresserInUnity">
               Lägg till samma logiska adresser för alla tjänstekontrakt
             </label>
           </div>
           <div class="radio">
             <label>
-              <input ng-model="linkLogicalAddressChoice" value="individualForContract" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios2">
+              <input ng-model="linkLogicalAddressChoice" value="individualPerAnslutning" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios2">
               Lägg till logiska adresser individuellt för varje tjänstekontrakt
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input ng-model="linkLogicalAddressChoice" value="sourceSystemBased" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios3">
-              Tjänstekontrakt tillämpar Källsystemsbaserad adressering, en logisk adress används (Tjänsteproducentens)
             </label>
           </div>
         </div>
@@ -349,7 +238,7 @@
   </div>
   <!-- / konfigurera tjänstekontrakt panel -->
   <!-- samma logiska adresser panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length && linkLogicalAddressChoice === 'sameForAllContracts' || linkLogicalAddressChoice === 'sourceSystemBased'">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
     <div class="panel-heading">
       <h3 class="panel-title">Konsument ska ha åtkomst till följande adress/er</h3>
     </div>
@@ -359,8 +248,8 @@
           <div class="col-md-4">
             <div class="row">
               <div class="form-group">
-                <label>Sök efter HSA-ID</label>
-                <ui-select  ng-model="selectedLogicalAddress.selected" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'" theme="bootstrap"
+                <label>Sök efter logisk adress</label>
+                <ui-select  ng-model="selectedLogicalAddress.selected" theme="bootstrap"
                             reset-search-input="true">
                   <ui-select-match placeholder="Namn - HSA ID">{{$select.selected.namn}} - {{$select.selected.hsaId}}</ui-select-match>
                   <ui-select-choices repeat="logicalAddress in filteredLogicalAddresses| filter: $select.search"
@@ -374,29 +263,17 @@
             <div class="row">
               <label>Lägg till ny logisk address</label>
               <div class="form-group">
-                <input ng-model="newLogicalAddress.hsaId" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'" type="text" class="form-control" id="newLogicalAddress_HSAID"
+                <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID"
                        placeholder="HSA ID">
               </div>
             </div>
 
             <div class="row">
               <div class="form-group">
-                <input ng-model="newLogicalAddress.namn" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'" type="text" class="form-control" id="newLogicalAddress_Name"
+                <input ng-model="newLogicalAddress.namn" type="text" class="form-control" id="newLogicalAddress_Name"
                        placeholder="Namn">
               </div>
             </div>
-
-            <!-- befintliga logiska adresser bortkommenterade tills vidare -->
-            <!--<div class="row">-->
-            <!--<div class="form-group">-->
-            <!--<label for="selectExistingLogicalAddresses">Välj från befintliga logiska adresser</label>-->
-            <!--<select multiple ng-multiple="true" ng-model="selectedExistingLogicalAddresses" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'"-->
-            <!--ng-options="logicalAddress.namn +' - '+logicalAddress.hsaId for logicalAddress in existingLogicalAddresses"-->
-            <!--class="form-control" id="selectExistingLogicalAddresses">-->
-            <!--</select>-->
-            <!--</div>-->
-            <!--</div>-->
-
           </div>
 
           <div class="col-md-2 col-md-offset-1">
@@ -404,58 +281,65 @@
 
               <div class="form-group top25">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogicalAddressToAllServiceContracts(selectedLogicalAddress.selected)" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected)">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
                 </div>
               </div>
-
             </div>
 
             <div class="row">
-
               <div class="form-group top45">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogicalAddressToAllServiceContracts(newLogicalAddress); newLogicalAddress = {};" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
                 </div>
               </div>
-
             </div>
-            <!-- befintliga logiska adresser bortkommenterade tills vidare -->
-            <!--<div class="row">-->
-            <!--<div class="form-group top75">-->
-            <!--<div class="btn-group">-->
-            <!--<button type="button" class="btn btn-default" ng-click="addLogicalAddressesToAllServiceContracts(selectedExistingLogicalAddresses)" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'">-->
-            <!--<label>Valda</label> <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</div>-->
 
-            <!--</div>-->
-
-            <!--<div class="row">-->
-            <!--<div class="form-group top17">-->
-            <!--<div class="btn-group">-->
-            <!--<button type="button" class="btn btn-default" ng-click="addLogicalAddressesToAllServiceContracts(existingLogicalAddresses)" ng-disabled="linkLogicalAddressChoice === 'sourceSystemBased'">-->
-            <!--<label>Alla</label> <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</div>-->
           </div>
 
-          <div class="form-group col-md-5">
+          <div class="form-group col-md-5" ng-if="!order.producentbestallning.producentanslutningar[0]._anslutetForProducent">
             <label>Valda logiska adresser</label>
-            <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="logicalAddress in logicalAddresses">
-              <button type="button" class="close" data-dismiss="alert" ng-click="removeLogicalAddressFromAllServiceContracts(logicalAddress)" ng-hide="linkLogicalAddressChoice === 'sourceSystemBased'">×</button>
-              {{logicalAddress.namn}}
-            </div>
-            <p ng-hide="logicalAddresses.length">
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="success"
+              close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+              ng-repeat="logiskAdress in nyaLogiskaAdresser = (order.producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+            </logisk-adress-alert>
+            <p ng-hide="nyaLogiskaAdresser.length">
               <em>inga logiska adresser valda</em>
             </p>
+          </div>
+          <div class="form-group col-md-5" ng-if="order.producentbestallning.producentanslutningar[0]._anslutetForProducent">
+            <label>Nyvalda logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="success"
+              close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+              ng-repeat="logiskAdress in nyaLogiskaAdresser = (order.producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+            </logisk-adress-alert>
+            <p ng-hide="nyaLogiskaAdresser.length">
+              <em>inga nya logiska adresser valda</em>
+            </p>
+            <label>Redan anslutna logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="info"
+              close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+              ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = ((order.producentbestallning.producentanslutningar | intersection:'befintligaLogiskaAdresser') | notIn:(order.producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser'):'hsaId')">
+            </logisk-adress-alert>
+            <p ng-hide="befintligaLogiskaAdresserAfterFilter.length">
+              <em>samtliga redan anslutna logiska adresser kommer tas bort</em>
+            </p>
+            <label ng-show="(order.producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser').length">Bortvalda redan anslutna logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="danger"
+              close="addLogiskAdressToAllAnslutningar(logiskAdress)"
+              ng-repeat="logiskAdress in borttagnaLogiskaAdresser = (order.producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser')">
+            </logisk-adress-alert>
           </div>
         </div>
       </div>
@@ -464,11 +348,11 @@
   <!-- / samma logiska adresser panel -->
   <!-- enskilda tjänstekontrakt panel(er) -->
   <div class="panel panel-primary"
-       ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length"
-       ng-repeat="contract in connectServiceProducerRequest.serviceContracts">
+       ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length"
+       ng-repeat="anslutning in order.producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
     <div class="panel-heading">
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllContracts'">Välj version av RIVTA-profil och URL för {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}} ({{contract.serviceDomainId}})</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualForContract'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{contract.namn}} {{contract.majorVersion}}.{{contract.minorVersion}} ({{contract.serviceDomainId}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">Välj version av RIVTA-profil och URL för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -477,15 +361,15 @@
             <div class="col-md-3">
               <label for="rivtaVersion">Version av RIVTA-profil</label>
               <i class="fa fa-info-circle" popover="Välj den version av RIV TA Basic Profile som kontraktet implementerar." popover-trigger="mouseenter" popover-placement="right"></i>
-              <select id="rivtaVersion" class="form-control" ng-model="contract.address.rivProfil"
+              <select id="rivtaVersion" class="form-control" ng-model="anslutning.rivtaProfil"
                       ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
-                      ng-init="contract.address.rivProfil = (rivProfiles | orderBy:'toString()':true)[0]"></select>
+                      ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
             </div>
             <div class="form-group" show-errors>
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="url" class="form-control" id="urlInput" name="url" ng-model="contract.address.url" placeholder="skriv in url" required>
+                <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" required>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
                 <span class="help-block" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
               </div>
@@ -493,12 +377,12 @@
           </form>
         </div>
       </div>
-      <div ng-show="linkLogicalAddressChoice === 'individualForContract'" class="row">
+      <div ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'" class="row top25">
         <div class="col-md-12">
           <div class="col-md-4">
             <div class="row">
               <div class="form-group">
-                <label>Sök efter HSA-ID</label>
+                <label>Sök efter logisk adress</label>
                 <ui-select ng-model="$parent.selectedLogicalAddress" theme="bootstrap"
                            reset-search-input="true">
                   <ui-select-match placeholder="Namn - HSA ID">{{$select.selected.namn}} - {{$select.selected.hsaId}}</ui-select-match>
@@ -525,30 +409,15 @@
                        placeholder="Namn">
               </div>
             </div>
-
-            <!-- befintliga logiska adresser bortkommenterade tills vidare -->
-            <!--<div class="row">-->
-            <!--<div class="form-group">-->
-            <!--<label for="selectExistingLogicalAddresses-{{$index}}">Välj från befintliga logiska adresser</label>-->
-            <!--<select multiple ng-multiple="true" ng-model="selectedExistingLogicalAddresses"-->
-            <!--ng-options="logicalAddress.namn +' - '+logicalAddress.hsaId for logicalAddress in existingLogicalAddresses"-->
-            <!--class="form-control" id="selectExistingLogicalAddresses-{{$index}}">-->
-            <!--</select>-->
-            <!--</div>-->
-            <!--</div>-->
-
           </div>
 
           <div class="col-md-2 col-md-offset-1">
             <div class="row">
               <div class="form-group top25">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogicalAddressToServiceContract(this.selectedLogicalAddress, contract)">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning)">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
-                  <!--<button type="button" class="btn btn-default" ng-click="addFilteredLogicalAddressToServiceContract(this, contract)">-->
-                  <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-                  <!--</button>-->
                 </div>
               </div>
             </div>
@@ -556,50 +425,55 @@
             <div class="row">
               <div class="form-group top45">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogicalAddressToServiceContract(newLogicalAddress, contract); newLogicalAddress = {};">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(newLogicalAddress, anslutning); newLogicalAddress = {};">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
-                  <!--<button type="button" class="btn btn-default" ng-click="addNewLogicalAddressToServiceContract(this, contract)">-->
-                  <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-                  <!--</button>-->
                 </div>
               </div>
             </div>
-
-
-            <!-- befintliga logiska adresser bortkommenterade tills vidare -->
-            <!--<div class="row">-->
-            <!--<div class="form-group top75">-->
-            <!--<div class="btn-group">-->
-            <!--<button type="button" class="btn btn-default" ng-click="addLogicalAddressesToServiceContract(this.selectedExistingLogicalAddresses, contract)">-->
-            <!--<label>Valda</label> <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</div>-->
-
-            <!--<div class="row">-->
-            <!--<div class="form-group top17">-->
-            <!--<div class="btn-group">-->
-            <!--<button type="button" class="btn btn-default" ng-click="addLogicalAddressesToServiceContract(existingLogicalAddresses, contract)">-->
-            <!--<label>Alla</label> <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</div>-->
           </div>
 
-          <div class="form-group col-md-5">
+          <div class="form-group col-md-5" ng-if="!anslutning._anslutetForProducent">
             <label>Valda logiska adresser</label>
-            <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="logicalAddress in contract.logicalAddresses">
-              <button type="button" class="close" data-dismiss="alert" ng-click="removeLogicalAddressFromServiceContract(logicalAddress, contract)">×</button>
-              {{logicalAddress.namn}}
-            </div>
-            <p ng-hide="contract.logicalAddresses.length">
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="success"
+              close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+              ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+            </logisk-adress-alert>
+            <p ng-hide="anslutning.nyaLogiskaAdresser.length">
               <em>inga logiska adresser valda</em>
             </p>
+          </div>
+          <div class="form-group col-md-5" ng-if="anslutning._anslutetForProducent">
+            <label>Nyvalda logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="success"
+              close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+              ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+            </logisk-adress-alert>
+            <p ng-hide="anslutning.nyaLogiskaAdresser.length">
+              <em>inga nya logiska adresser valda</em>
+            </p>
+            <label>Redan anslutna logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="info"
+              close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+              ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = (anslutning.befintligaLogiskaAdresser | notIn:anslutning.borttagnaLogiskaAdresser:'hsaId')">
+            </logisk-adress-alert>
+            <p ng-show="!befintligaLogiskaAdresserAfterFilter.length">
+              <em ng-hide="!anslutning.borttagnaLogiskaAdresser.length">samtliga redan anslutna logiska adresser kommer tas bort</em>
+              <em ng-show="!anslutning.borttagnaLogiskaAdresser.length">inga logiska adresser anslutna</em>
+            </p>
+            <label ng-show="anslutning.borttagnaLogiskaAdresser.length">Bortvalda redan anslutna logiska adresser</label>
+            <logisk-adress-alert
+              logisk-adress="logiskAdress"
+              type="danger"
+              close="addLogiskAdressToAnslutning(logiskAdress, anslutning);"
+              ng-repeat="logiskAdress in anslutning.borttagnaLogiskaAdresser">
+            </logisk-adress-alert>
           </div>
 
         </div>
@@ -609,7 +483,7 @@
   </div>
   <!-- / enskilda tjänstekontrakt panel(er) -->
   <!-- anropsbehörighet panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
       <h3 class="panel-title">Lägg till anropsbehörighet för tjänstekonsument</h3>
     </div>
@@ -624,46 +498,74 @@
         <div class="col-md-12">
           <div class="radio">
             <label>
-              <input ng-model="requestForCallPermissionInSeparateOrder" ng-value="true" type="radio" name="callPermissionRadios"
-                     id="callPermissionRadios1" ng-change="requestForCallPermissionClicked()">
+              <input ng-model="callPermissionInSeparateOrder" ng-value="true" type="radio" name="callPermissionRadios"
+                     id="callPermissionRadios1" ng-init="callPermissionInSeparateOrder=true">
               Anropsbehörighet kommer begäras via en konsumentanslutningsbeställning
             </label>
           </div>
           <div class="radio">
             <label>
-              <input ng-model="requestForCallPermissionInSeparateOrder" ng-value="false" type="radio" name="callPermissionRadios" id="callPermissionRadios2">
+              <input ng-model="callPermissionInSeparateOrder" ng-value="false" type="radio" name="callPermissionRadios" id="callPermissionRadios2">
               Anropsbehörighet ska begäras i samband med denna beställning
             </label>
           </div>
         </div>
       </div>
-      <div class="row" ng-show="!requestForCallPermissionInSeparateOrder ">
-        <div class="col-md-4">
-          <ui-select ng-model="selectedServiceConsumer.selected" theme="bootstrap" reset-search-input="true" on-select="onSelectServiceConsumer($item, $model)">
-            <ui-select-match placeholder="Välj tjänstekonsument">{{$select.selected.namn}} -
-              {{$select.selected.hsaId}}
-            </ui-select-match>
-            <ui-select-choices
-              repeat="serviceConsumer in filteredServiceConsumers | filter: $select.search"
-              refresh="filterServiceConsumers($select.search)"
-              refresh-delay="200"
-              >
-              <div
-                ng-bind-html="(serviceConsumer.namn + ' - ' + serviceConsumer.hsaId) | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-        </div>
-      </div>
-      <div class="row" ng-show="!requestForCallPermissionInSeparateOrder && selectedServiceConsumer.selected.namn">
+
+
+      <div class="row top25" ng-show="!callPermissionInSeparateOrder">
         <div class="col-md-12">
-          <p>Vald tjänstekonsument ({{selectedServiceConsumer.selected.namn}}) ska få anropsbehörighet för valda tjänstekontrakt.</p>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="form-group">
+                <label>Sök efter tjänstekonsument</label>
+                <ui-select ng-model="selectedTjanstekonsument.selected" theme="bootstrap" reset-search-input="false">
+                  <ui-select-match placeholder="Sök tjänstekonsument"><span ng-if="$select.selected.beskrivning">{{$select.selected.beskrivning}} - </span>{{$select.selected.hsaId}}</ui-select-match>
+                  <ui-select-choices
+                    repeat="tjanstekomponent in filteredTjanstekonsumenter | filter: $select.search"
+                    refresh="filterTjanstekonsumenter($select.search)"
+                    refresh-delay="200"
+                    >
+                    <div ng-bind-html="((tjanstekomponent.beskrivning ? tjanstekomponent.beskrivning + ' - ' : '') + tjanstekomponent.hsaId) | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-md-offset-1">
+            <div class="row">
+              <div class="form-group top25">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected);">
+                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-5">
+            <label>Valda tjänstekonsumenter</label>
+            <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = order.konsumentbestallningar">
+              <button type="button" class="close" data-dismiss="alert" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekonsument)">×</button>
+              <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
+              <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
+            </div>
+            <p ng-hide="konsumentbestallningar.length">
+              <em>inga tjänstekonsumenter valda</em>
+            </p>
+            <p class="top25" ng-show="konsumentbestallningar.length">
+              Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <!-- / anropsbehörighet panel -->
   <!-- övrigt panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
       <h3 class="panel-title">Övrigt</h3>
     </div>
@@ -673,7 +575,7 @@
           <div class="row">
             <div class="form-group">
               <label for="ovrigInformation">Övrig information</label>
-              <textarea ng-model="connectServiceProducerRequest.otherInfo" id="ovrigInformation" class="form-control"
+              <textarea ng-model="order.otherInfo" id="ovrigInformation" class="form-control"
                         cols="30" rows="10"></textarea>
             </div>
           </div>
@@ -683,14 +585,11 @@
   </div>
   <!-- / övrigt panel -->
   <!-- beställare panel -->
-  <div class="panel panel-primary" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
       <h3 class="panel-title">Beställare</h3>
     </div>
     <div class="panel-body">
-      <!--<div class="row">-->
-        <!--<h4>Beställare</h4>-->
-      <!--</div>-->
       <form name="bestallareForm" role="form">
         <div class="row">
           <div class="col-md-5">
@@ -702,7 +601,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label class=" control-label" for="bestallareNamnInput">För- och efternamn</label>
-                <input ng-model="connectServiceProducerRequest.client.name"
+                <input ng-model="order.bestallare.namn"
                        type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
                        placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareNamn.$error.required">För- och efternamn måste vara ifyllt</span>
@@ -711,7 +610,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label for="bestallareEmailInput" class="control-label">E-postadress</label>
-                <input ng-model="connectServiceProducerRequest.client.email" type="email" class="form-control"
+                <input ng-model="order.bestallare.epost" type="email" class="form-control"
                        id="bestallareEmailInput" name="bestallareMail" placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareMail.$error.required">E-postadress måste vara ifyllt</span>
                 <span class="help-block" ng-if="bestallareForm.bestallareMail.$error.email">E-postadress är ej giltig</span>
@@ -720,7 +619,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label for="bestallareTelefonInput" class="control-label">Telefon</label>
-                <input ng-model="connectServiceProducerRequest.client.phone" type="text" class="form-control"
+                <input ng-model="order.bestallare.telefon" type="text" class="form-control"
                        id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareTelefon.$error.required">Telefon måste vara ifyllt</span>
               </div>
@@ -728,7 +627,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label for="bestallareHsaIdInput" class="control-label">HSA-ID</label>
-                <input ng-model="connectServiceProducerRequest.client.hsaId" type="text" class="form-control"
+                <input ng-model="order.bestallare.hsaId" type="text" class="form-control"
                        id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareHsaId.$error.required">HSA-ID måste vara ifyllt</span>
               </div>
@@ -736,7 +635,7 @@
             <div class="row">
               <div class="form-group" show-errors>
                 <label for="bestallareRoll" class="control-label">Roll</label>
-                <input ng-model="connectServiceProducerRequest.client.role" type="text" class="form-control"
+                <input ng-model="order.bestallareRoll" type="text" class="form-control"
                        id="bestallareRoll" name="bestallareRoll" placeholder="" required>
                 <span class="help-block" ng-if="bestallareForm.bestallareRoll.$error.required">Roll måste vara ifyllt</span>
               </div>
@@ -747,7 +646,7 @@
     </div>
   </div>
   <!-- / beställare panel -->
-  <div class="row" ng-show="!orderValid && connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="row" ng-show="!orderValid && order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="col-md-4 col-md-offset-8">
       <div class="alert alert-dismissable alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -755,7 +654,7 @@
       </div>
     </div>
   </div>
-  <div class="row" ng-show="connectServiceProducerRequest.serviceComponent && connectServiceProducerRequest.serviceContracts.length">
+  <div class="row" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="col-md-4 col-md-offset-8">
       <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="sendServiceProducerConnectionOrder()">Skicka</button>
     </div>
@@ -765,8 +664,15 @@
   <h3 ng-show="showDevStuff">sammanfattning:</h3>
   <div ng-show="showDevStuff" class="jumbotron">
     <pre>
-        {{serviceContractsInSelectedDomain}}
-        {{connectServiceProducerRequest | json}}
+canHandleLogiskaAdresserInUnity = {{canHandleLogiskaAdresserInUnity}}
+
+order: {{order | json}}
+
+selectedServiceComponent: {{selectedServiceComponent | json}}
+
+anslutningarIValdTjanstedoman: {{anslutningarIValdTjanstedoman | json}}
+
+filteredServiceComponents: {{filteredServiceComponents | json}}
     </pre>
   </div>
 </div>

@@ -1,4 +1,5 @@
 <!doctype html>
+<!--suppress HtmlUnknownTarget -->
 <html class="no-js">
   <head>
     <meta charset="utf-8">
@@ -45,8 +46,7 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <p>Tjänsteproducent</p>
-            <li> <a ui-sref="connectServiceProducer" ui-sref-active="active">Anslut till tjänstekontrakt</a></li>
-            <li><a ui-sref="updateServiceProducer" ui-sref-active="active">Hantera anslutningar till tjänstekontrakt</a></li>
+            <li> <a ui-sref="connectServiceProducer" ui-sref-active="active">Administrera anslutning</a></li>
             <p>Kontaktinformation</p>
             <li><a ui-sref="updateContact" ui-sref-active="active">Uppdatera kontaktinformation</a></li>
           </ul>
@@ -88,7 +88,7 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
     <script src="bower_components/angular-ui-select/dist/select.js"></script>
-    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.js"></script>
@@ -98,7 +98,6 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/connectServiceProducer.js"></script>
-        <script src="scripts/controllers/updateServiceProducer.js"></script>
         <script src="scripts/controllers/updateContact.js"></script>
         <script src="scripts/factories/logicalAddress.js"></script>
         <script src="scripts/factories/rivProfile.js"></script>
@@ -110,6 +109,9 @@
         <script src="scripts/factories/sessionInterceptor.js"></script>
         <script src="scripts/factories/order.js"></script>
         <script src="scripts/factories/user.js"></script>
+        <script src="scripts/filters/intersection.js"></script>
+        <script src="scripts/filters/notIn.js"></script>
+        <script src="scripts/directives/logiskAdressAlert.js"></script>
         <!-- endbuild -->
 
     <!-- build:js config.js -->

@@ -60,6 +60,10 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      },
+      config: {
+        files: ['config/{,*/}*.{js,json}'],
+        tasks: ['replace:development']
       }
     },
 
