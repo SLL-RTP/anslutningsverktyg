@@ -9,36 +9,22 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$log', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state',
-    function ($rootScope, $scope, $log, ServiceDomain, ServiceContract, ServiceComponent, environments, currentUser, rivProfiles, LogicalAddress, Order, configuration, $state) {
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
+    function ($rootScope, $scope, $log, $timeout, ServiceDomain, ServiceContract, ServiceComponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
       $scope.targetEnvironments = environments;
       $scope.rivProfiles = rivProfiles;
-      $scope.currentUser = currentUser;
-
-      $scope.newComponent = false;
-
       $scope.showDevStuff = configuration.devDebug;
 
-      $scope.connectServiceProducerRequest = {
-        serviceComponent: {},
-        targetEnvironment: {},
-        serviceDomain: {},
-        serviceContracts: [],
-        serviceConsumer: {},
-        slaFullfilled: false,
-        otherInfo: '',
-        client: {
-          name: '',
-          email: '',
-          phone: ''
-        }
+      $scope.order = {
+        driftmiljo: {},
+        producentbestallning: {
+          tjanstekomponent: {},
+          producentanslutningar: []
+        },
+        bestallare: currentUser
       };
 
-      $scope.selectedServiceComponent = {};
-      $scope.filteredServiceComponents = [];
-
-      $scope.selectedServiceConsumer = {};
-      $scope.filteredServiceConsumers = [];
+      $scope.selectedTjanstekonsument = {};
 
       $scope.serviceDomains = [];
 
@@ -48,64 +34,46 @@ angular.module('avApp')
 
       $scope.selectedLogicalAddress = {};
       $scope.filteredLogicalAddresses = [];
-      $scope.logicalAddresses = [];
       $scope.existingLogicalAddresses = [];
       $scope.selectedExistingLogicalAddresses = [];
-      $scope.selectedServiceContracts = [];
-      $scope.logicalAddressesForAllServiceContracts = [];
 
-      $scope.linkLogicalAddressChoice = 'sameForAllContracts';
-
-      $scope.requestForCallPermissionInSeparateOrder = true; //Default
+      $scope.linkLogicalAddressChoice = 'sameForAllAnslutningar';
 
       $scope.orderValid = true;
 
-      $scope.gridOptions = {
-        enableRowSelection: true,
-        enableSelectAll: true,
-        multiSelect: true,
-        columnDefs: [
-          {name: 'Namn', field: 'getName()'},
-          {name: 'version', field: 'getVersion()'}
-        ],
-        rowTemplate: 'templates/ui-grid/connect-service-producer-grid-row.html'
+
+      $scope.canHandleLogiskaAdresserInUnity = true;
+
+      $scope.filterTjansteproducenter = function (query) {
+        if (!_.isEmpty(query)) {
+          ServiceComponent.getFilteredServiceComponents(query, $scope.order.driftmiljo.id).then(function (result) {
+            $scope.filteredTjansteproducenter = result;
+          });
+        }
       };
 
-      $scope.filterServiceComponents = function (query) {
-        ServiceComponent.getFilteredServiceComponents(query, $scope.selectedTargetEnvironment.id).then(function (result) {
-          $scope.filteredServiceComponents = result;
-        });
+      $scope.filterTjanstekonsumenter = function (query) {
+        if (!_.isEmpty(query)) {
+          ServiceComponent.getFilteredServiceComponents(query, $scope.order.driftmiljo.id).then(function (result) {
+            if ($scope.order.producentbestallning.tjanstekomponent && $scope.order.producentbestallning.tjanstekomponent.hsaId) {
+              _.remove(result, {hsaId: $scope.order.producentbestallning.tjanstekomponent.hsaId});
+            }
+            $scope.filteredTjanstekonsumenter = result;
+          });
+        }
       };
 
-      $scope.filterServiceConsumers = function (query) {
-        ServiceComponent.getFilteredServiceComponents(query, $scope.selectedTargetEnvironment.id).then(function (result) {
-          //This line effectively removes, from the search result
-          // the previously chosen service component
-          if($scope.selectedServiceComponent.selected) {
-            _.remove(result, {hsaId: $scope.selectedServiceComponent.selected.hsaId});
-          }
-
-          $scope.filteredServiceConsumers = result;
-        });
-      };
-
-      $scope.$watch('newComponent', function() {
-        resetServiceComponent();
-      });
-
-      $scope.$watch('selectedServiceComponent.selected', function (newValue) {
+      $scope.$watch('selectedTjansteproducent', function (newValue) {
           if (newValue) {
             reset();
-            console.log('new service component selected:');
-            console.log(newValue);
-            if (angular.isDefined(newValue.namn)) { //FIXME: fix until backend returns service components also from TAK on this query
+            if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
               ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
                 console.log(result);
-                $scope.connectServiceProducerRequest.serviceComponent = result;
+                $scope.order.producentbestallning.tjanstekomponent = result;
               });
             } else {
               console.log('detected producer from TAK');
-              $scope.connectServiceProducerRequest.serviceComponent = _.clone(newValue);
+              $scope.order.producentbestallning.tjanstekomponent = _.clone(newValue);
             }
           } else {
             reset();
@@ -113,182 +81,137 @@ angular.module('avApp')
         }
       );
 
-      $scope.onSelectServiceConsumer = function(item, model) {
-        ServiceComponent.getServiceComponent(item.hsaId).then(function (result) {
-          $scope.connectServiceProducerRequest.serviceConsumer = result;
+      $scope.$watch('callPermissionInSeparateOrder', function () {
+        $scope.order.konsumentbestallningar = [];
+      });
+
+      $scope.$watch('linkLogicalAddressChoice', function (newValue) {
+        _resetLogiskaAdresserForAllAnslutningar();
+      });
+
+      $scope.driftmiljoSelected = function () {
+        resetServiceComponent();
+        ServiceDomain.listDomains().then(function (domains) {
+          $scope.serviceDomains = domains;
         });
       };
 
-      $scope.enableNewServiceProducer = function() {
-
-      };
-
-      $scope.requestForCallPermissionClicked = function() {
-        //Reset stuff
-        $scope.selectedServiceConsumer = {};
-        $scope.connectServiceProducerRequest.serviceConsumer = {};
-      };
-
-      $scope.$watch('linkLogicalAddressChoice', function(newValue) {
-        resetLogicalAddressesForServiceContracts();
-        if(newValue === 'sourceSystemBased') {
-          var logicalAddress = $scope.connectServiceProducerRequest.serviceComponent;
-          $scope.logicalAddresses.push(logicalAddress);
-          _addLogicalAddressToAllServiceContracts(logicalAddress);
-        }
-      });
-
-      $scope.targetEnvironmentSelected = function () {
-        if ($scope.selectedTargetEnvironment && $scope.connectServiceProducerRequest.serviceComponent) {
-          resetContracts();
-          $scope.connectServiceProducerRequest.targetEnvironment = $scope.selectedTargetEnvironment;
-          ServiceDomain.listDomains().then(function (domains) {
-            $scope.serviceDomains = domains;
-          });
-        }
-      };
-
-      $scope.serviceDomainSelected = function () {
-        if ($scope.selectedTargetEnvironment && $scope.connectServiceProducerRequest.serviceComponent && $scope.selectedServiceDomain) {
-          resetContracts();
-          var serviceComponentId = $scope.connectServiceProducerRequest.serviceComponent.hsaId;
-          var environmentId = $scope.selectedTargetEnvironment.id;
-          var serviceDomainId = $scope.selectedServiceDomain.tjansteDomanId;
-          $scope.connectServiceProducerRequest.serviceDomain = $scope.selectedServiceDomain;
-          ServiceContract.listContracts(serviceComponentId, environmentId, serviceDomainId).then(function (contracts) {
-            $scope.serviceContractsInSelectedDomain = _.map(contracts, function(serviceContract) {
-              serviceContract.onOrder = _isServiceContractSelected(serviceContract);
-              return serviceContract;
-            });
-            $scope.gridOptions.data = contracts;
-            _.each($scope.gridOptions.data, function(contractData) { //ui-grid doesn't seem to support composite field values in any other way
-              contractData.getVersion = function() {
-                return this.majorVersion + '.' + this.minorVersion;
-              };
-              contractData.getName = function() {
-                var statusText = '';
-                if (!this.installedInEnvironment) {
-                  statusText = ' (ej installerat)';
-                } else if (this.installedForProducerHsaId) {
-                  statusText = ' (redan ansluten)';
-                }
-                return this.namn + statusText;
-              };
+      $scope.tjanstedomanSelected = function () {
+        if ($scope.order.driftmiljo && $scope.order.producentbestallning.tjanstekomponent && $scope.selectedTjanstedoman) {
+          var serviceComponentId = $scope.order.producentbestallning.tjanstekomponent.hsaId;
+          var environmentId = $scope.order.driftmiljo.id;
+          var serviceDomainId = $scope.selectedTjanstedoman.tjansteDomanId;
+          ServiceContract.listAnslutningar(serviceComponentId, environmentId, serviceDomainId).then(function (anslutningar) {
+            $scope.anslutningarIValdTjanstedoman = _.map(anslutningar, function (anslutning) {
+              anslutning._paBestallning = _isAnslutningOnOrder(anslutning);
+              return anslutning;
             });
           });
         }
       };
 
-      $scope.$watchCollection('selectedServiceContracts', function(newSelected, oldSelected) {
-        $scope.serviceContractsInSelectedDomain = _.map(_.clone($scope.serviceContractsInSelectedDomain, true), function(serviceContract) {
-          serviceContract.onOrder = _isServiceContractSelected(serviceContract);
-          return serviceContract;
+      $scope.$watchCollection('order.producentbestallning.producentanslutningar', function () {
+        $scope.anslutningarIValdTjanstedoman = _.map($scope.anslutningarIValdTjanstedoman, function (anslutning) {
+          anslutning._paBestallning = _isAnslutningOnOrder(anslutning);
+          return anslutning;
         });
-        //$scope.dataCount = newNames.length;
       });
 
-      $scope.updateSelectedServiceContracts = function() {
-        _.chain($scope.serviceContractsInSelectedDomain)
-          .filter('selected')
-          .forEach(function(serviceContract) {
-            _addServiceContractToOrder(serviceContract);
+      $scope.$watch('canHandleLogiskaAdresserInUnity', function () {
+        if (!$scope.canHandleLogiskaAdresserInUnity) {
+          $scope.linkLogicalAddressChoice = 'individualPerAnslutning';
+        }
+      });
+
+      $scope.$on('logisk-adress-added', _.debounce(function () {
+        _recalculateLogiskaAdresserUnity();
+      }, 100));
+
+      $scope.$on('logisk-adress-removed', _.debounce(function () {
+        _recalculateLogiskaAdresserUnity();
+      }, 100));
+
+      $scope.$on('anslutning-added', _.debounce(function () {
+        _recalculateLogiskaAdresserUnity();
+      }, 100));
+
+      $scope.$on('anslutning-removed', _.debounce(function () {
+        _recalculateLogiskaAdresserUnity();
+      }, 100));
+
+      /**
+       * calculate whether the user should be allowed to handle 'anslutningar' in a unified fashion or
+       * if she must configure them separately
+       * @private
+       */
+      var _recalculateLogiskaAdresserUnity = function () {
+        var unity = true;
+        var nyaLogiskaAdresserIntersection = intersectionFilter($scope.order.producentbestallning.producentanslutningar, 'nyaLogiskaAdresser');
+        var befintligaLogiskaAdresserIntersection = intersectionFilter($scope.order.producentbestallning.producentanslutningar, 'befintligaLogiskaAdresser');
+
+        var nyaLogiskaAdresserUnity = _.isUndefined(nyaLogiskaAdresserIntersection);
+        if (!nyaLogiskaAdresserUnity) {
+          nyaLogiskaAdresserUnity = _.every(_.map($scope.order.producentbestallning.producentanslutningar, 'nyaLogiskaAdresser'), function (laArr) {
+            var diff = _.difference(_.map(laArr, 'hsaId'), _.map(nyaLogiskaAdresserIntersection, 'hsaId'));
+            return diff.length === 0;
           });
-        //_.forEach($scope.serviceContractsInSelectedDomain, function(serviceContract) {
-        //  _.chain($scope.serviceContractsInSelectedDomain)
-        //    .filter('selected')
-        //    .forEach(function() {
-        //      _addServiceContractToOrder(serviceContract);
-        //    });
-        //  //if (serviceContract.selected) {
-        //  //  _addServiceContractToOrder(serviceContract);
-        //  //} else {
-        //  //  _removeServiceContractFromOrder(serviceContract);
-        //  //}
-        //});
-        //_.chain($scope.serviceContractsInSelectedDomain)
-        //.filter('selected')
-        //  .forEach(function(selectedContract) {
-        //    console.log(selectedContract.namn);
-        //  });
+        }
+        var befintligaLogiskaAdresserUnity = _.isUndefined(befintligaLogiskaAdresserIntersection);
+        if (!befintligaLogiskaAdresserUnity) {
+          befintligaLogiskaAdresserUnity = _.every(_.map($scope.order.producentbestallning.producentanslutningar, 'befintligaLogiskaAdresser'), function (laArr) {
+            var diff = _.difference(_.map(laArr, 'hsaId'), _.map(befintligaLogiskaAdresserIntersection, 'hsaId'));
+            return diff.length === 0;
+          });
+        }
+        var uniq = _.uniq($scope.order.producentbestallning.producentanslutningar, 'installedForProducerHsaId');
+        var mid = (nyaLogiskaAdresserUnity && befintligaLogiskaAdresserUnity && uniq.length === 1);
+        $timeout(function () {
+          $scope.canHandleLogiskaAdresserInUnity = mid;
+        });
       };
 
-      $scope.removeServiceContract = function(serviceContract) {
-        _removeServiceContractFromOrder(serviceContract);
-      }
+      $scope.updateValdaAnslutningar = function () {
+        _.each(_.filter($scope.anslutningarIValdTjanstedoman, '_selected'), function (anslutning) {
+          _addAnslutningToOrder(anslutning);
+          delete anslutning._selected; //deselect in UI
+        });
+      };
+
+      $scope.removeAnslutningFromOrder = function (anslutning) {
+        _removeAnslutningFromOrder(anslutning);
+      };
 
       $scope.filterLogicalAddresses = function (logicalAddressQuery) {
         LogicalAddress.getFilteredLogicalAddresses(logicalAddressQuery).then(function (logicalAddresses) {
             $scope.filteredLogicalAddresses = logicalAddresses;
-            console.log(logicalAddresses);
-
           }
         );
       };
 
-      /**
-       *  use this one!
-       * @param logicalAddress
-       */
-      $scope.addLogicalAddressToAllServiceContracts = function(logicalAddress) {
-        var where = {hsaId: logicalAddress.hsaId};
-        if (!_.find($scope.logicalAddresses, where)) {
-          $scope.logicalAddresses.push(logicalAddress);
-        }
-        _addLogicalAddressToAllServiceContracts(logicalAddress);
+      $scope.addLogiskAdressToAllAnslutningar = function (logiskAdress) {
+        _addLogiskAdressToAllAnslutningar(logiskAdress);
       };
 
-      /**
-       * use this one!
-       * @param logicalAddresses
-       */
-      $scope.addLogicalAddressesToAllServiceContracts = function(logicalAddresses) {
-        _.each(logicalAddresses, function(logicalAddress) {
-          var where = {hsaId: logicalAddress.hsaId};
-          if (!_.find($scope.logicalAddresses, where)) {
-            $scope.logicalAddresses.push(logicalAddress);
-          }
-          _addLogicalAddressToAllServiceContracts(logicalAddress);
-        });
+      $scope.addLogiskAdressToAnslutning = function (logicalAddress, anslutning) {
+        _addLogiskAdressToAnslutning(logicalAddress, anslutning);
       };
 
-      /**
-       * use this one!
-       * @param logicalAddress
-       * @param serviceContract
-       */
-      $scope.addLogicalAddressToServiceContract = function(logicalAddress, serviceContract) {
-        _addLogicalAddressToServiceContract(logicalAddress, serviceContract);
+      $scope.removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
+        _removeLogiskAdressFromAllAnslutningar(logiskAdress);
       };
 
-      /**
-       * use this one!
-       * @param logicalAddresses
-       * @param serviceContract
-       */
-      $scope.addLogicalAddressesToServiceContract = function(logicalAddresses, serviceContract) {
-        _.each(logicalAddresses, function(logicalAddress) {
-          _addLogicalAddressToServiceContract(logicalAddress, serviceContract);
-        });
+      $scope.removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
+        _removeLogiskAdressFromAnslutning(logiskAdress, anslutning);
       };
 
-      $scope.removeLogicalAddressFromAllServiceContracts = function(logicalAddress) {
-        _removeLogicalAddressFromAllServiceContracts(logicalAddress);
-        _.remove($scope.logicalAddresses, {hsaId: logicalAddress.hsaId});
-      };
-
-      $scope.removeLogicalAddressFromServiceContract = function(tag, serviceContract) {
-        var logicalAddressId = tag.hsaId;
-        if (angular.isDefined(serviceContract.logicalAddresses)) {
-          _.remove(serviceContract.logicalAddresses, {hsaId: logicalAddressId});
-        }
-      };
-
-      $scope.sendServiceProducerConnectionOrder = function() {
-        if(!validateForms()) {
+      $scope.sendServiceProducerConnectionOrder = function () {
+        if (!validateForms()) {
+          console.log('order is not valid');
           $scope.orderValid = false;
         } else {
+          console.log('order is valid');
           $scope.orderValid = true;
-          Order.createServiceProducerConnectionOrder($scope.connectServiceProducerRequest).then(function(status) {
+          Order.createServiceProducerConnectionOrder($scope.order).then(function (status) {
             console.log('Status: ' + status);
             if (status === 201) {
               console.log("Going to state");
@@ -299,206 +222,214 @@ angular.module('avApp')
         }
       };
 
-      $scope.$watch('newComponent', function(newValue) {
-        //Everytime this scope model changes
-        //reset all validation in the page
-        $scope.$broadcast('show-errors-reset');
-      });
-      /*
-       Grid config
-       */
+      $scope.copyPersonInChargeToClient = function () {
+        $scope.order.bestallare = $scope.order.producentbestallning.tjanstekomponent.huvudansvarigKontakt;
+      };
 
-      $scope.gridOptions.onRegisterApi = function (gridApi) {
-        //set gridApi on scope
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          checkInstalledAndUpdate(gridApi, row);
+      $scope.addTjanstekonsumentToOrder = function(tjanstekomponent) {
+        if (!$scope.order.konsumentbestallningar) {
+          $scope.order.konsumentbestallningar = [];
+        }
+        var konsumentbestallningId = {
+          tjanstekomponent: {
+            hsaId: tjanstekomponent.hsaId
+          }
+        };
+
+        if (!_.find($scope.order.konsumentbestallningar, konsumentbestallningId)) {
+          $scope.order.konsumentbestallningar.push({
+            tjanstekomponent: _.cloneDeep(tjanstekomponent)
+          });
+        } else {
+          console.log('tjanstekomponent (konsument) already added');
+        }
+      };
+
+      $scope.removeTjanstekonsumentFromOrder = function(tjanstekomponent) {
+        var konsumentbestallningId = {
+          tjanstekomponent: {
+            hsaId: tjanstekomponent.hsaId
+          }
+        };
+        _.remove($scope.order.konsumentbestallningar, konsumentbestallningId)
+      };
+
+      var _addLogiskAdressToAllAnslutningar = function (logiskAdress) {
+        _.forEach($scope.order.producentbestallning.producentanslutningar, function (anslutning) {
+          _addLogiskAdressToAnslutning(logiskAdress, anslutning);
         });
+      };
 
-        gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
-          _.forEach(rows, function (row) {
-            checkInstalledAndUpdate(gridApi, row);
+      var _addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
+        var logiskAdressId = {hsaId: logiskAdress.hsaId};
+        if (logiskAdress._existing) {
+          if (_.isUndefined(anslutning.befintligaLogiskaAdresser)) {
+            anslutning.befintligaLogiskaAdresser = [];
+          }
+          if (!_isLogiskAdressOnAnslutning(logiskAdress, anslutning)) {
+            anslutning.befintligaLogiskaAdresser.push(_.omit(logiskAdress, '_existing'));
+          } else {
+            $log.warn('Can\'t add logisk adress twice');
+          }
+        } else {
+          if (_.isUndefined(anslutning.nyaLogiskaAdresser)) {
+            anslutning.nyaLogiskaAdresser = [];
+          }
+          if (!_isLogiskAdressOnAnslutning(logiskAdress, anslutning)) {
+            if (_isLogiskAdressInBorttagnaLogiskaAdresser(logiskAdress, anslutning)) {
+              _.remove(anslutning.borttagnaLogiskaAdresser, logiskAdressId);
+            } else {
+              anslutning.nyaLogiskaAdresser.push(logiskAdress);
+            }
+          } else {
+            $log.warn('Can\'t add logisk adress twice');
+
+          }
+        }
+        $scope.$broadcast('logisk-adress-added');
+      };
+
+      var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
+        var logiskAdressId = {hsaId: logiskAdress.hsaId};
+        if (anslutning.nyaLogiskaAdresser && _.find(anslutning.nyaLogiskaAdresser, logiskAdressId)) {
+          return true;
+        }
+        if (anslutning.befintligaLogiskaAdresser && _.find(anslutning.befintligaLogiskaAdresser, logiskAdressId)) {
+          if (_isLogiskAdressInBorttagnaLogiskaAdresser(logiskAdress, anslutning)) {
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }
+
+      var _isLogiskAdressInBorttagnaLogiskaAdresser = function (logiskAdress, anslutning) {
+        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
+      }
+
+      var _removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
+        _.each($scope.order.producentbestallning.producentanslutningar, function (anslutning) {
+          _removeLogiskAdressFromAnslutning(logiskAdress, anslutning);
+        });
+      };
+
+      var _removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
+        var logiskAdressId = logiskAdress.hsaId;
+        if (angular.isDefined(anslutning.nyaLogiskaAdresser)) {
+          _.remove(anslutning.nyaLogiskaAdresser, {hsaId: logiskAdressId});
+        }
+        if (angular.isDefined(anslutning.befintligaLogiskaAdresser) && _.find(anslutning.befintligaLogiskaAdresser, {hsaId: logiskAdressId})) {
+          if (!anslutning.borttagnaLogiskaAdresser) {
+            anslutning.borttagnaLogiskaAdresser = [];
+          }
+          if (!_.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdressId})) {
+            anslutning.borttagnaLogiskaAdresser.push(logiskAdress);
+          }
+        }
+        $scope.$broadcast('logisk-adress-removed');
+      };
+
+      var _addAnslutningToOrder = function (anslutning) {
+        console.log('add: ' + anslutning.tjanstekontraktNamnrymd + ', _anslutetForProducent: ' + anslutning._anslutetForProducent);
+        if (!_isAnslutningOnOrder(anslutning)) {
+          var nyAnslutning = _.cloneDeep(anslutning);
+          //TODO: how to handle logiska adresser already added to anslutningar when new anslutning is to be added?
+          if (nyAnslutning._anslutetForProducent) {
+            var serviceComponent = $scope.order.producentbestallning.tjanstekomponent;
+            var environment = $scope.order.driftmiljo;
+            _populateAnslutningWithExistingLogiskaAdresser(nyAnslutning, serviceComponent.hsaId, environment.id);
+            _populateAnslutningWithRivtaProfilAndUrl(serviceComponent, nyAnslutning, environment);
+          }
+          $scope.order.producentbestallning.producentanslutningar.push(nyAnslutning);
+          $scope.$broadcast('anslutning-added');
+        }
+      };
+
+      var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning, tjanstekomponentHsaId, driftmiljoId) {
+        LogicalAddress.getConnectedLogicalAddressesForContract(tjanstekomponentHsaId, driftmiljoId, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (anslutnaLogiskaAdresser) {
+          _.each(anslutnaLogiskaAdresser, function (logiskAdress) {
+            var where = {hsaId: logiskAdress.hsaId};
+            if (!_.find(anslutning.borttagnaLogiskaAdresser, where)) {
+              logiskAdress._existing = true;
+              _addLogiskAdressToAnslutning(logiskAdress, anslutning);
+            }
           });
         });
       };
 
-      $scope.copyPersonInChargeToClient = function() {
-        $scope.connectServiceProducerRequest.client.name = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigNamn;
-        $scope.connectServiceProducerRequest.client.email = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigEpost;
-        $scope.connectServiceProducerRequest.client.phone = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigTelefon;
-      };
-
-      $scope.copyPersonInChargeToTekniskKontakt = function() {
-        $scope.connectServiceProducerRequest.serviceComponent.tekniskKontaktNamn = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigNamn;
-        $scope.connectServiceProducerRequest.serviceComponent.tekniskKontaktEpost = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigEpost;
-        $scope.connectServiceProducerRequest.serviceComponent.tekniskKontaktTelefon = $scope.connectServiceProducerRequest.serviceComponent.huvudAnsvarigTelefon;
-      };
-
-      var checkInstalledAndUpdate = function(gridApi, row) {
-        if (!row.entity.installedInEnvironment || row.entity.installedForProducerHsaId) {
-          gridApi.selection.unSelectRow(row.entity);
-        } else {
-          updateSelectedServiceContracts(row);
-        }
-      };
-
-      var _addLogicalAddressToAllServiceContracts = function(logicalAddress) {
-        _.forEach($scope.connectServiceProducerRequest.serviceContracts, function (serviceContract) {
-          if (!angular.isDefined(serviceContract.logicalAddresses)) {
-            serviceContract.logicalAddresses = [];
-          }
-          if (!_.find(serviceContract.logicalAddresses, {hsaId: logicalAddress.hsaId})) {
-            serviceContract.logicalAddresses.push(logicalAddress);
-          } else {
-            $log.log('Can\'t add a tag twice');
-          }
-          if (!_.find($scope.logicalAddressesForAllServiceContracts, {hsaId: logicalAddress.hsaId})) {
-            $scope.logicalAddressesForAllServiceContracts.push(logicalAddress);
+      var _populateAnslutningWithRivtaProfilAndUrl = function (serviceComponent, anslutning, environment) {
+        Url.getUrlAndProfile(serviceComponent.hsaId, environment.id, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (urlAndProfile) {
+          if (urlAndProfile.rivProfil) {
+            anslutning.rivtaProfil = urlAndProfile.rivProfil;
+            anslutning.url = urlAndProfile.url;
+            anslutning.tidigareRivtaProfil = urlAndProfile.rivProfil;
+            anslutning.tidigareUrl = urlAndProfile.url;
           }
         });
       };
 
-      var _addLogicalAddressToServiceContract = function(logicalAddress, serviceContract) {
-        if (!angular.isDefined(serviceContract.logicalAddresses)) {
-          serviceContract.logicalAddresses = [];
-        }
-        if (!_.find(serviceContract.logicalAddresses, {hsaId: logicalAddress.hsaId})) {
-          serviceContract.logicalAddresses.push(logicalAddress);
-        } else {
-          $log.log('Can\'t add a tag twice');
-        }
-      };
-
-      var _removeLogicalAddressFromAllServiceContracts = function(logicalAddress) {
-        _.each($scope.connectServiceProducerRequest.serviceContracts, function(serviceContract) {
-          _removeLogicalAddressFromServiceContract(logicalAddress, serviceContract);
-        });
-      };
-
-      var _removeLogicalAddressFromServiceContract = function(logicalAddress, serviceContract) {
-        var logicalAddressId = logicalAddress.hsaId;
-        if (angular.isDefined(serviceContract.logicalAddresses)) {
-          _.remove(serviceContract.logicalAddresses, {hsaId: logicalAddressId});
-        }
-      };
-
-      var updateSelectedServiceContracts = function (row) {
-        var serviceContract = row.entity;
-        var serviceContractIdentifier = {
-          namnrymd: serviceContract.namnrymd,
-          majorVersion: serviceContract.majorVersion,
-          minorVersion: serviceContract.minorVersion
+      var _removeAnslutningFromOrder = function (anslutning) {
+        var anslutningId = {
+          tjanstekontraktNamnrymd: anslutning.tjanstekontraktNamnrymd,
+          tjanstekontraktMajorVersion: anslutning.tjanstekontraktMajorVersion,
+          tjanstekontraktMinorVersion: anslutning.tjanstekontraktMinorVersion
         };
-        if (row.isSelected && !_.find($scope.selectedServiceContracts, serviceContractIdentifier)) {
-          $scope.selectedServiceContracts.push(serviceContract);
-          var newServiceContract = _getCleanServiceContract(serviceContract);
-          if ($scope.linkLogicalAddressChoice !== 'individualForContract' && $scope.logicalAddressesForAllServiceContracts) {
-            newServiceContract.logicalAddresses = _.map($scope.logicalAddressesForAllServiceContracts, function(logicalAddress) {
-              return _.clone(logicalAddress);
-            });
-          }
-          $scope.connectServiceProducerRequest.serviceContracts.push(newServiceContract);
-        } else if (!row.isSelected && _.find($scope.selectedServiceContracts, serviceContractIdentifier)) {
-          _.remove($scope.selectedServiceContracts, serviceContractIdentifier);
-          _.remove($scope.connectServiceProducerRequest.serviceContracts, serviceContractIdentifier);
-        }
-        $log.info($scope.selectedServiceContracts);
-      };
-
-      var _addServiceContractToOrder = function(serviceContract) {
-        console.log('add: ' + serviceContract.namnrymd);
-        if (!_isServiceContractSelected(serviceContract)) {
-          $scope.selectedServiceContracts.push(serviceContract);
-          var newServiceContract = _getCleanServiceContract(serviceContract);
-          if ($scope.linkLogicalAddressChoice !== 'individualForContract' && $scope.logicalAddressesForAllServiceContracts) {
-            newServiceContract.logicalAddresses = _.map($scope.logicalAddressesForAllServiceContracts, function(logicalAddress) {
-              return _.clone(logicalAddress);
-            });
-          }
-          $scope.connectServiceProducerRequest.serviceContracts.push(newServiceContract);
+        if (_isAnslutningOnOrder(anslutning)) {
+          _.remove($scope.order.producentbestallning.producentanslutningar, anslutningId);
+          $scope.$broadcast('anslutning-removed');
         }
       };
 
-      var _removeServiceContractFromOrder = function(serviceContract) {
-        console.log('remove: ' + serviceContract.namnrymd);
-        var serviceContractIdentifier = {
-          namnrymd: serviceContract.namnrymd,
-          majorVersion: serviceContract.majorVersion,
-          minorVersion: serviceContract.minorVersion
+      var _isAnslutningOnOrder = function (anslutning) {
+        var anslutningId = {
+          tjanstekontraktNamnrymd: anslutning.tjanstekontraktNamnrymd,
+          tjanstekontraktMajorVersion: anslutning.tjanstekontraktMajorVersion,
+          tjanstekontraktMinorVersion: anslutning.tjanstekontraktMinorVersion
         };
-        if (_isServiceContractSelected(serviceContract)) {
-          _.remove($scope.selectedServiceContracts, serviceContractIdentifier);
-          _.remove($scope.connectServiceProducerRequest.serviceContracts, serviceContractIdentifier);
-        }
-      };
-
-      var _isServiceContractSelected = function(serviceContract) {
-        var serviceContractIdentifier = {
-          namnrymd: serviceContract.namnrymd,
-          majorVersion: serviceContract.majorVersion,
-          minorVersion: serviceContract.minorVersion
-        };
-        return _.find($scope.selectedServiceContracts, serviceContractIdentifier);
-      };
-
-      var _getCleanServiceContract = function(serviceContract) {
-        return _.cloneDeep(serviceContract);
+        return _.find($scope.order.producentbestallning.producentanslutningar, anslutningId);
       };
 
       var reset = function () {
         $scope.selectedServiceDomain = {};
         $scope.selectedLogicalAddress = {};
-        $scope.connectServiceProducerRequest = {
-          serviceComponent: {},
-          serviceDomain: {},
-          serviceContracts: [],
-          serviceConsumer: {},
-          slaFullfilled: false,
-          otherInfo: '',
-          client: $scope.connectServiceProducerRequest.client //keep client info
+        $scope.order = {
+          driftmiljo: $scope.order.driftmiljo, //keep driftmiljo
+          bestallare: $scope.order.bestallare, //keep client info
+          producentbestallning: {
+            tjanstekomponent: {},
+            producentanslutningar: []
+          }
         };
-        $scope.gridOptions.data = [];
         $scope.selectedExistingLogicalAddresses = [];
-        $scope.selectedServiceContracts = [];
-        $scope.linkLogicalAddressChoice = 'sameForAllContracts';
-        $scope.logicalAddressesForAllServiceContracts = [];
-        $scope.selectedServiceConsumer = {};
+        $scope.linkLogicalAddressChoice = 'sameForAllAnslutningar';
         $scope.requestForCallPermissionInSeparateOrder = true;
-        $scope.logicalAddresses = []; //So we don't get any logical address lingering in the tags input
 
         //Reset all form validation that we might have done
         $scope.$broadcast('show-errors-reset');
         $scope.orderValid = true;
       };
 
-      var resetServiceComponent = function() {
-        delete $scope.selectedServiceComponent.selected;
-        $scope.connectServiceProducerRequest.serviceComponent = {};
+      var resetServiceComponent = function () {
+        $scope.order.producentbestallning.tjanstekomponent = {};
       };
 
-      var resetContracts = function() {
-        $scope.gridOptions.data = [];
-        //$scope.selectedServiceContracts = [];
-        //$scope.connectServiceProducerRequest.serviceContracts = [];
-      };
-
-      var resetLogicalAddressesForServiceContracts = function() {
-        $log.info('resetLogicalAddressesForServiceContracts()');
-        _.forEach($scope.connectServiceProducerRequest.serviceContracts, function(serviceContract) {
-          serviceContract.logicalAddresses = [];
+      var _resetLogiskaAdresserForAllAnslutningar = function () {
+        _.forEach($scope.order.producentbestallning.producentanslutningar, function (anslutning) {
+          anslutning.nyaLogiskaAdresser = [];
+          if (!_.isEmpty(anslutning.borttagnaLogiskaAdresser)) {
+            anslutning.borttagnaLogiskaAdresser = [];
+          }
         });
-        $scope.logicalAddresses = [];
-        $scope.logicalAddressesForAllServiceContracts = [];
       };
 
-      var validateForms = function() {
+      var validateForms = function () {
         $scope.$broadcast('show-errors-check-validity');
 
         //Get all divs with class form-group, since it is these that show the
         //has-success or has-error classes
         var formGroupElements = document.getElementsByClassName("form-group");
 
-        return !_.any(formGroupElements, function(formGroup) {
+        return !_.any(formGroupElements, function (formGroup) {
             return angular.element(formGroup).hasClass('has-error');
           }
         );

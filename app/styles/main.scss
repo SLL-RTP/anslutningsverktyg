@@ -94,7 +94,8 @@ $uiGridRowDisabledBackgroundColor: rgb(237, 237, 237);
 $uiGridRowDisabledTextColor: rgb(163, 163, 163);
 $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
 
-.table {
+.table.contract-selector {
+  font-size: $font-size-base-small;
   .contract-row {
     cursor: pointer;
   }
@@ -102,6 +103,12 @@ $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
     background-color: $uiGridRowDisabledBackgroundColor !important;
     color: $uiGridRowDisabledTextColor;
     cursor: default;
+  }
+}
+
+.alert.logical-address {
+  p + p {
+    margin-top: -2px;
   }
 }
 
@@ -144,4 +151,9 @@ $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
 
 .top75 {
   margin-top: 75px;
+}
+
+.disabled > label {
+  color: rgb(163, 163, 163);
+  text-decoration: line-through;
 }
