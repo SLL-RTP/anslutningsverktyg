@@ -7,9 +7,9 @@ angular.module('avApp')
           var deferred = $q.defer();
           var bestallningDTO = fixOrder(order);
           console.log(JSON.stringify(bestallningDTO, null, 2));
-          $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status, headers) {
+          $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
             deferred.resolve(status);
-          }).error(function (data, status, headers) { //TODO: handle errors
+          }).error(function () { //TODO: handle errors
             deferred.reject();
           });
           return deferred.promise;
@@ -87,14 +87,14 @@ angular.module('avApp')
       };
 
       var isUppdateraProducentAnslutning = function(anslutning) {
-        return ((anslutning.befintligaLogiskaAdresser && anslutning.befintligaLogiskaAdresser.length > 0) || anslutning.tidigareRivtaProfil || anslutning.tidigareUrl)
+        return ((anslutning.befintligaLogiskaAdresser && anslutning.befintligaLogiskaAdresser.length > 0) || anslutning.tidigareRivtaProfil || anslutning.tidigareUrl);
       };
 
       var isUppdateraProducentAnslutningChanged = function(uppdateraProducentanslutning) {
-        return uppdateraProducentanslutning.rivtaProfil != uppdateraProducentanslutning.tidigareRivtaProfil
-          || uppdateraProducentanslutning.url != uppdateraProducentanslutning.tidigareUrl
-          || !_.isEmpty(uppdateraProducentanslutning.nyaLogiskaAdresser)
-          || !_.isEmpty(uppdateraProducentanslutning.borttagnaLogiskaAdresser);
+        return uppdateraProducentanslutning.rivtaProfil !== uppdateraProducentanslutning.tidigareRivtaProfil ||
+          uppdateraProducentanslutning.url !== uppdateraProducentanslutning.tidigareUrl ||
+          !_.isEmpty(uppdateraProducentanslutning.nyaLogiskaAdresser) ||
+          !_.isEmpty(uppdateraProducentanslutning.borttagnaLogiskaAdresser);
       };
 
 

@@ -85,7 +85,7 @@ angular.module('avApp')
         $scope.order.konsumentbestallningar = [];
       });
 
-      $scope.$watch('linkLogicalAddressChoice', function (newValue) {
+      $scope.$watch('linkLogicalAddressChoice', function () {
         _resetLogiskaAdresserForAllAnslutningar();
       });
 
@@ -145,7 +145,6 @@ angular.module('avApp')
        * @private
        */
       var _recalculateLogiskaAdresserUnity = function () {
-        var unity = true;
         var nyaLogiskaAdresserIntersection = intersectionFilter($scope.order.producentbestallning.producentanslutningar, 'nyaLogiskaAdresser');
         var befintligaLogiskaAdresserIntersection = intersectionFilter($scope.order.producentbestallning.producentanslutningar, 'befintligaLogiskaAdresser');
 
@@ -214,7 +213,7 @@ angular.module('avApp')
           Order.createServiceProducerConnectionOrder($scope.order).then(function (status) {
             console.log('Status: ' + status);
             if (status === 201) {
-              console.log("Going to state");
+              console.log('Going to state');
               $state.go('serviceProducerOrderConfirmed');
             }
           });
@@ -251,7 +250,7 @@ angular.module('avApp')
             hsaId: tjanstekomponent.hsaId
           }
         };
-        _.remove($scope.order.konsumentbestallningar, konsumentbestallningId)
+        _.remove($scope.order.konsumentbestallningar, konsumentbestallningId);
       };
 
       var _addLogiskAdressToAllAnslutningar = function (logiskAdress) {
@@ -301,11 +300,11 @@ angular.module('avApp')
           return true;
         }
         return false;
-      }
+      };
 
       var _isLogiskAdressInBorttagnaLogiskaAdresser = function (logiskAdress, anslutning) {
         return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
-      }
+      };
 
       var _removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
         _.each($scope.order.producentbestallning.producentanslutningar, function (anslutning) {
@@ -427,7 +426,7 @@ angular.module('avApp')
 
         //Get all divs with class form-group, since it is these that show the
         //has-success or has-error classes
-        var formGroupElements = document.getElementsByClassName("form-group");
+        var formGroupElements = document.getElementsByClassName('form-group');
 
         return !_.any(formGroupElements, function (formGroup) {
             return angular.element(formGroup).hasClass('has-error');

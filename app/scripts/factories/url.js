@@ -11,7 +11,7 @@ angular.module('avApp')
             .success(function (data) {
               console.log(data);
               deferred.resolve(data);
-            }).error(function (data, status, headers) { //TODO: error handling
+            }).error(function () { //TODO: error handling
               deferred.reject();
             });
           return deferred.promise;

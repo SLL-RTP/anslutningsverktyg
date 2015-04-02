@@ -3,7 +3,9 @@
 angular.module('avApp')
   .filter('intersection', function() {
     return function(collection, nameOfSubCollection) {
-      if (collection.length === 0) return [];
+      if (collection.length === 0) {
+        return [];
+      }
       var arrays = _.map(collection, nameOfSubCollection);
       var first = _.first(arrays);
       if (arrays.length === 1) {

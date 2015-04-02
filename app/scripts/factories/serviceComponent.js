@@ -16,7 +16,7 @@ angular.module('avApp')
               }
             }).success(function (data) {
               deferred.resolve(data);
-            }).error(function (data, status, headers) { //TODO: error handling
+            }).error(function () { //TODO: error handling
               deferred.reject();
             });
           } else {
@@ -29,7 +29,7 @@ angular.module('avApp')
           console.log('getServiceComponent: ' + serviceComponentId);
           $http.get(configuration.basePath + '/api/serviceComponents/'+serviceComponentId).success(function (data) {
             deferred.resolve(data);
-          }).error(function (data, status, headers) { //TODO: error handling
+          }).error(function () { //TODO: error handling
             deferred.reject();
           });
           return deferred.promise;
@@ -40,7 +40,7 @@ angular.module('avApp')
           var deferred = $q.defer();
           $http.put(configuration.basePath + '/api/serviceComponents/' + clonedSc.hsaId , clonedSc).success(function() {
             deferred.resolve();
-          }).error(function(data, status, headers) { //TODO: handle errors
+          }).error(function() { //TODO: handle errors
 
           });
           return deferred.promise;

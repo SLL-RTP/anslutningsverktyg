@@ -62,7 +62,7 @@ angular
       .state('serviceProducerOrderConfirmed', {
         url: '/connectServiceProducer/confirmed',
         templateUrl: 'views/serviceProducer/confirmed.html'
-      })
+      });
   }])
   .config(['uiSelectConfig', function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
