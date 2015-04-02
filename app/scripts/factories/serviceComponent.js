@@ -24,10 +24,14 @@ angular.module('avApp')
           }
           return deferred.promise;
         },
-        getServiceComponent: function (serviceComponentId) {
+        getServiceComponent: function (serviceComponentId, driftmiljoId) {
           var deferred = $q.defer();
           console.log('getServiceComponent: ' + serviceComponentId);
-          $http.get(configuration.basePath + '/api/serviceComponents/'+serviceComponentId).success(function (data) {
+          $http.get(configuration.basePath + '/api/serviceComponents/'+serviceComponentId, {
+            params: {
+              takId: driftmiljoId
+            }
+          }).success(function (data) {
             deferred.resolve(data);
           }).error(function () { //TODO: error handling
             deferred.reject();

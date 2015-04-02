@@ -67,7 +67,7 @@ angular.module('avApp')
           if (newValue) {
             reset();
             if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
-              ServiceComponent.getServiceComponent(newValue.hsaId).then(function (result) {
+              ServiceComponent.getServiceComponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
                 console.log(result);
                 $scope.order.producentbestallning.tjanstekomponent = result;
               });
