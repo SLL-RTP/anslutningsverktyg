@@ -222,7 +222,7 @@ angular.module('avApp')
       };
 
       $scope.copyPersonInChargeToClient = function () {
-        $scope.order.bestallare = $scope.order.producentbestallning.tjanstekomponent.huvudansvarigKontakt;
+        $scope.order.bestallare = _.omit($scope.order.producentbestallning.tjanstekomponent.huvudansvarigKontakt, ['hsaId']);
       };
 
       $scope.addTjanstekonsumentToOrder = function(tjanstekomponent) {

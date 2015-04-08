@@ -367,11 +367,11 @@
             </div>
             <div class="form-group" show-errors>
               <div class="col-md-9">
-                <label class="control-label" for="urlInput">URL</label>
+                <label class="control-label" for="urlInput">* URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" required>
-                <span class="help-block" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
-                <span class="help-block" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
+                <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
+                <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
+                <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
               </div>
             </div>
           </form>
@@ -595,49 +595,48 @@
           <div class="col-md-5">
             <div class="row">
               <div class="form-group">
-                <input type="button" class="btn btn-primary btn-sm" ng-click="copyPersonInChargeToClient()" value="Kopiera från huvudansvarig">
+                <input type="button" class="btn btn-primary btn-sm" ng-click="copyPersonInChargeToClient()" value="Kopiera från huvudansvarig" ng-show="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.namn">
               </div>
             </div>
             <div class="row">
               <div class="form-group" show-errors>
-                <label class=" control-label" for="bestallareNamnInput">För- och efternamn</label>
+                <label class=" control-label" for="bestallareNamnInput">* För- och efternamn</label>
                 <input ng-model="order.bestallare.namn"
                        type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
-                       placeholder="" required>
-                <span class="help-block" ng-if="bestallareForm.bestallareNamn.$error.required">För- och efternamn måste vara ifyllt</span>
+                       required>
+                <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareNamn.$error.required">För- och efternamn måste vara ifyllt</span>
               </div>
             </div>
             <div class="row">
               <div class="form-group" show-errors>
-                <label for="bestallareEmailInput" class="control-label">E-postadress</label>
+                <label for="bestallareEmailInput" class="control-label">* E-postadress</label>
                 <input ng-model="order.bestallare.epost" type="email" class="form-control"
-                       id="bestallareEmailInput" name="bestallareMail" placeholder="" required>
-                <span class="help-block" ng-if="bestallareForm.bestallareMail.$error.required">E-postadress måste vara ifyllt</span>
-                <span class="help-block" ng-if="bestallareForm.bestallareMail.$error.email">E-postadress är ej giltig</span>
+                       id="bestallareEmailInput" name="bestallareMail" required>
+                <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.required">E-postadress måste vara ifyllt</span>
+                <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.email">E-postadress är ej giltig</span>
               </div>
             </div>
             <div class="row">
               <div class="form-group" show-errors>
-                <label for="bestallareTelefonInput" class="control-label">Telefon</label>
+                <label for="bestallareTelefonInput" class="control-label">* Telefon</label>
                 <input ng-model="order.bestallare.telefon" type="text" class="form-control"
                        id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
-                <span class="help-block" ng-if="bestallareForm.bestallareTelefon.$error.required">Telefon måste vara ifyllt</span>
+                <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareTelefon.$error.required">Telefon måste vara ifyllt</span>
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
-                <label for="bestallareHsaIdInput" class="control-label">HSA-ID</label>
+              <div class="form-group">
+                <label for="bestallareHsaIdInput" class="control-label">* HSA-ID</label>
                 <input ng-model="order.bestallare.hsaId" type="text" class="form-control"
-                       id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" required>
-                <span class="help-block" ng-if="bestallareForm.bestallareHsaId.$error.required">HSA-ID måste vara ifyllt</span>
+                       id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" readonly>
               </div>
             </div>
             <div class="row">
               <div class="form-group" show-errors>
-                <label for="bestallareRoll" class="control-label">Roll</label>
+                <label for="bestallareRoll" class="control-label">* Roll</label>
                 <input ng-model="order.bestallareRoll" type="text" class="form-control"
                        id="bestallareRoll" name="bestallareRoll" placeholder="" required>
-                <span class="help-block" ng-if="bestallareForm.bestallareRoll.$error.required">Roll måste vara ifyllt</span>
+                <span class="help-block hide-no-error " ng-if="bestallareForm.bestallareRoll.$error.required">Roll måste vara ifyllt</span>
               </div>
             </div>
           </div>

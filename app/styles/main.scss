@@ -157,3 +157,13 @@ $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
   color: rgb(163, 163, 163);
   text-decoration: line-through;
 }
+
+.hide-no-error {
+  display: none
+}
+
+.has-error {
+  .hide-no-error {
+    display: block;
+  }
+}
