@@ -12,14 +12,10 @@ angular
   .module('avApp', [
     'services.config',
     'ngAnimate',
-    'ngCookies',
     'ngResource',
     'ngSanitize',
     'ui.router',
     'ui.bootstrap',
-    'ui.grid',
-    'ui.grid.selection',
-    'ngTagsInput',
     'ui.bootstrap.showErrors',
     'ng.shims.placeholder'
   ])
@@ -64,13 +60,7 @@ angular
         templateUrl: 'views/serviceProducer/confirmed.html'
       });
   }])
-  .config(['tagsInputConfigProvider', function(tagsInputConfigProvider) {
-    tagsInputConfigProvider
-      .setDefaults('tagsInput', {
-        placeholder: '',
-        addOnEnter: false
-      });
-  }]).config(['$httpProvider', function ($httpProvider) {
+  .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('SessionInterceptor');
   }]).config(['showErrorsConfigProvider', function(showErrorsConfigProvider) {
     showErrorsConfigProvider.showSuccess(true);
