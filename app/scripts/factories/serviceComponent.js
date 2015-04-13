@@ -40,7 +40,7 @@ angular.module('avApp')
         },
         updateServiceComponent: function (serviceComponent) {
           var clonedSc = _.clone(serviceComponent);
-          delete clonedSc.class; //TODO: we should handle this in backend
+          delete clonedSc['class']; //TODO: we should handle this in backend
           var deferred = $q.defer();
           $http.put(configuration.basePath + '/api/serviceComponents/' + clonedSc.hsaId , clonedSc).success(function() {
             deferred.resolve();

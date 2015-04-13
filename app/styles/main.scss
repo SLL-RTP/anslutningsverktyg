@@ -167,3 +167,13 @@ $uiGridRowDisabledButtonTextColor: rgb(240, 240, 238);
     display: block;
   }
 }
+
+.centered-content {
+  display: block;
+  text-align: center;
+}
+
+//for angular-shims-placeholder
+.empty {
+  color: #a9a9a9;
+}

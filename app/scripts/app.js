@@ -19,9 +19,9 @@ angular
     'ui.bootstrap',
     'ui.grid',
     'ui.grid.selection',
-    'ui.select',
     'ngTagsInput',
-    'ui.bootstrap.showErrors'
+    'ui.bootstrap.showErrors',
+    'ng.shims.placeholder'
   ])
   .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 
@@ -63,9 +63,6 @@ angular
         url: '/connectServiceProducer/confirmed',
         templateUrl: 'views/serviceProducer/confirmed.html'
       });
-  }])
-  .config(['uiSelectConfig', function(uiSelectConfig) {
-    uiSelectConfig.theme = 'bootstrap';
   }])
   .config(['tagsInputConfigProvider', function(tagsInputConfigProvider) {
     tagsInputConfigProvider

@@ -9,8 +9,8 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
-    function ($rootScope, $scope, $log, $timeout, ServiceDomain, ServiceContract, ServiceComponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
+    function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, ServiceComponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
       $scope.targetEnvironments = environments;
       $scope.rivProfiles = rivProfiles;
       $scope.showDevStuff = configuration.devDebug;
@@ -33,7 +33,6 @@ angular.module('avApp')
       $scope.serviceContractsInSelectedDomain = [];
 
       $scope.selectedLogicalAddress = {};
-      $scope.filteredLogicalAddresses = [];
       $scope.existingLogicalAddresses = [];
       $scope.selectedExistingLogicalAddresses = [];
 
@@ -44,23 +43,19 @@ angular.module('avApp')
 
       $scope.canHandleLogiskaAdresserInUnity = true;
 
-      $scope.filterTjansteproducenter = function (query) {
-        if (!_.isEmpty(query)) {
-          ServiceComponent.getFilteredServiceComponents(query, $scope.order.driftmiljo.id).then(function (result) {
-            $scope.filteredTjansteproducenter = result;
-          });
-        }
-      };
-
-      $scope.filterTjanstekonsumenter = function (query) {
+      $scope.getFilteredTjanstekomponenter = function(query) {
+        var deferred = $q.defer();
         if (!_.isEmpty(query)) {
           ServiceComponent.getFilteredServiceComponents(query, $scope.order.driftmiljo.id).then(function (result) {
             if ($scope.order.producentbestallning.tjanstekomponent && $scope.order.producentbestallning.tjanstekomponent.hsaId) {
               _.remove(result, {hsaId: $scope.order.producentbestallning.tjanstekomponent.hsaId});
             }
-            $scope.filteredTjanstekonsumenter = result;
+            deferred.resolve(result);
           });
+        } else {
+          deferred.resolve();
         }
+        return deferred.promise;
       };
 
       $scope.$watch('selectedTjansteproducent', function (newValue) {
@@ -180,11 +175,10 @@ angular.module('avApp')
         _removeAnslutningFromOrder(anslutning);
       };
 
-      $scope.filterLogicalAddresses = function (logicalAddressQuery) {
-        LogicalAddress.getFilteredLogicalAddresses(logicalAddressQuery).then(function (logicalAddresses) {
-            $scope.filteredLogicalAddresses = logicalAddresses;
-          }
-        );
+      $scope.getFilteredLogiskaAdresser = function(queryString) {
+        var deferred = $q.defer();
+        deferred.resolve(LogicalAddress.getFilteredLogicalAddresses(queryString));
+        return deferred.promise;
       };
 
       $scope.addLogiskAdressToAllAnslutningar = function (logiskAdress) {
@@ -360,8 +354,10 @@ angular.module('avApp')
         Url.getUrlAndProfile(serviceComponent.hsaId, environment.id, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (urlAndProfile) {
           if (urlAndProfile.rivProfil) {
             anslutning.rivtaProfil = urlAndProfile.rivProfil;
-            anslutning.url = urlAndProfile.url;
             anslutning.tidigareRivtaProfil = urlAndProfile.rivProfil;
+          }
+          if (urlAndProfile.url) {
+            anslutning.url = urlAndProfile.url;
             anslutning.tidigareUrl = urlAndProfile.url;
           }
         });
@@ -423,11 +419,9 @@ angular.module('avApp')
 
       var validateForms = function () {
         $scope.$broadcast('show-errors-check-validity');
-
         //Get all divs with class form-group, since it is these that show the
         //has-success or has-error classes
-        var formGroupElements = document.getElementsByClassName('form-group');
-
+        var formGroupElements = document.querySelectorAll('.form-group');
         return !_.any(formGroupElements, function (formGroup) {
             return angular.element(formGroup).hasClass('has-error');
           }

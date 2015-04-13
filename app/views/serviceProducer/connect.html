@@ -36,18 +36,13 @@
         <div class="col-md-5">
           <div class="row">
             <div class="form-group">
-              <ui-select ng-model="$parent.selectedTjansteproducent" theme="bootstrap" reset-search-input="false">
-                <ui-select-match placeholder="Sök befintlig tjänsteproducent"><span ng-if="$select.selected.beskrivning">{{$select.selected.beskrivning}} - </span>{{$select.selected.hsaId}}</ui-select-match>
-                <ui-select-choices
-                  repeat="tjanstekomponent in filteredTjansteproducenter | filter: $select.search"
-                  refresh="filterTjansteproducenter($select.search)"
-                  refresh-delay="200"
-                  >
-                  <div ng-bind-html="((tjanstekomponent.beskrivning ? tjanstekomponent.beskrivning + ' - ' : '') + tjanstekomponent.hsaId) | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
+              <input type="text" placeholder="Sök befintlig tjänsteproducent"
+                     ng-model="$parent.selectedTjansteproducent"
+                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                     typeahead-editable="false"
+                     typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                     class="form-control">
             </div>
-
           </div>
         </div>
       </div>
@@ -168,9 +163,12 @@
           </table>
         </div>
         <div class="col-md-2">
-          <button type="button" style="display: block; margin: 25px auto" class="btn btn-primary" ng-show="anslutningarIValdTjanstedoman.length" ng-click="updateValdaAnslutningar()">
-            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-          </button>
+          <label>&nbsp;</label>
+          <div class="centered-content">
+            <button type="button" class="btn btn-primary" ng-show="anslutningarIValdTjanstedoman.length" ng-click="updateValdaAnslutningar()">
+              <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
         <div class="col-md-5">
           <label>Tjänstekontrakt för beställning</label>
@@ -249,14 +247,11 @@
             <div class="row">
               <div class="form-group">
                 <label>Sök efter logisk adress</label>
-                <ui-select  ng-model="selectedLogicalAddress.selected" theme="bootstrap"
-                            reset-search-input="true">
-                  <ui-select-match placeholder="Namn - HSA ID">{{$select.selected.namn}} - {{$select.selected.hsaId}}</ui-select-match>
-                  <ui-select-choices repeat="logicalAddress in filteredLogicalAddresses| filter: $select.search"
-                                     refresh="filterLogicalAddresses($select.search)" refresh-delay="200">
-                    <div ng-bind-html="logicalAddress.namn | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+                <input type="text" ng-model="selectedLogicalAddress.selected"
+                  type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
+                  typeahead-editable="false"
+                  typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                  class="form-control">
               </div>
             </div>
 
@@ -281,7 +276,7 @@
 
               <div class="form-group top25">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected)">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -369,7 +364,7 @@
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">* URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
-                <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
+                <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" validity-bind-fix required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
                 <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
                 <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
               </div>
@@ -383,16 +378,12 @@
             <div class="row">
               <div class="form-group">
                 <label>Sök efter logisk adress</label>
-                <ui-select ng-model="$parent.selectedLogicalAddress" theme="bootstrap"
-                           reset-search-input="true">
-                  <ui-select-match placeholder="Namn - HSA ID">{{$select.selected.namn}} - {{$select.selected.hsaId}}</ui-select-match>
-                  <ui-select-choices repeat="logicalAddress in filteredLogicalAddresses| filter: $select.search"
-                                     refresh="filterLogicalAddresses($select.search)" refresh-delay="200">
-                    <div ng-bind-html="logicalAddress.namn | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+                <input type="text" ng-model="this.selectedLogicalAddress" ng-init="this.selectedLogicalAddress = ''"
+                       type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
+                       typeahead-editable="false"
+                       typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                       class="form-control">
               </div>
-
             </div>
 
             <div class="row">
@@ -415,7 +406,7 @@
             <div class="row">
               <div class="form-group top25">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning)">
+                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning); this.selectedLogicalAddress = '';">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -519,16 +510,12 @@
             <div class="row">
               <div class="form-group">
                 <label>Sök efter tjänstekonsument</label>
-                <ui-select ng-model="selectedTjanstekonsument.selected" theme="bootstrap" reset-search-input="false">
-                  <ui-select-match placeholder="Sök tjänstekonsument"><span ng-if="$select.selected.beskrivning">{{$select.selected.beskrivning}} - </span>{{$select.selected.hsaId}}</ui-select-match>
-                  <ui-select-choices
-                    repeat="tjanstekomponent in filteredTjanstekonsumenter | filter: $select.search"
-                    refresh="filterTjanstekonsumenter($select.search)"
-                    refresh-delay="200"
-                    >
-                    <div ng-bind-html="((tjanstekomponent.beskrivning ? tjanstekomponent.beskrivning + ' - ' : '') + tjanstekomponent.hsaId) | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+                <input type="text" placeholder="Sök befintlig tjänstekonsument" ng-init="selectedTjanstekonsument.selected = '';"
+                       ng-model="selectedTjanstekonsument.selected"
+                       typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                       typeahead-editable="false"
+                       typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                       class="form-control">
               </div>
             </div>
           </div>
@@ -537,7 +524,7 @@
             <div class="row">
               <div class="form-group top25">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected);">
+                  <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -548,7 +535,7 @@
           <div class="form-group col-md-5">
             <label>Valda tjänstekonsumenter</label>
             <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = order.konsumentbestallningar">
-              <button type="button" class="close" data-dismiss="alert" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekonsument)">×</button>
+              <button type="button" class="close" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)">×</button>
               <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
               <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
             </div>
@@ -660,18 +647,18 @@
   </div>
 
 
-  <!--<h3 ng-show="showDevStuff">sammanfattning:</h3>-->
-  <!--<div ng-show="showDevStuff || showDevStuff === 'true'" class="jumbotron">-->
-    <!--<pre>-->
-<!--canHandleLogiskaAdresserInUnity = {{canHandleLogiskaAdresserInUnity}}-->
+  <h3 ng-show="showDevStuff">sammanfattning:</h3>
+  <div ng-show="showDevStuff || showDevStuff === 'true'" class="jumbotron">
+    <pre>
+canHandleLogiskaAdresserInUnity = {{canHandleLogiskaAdresserInUnity}}
 
-<!--order: {{order | json}}-->
+order: {{order | json}}
 
-<!--selectedServiceComponent: {{selectedServiceComponent | json}}-->
+selectedServiceComponent: {{selectedServiceComponent | json}}
 
-<!--anslutningarIValdTjanstedoman: {{anslutningarIValdTjanstedoman | json}}-->
+anslutningarIValdTjanstedoman: {{anslutningarIValdTjanstedoman | json}}
 
-<!--filteredServiceComponents: {{filteredServiceComponents | json}}-->
-    <!--</pre>-->
-  <!--</div>-->
+filteredServiceComponents: {{filteredServiceComponents | json}}
+    </pre>
+  </div>
 </div>

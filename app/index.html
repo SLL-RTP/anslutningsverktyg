@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--suppress HtmlUnknownTarget -->
 <html class="no-js">
   <head>
@@ -6,11 +6,11 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
-    <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
     <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css" />
     <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
     <!-- endbower -->
@@ -21,14 +21,12 @@
 
     <!--[if lte IE 8]>
     <script>
-      document.createElement('ui-select');
-      document.createElement('ui-select-match');
-      document.createElement('ui-select-choices');
-      document.createElement('ng-tags-input');
+      document.createElement('logisk-adress-alert');
+      document.createElement('nav');
     </script>
     <![endif]-->
   </head>
-  <body ng-app="avApp">
+  <body id="ng-app" ng-app="avApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -60,8 +58,10 @@
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
+    <script src="bower_components/console-polyfill/index.js"></script>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/respond/dest/respond.src.js"></script>
     <![endif]-->
     <!-- endbuild -->
 
@@ -87,11 +87,11 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
-    <script src="bower_components/angular-ui-select/dist/select.js"></script>
-    <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.js"></script>
+    <script src="bower_components/lodash-compat/lodash.js"></script>
+    <script src="bower_components/angular-shims-placeholder/dist/angular-shims-placeholder.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -112,6 +112,7 @@
         <script src="scripts/filters/intersection.js"></script>
         <script src="scripts/filters/notIn.js"></script>
         <script src="scripts/directives/logiskAdressAlert.js"></script>
+        <script src="scripts/directives/validityBindFix.js"></script>
         <!-- endbuild -->
 
     <!-- build:js config.js -->
