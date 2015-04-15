@@ -13,6 +13,14 @@ angular.module('avApp')
               query: lowerCaseQuery
             }
           }).success(function (data) {
+            if (angular.isDefined(data)) {
+              data = _.map(data, function(logiskAdress) {
+                if (logiskAdress.hsaId) {
+                  logiskAdress.hsaId = logiskAdress.hsaId.toUpperCase();
+                }
+                return logiskAdress;
+              });
+            }
             deferred.resolve(data);
           }).error(function () { //TODO: error handling
             deferred.reject();
@@ -30,6 +38,14 @@ angular.module('avApp')
               serviceDomainId: serviceDomainId
             }
           }).success(function (data) {
+            if (angular.isDefined(data)) {
+              data = _.map(data, function(logiskAdress) {
+                if (logiskAdress.hsaId) {
+                  logiskAdress.hsaId = logiskAdress.hsaId.toUpperCase();
+                }
+                return logiskAdress;
+              });
+            }
             deferred.resolve(data);
           }).error(function () { //TODO: error handling
             deferred.reject();
@@ -43,6 +59,14 @@ angular.module('avApp')
         $http.get(configuration.basePath + '/api/serviceComponents/' + serviceComponentId + '/' + environmentId + '/' + serviceContractId + '/' + majorVersion + '/' + minorVersion + '/logicalAddresses')
           .success(function (data) {
             console.log(data);
+            if (angular.isDefined(data)) {
+              data = _.map(data, function(logiskAdress) {
+                if (logiskAdress.hsaId) {
+                  logiskAdress.hsaId = logiskAdress.hsaId.toUpperCase();
+                }
+                return logiskAdress;
+              });
+            }
           deferred.resolve(data);
         }).error(function () { //TODO: error handling
           deferred.reject();

@@ -15,6 +15,14 @@ angular.module('avApp')
                 takId: driftmiljoId
               }
             }).success(function (data) {
+              if (angular.isDefined(data)) {
+                data = _.map(data, function(tjanstekomponent) {
+                  if (tjanstekomponent.hsaId) {
+                    tjanstekomponent.hsaId = tjanstekomponent.hsaId.toUpperCase();
+                  }
+                  return tjanstekomponent;
+                });
+              }
               deferred.resolve(data);
             }).error(function () { //TODO: error handling
               deferred.reject();
@@ -32,6 +40,9 @@ angular.module('avApp')
               takId: driftmiljoId
             }
           }).success(function (data) {
+            if (angular.isDefined(data) && data.hsaId) {
+              data.hsaId = data.hsaId.toUpperCase();
+            }
             deferred.resolve(data);
           }).error(function () { //TODO: error handling
             deferred.reject();
