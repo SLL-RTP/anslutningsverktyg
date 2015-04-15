@@ -196,7 +196,7 @@ angular.module('avApp')
       };
 
       $scope.canAddLogiskAdressToAnslutning = function(logiskAdress, anslutning) {
-        return _isLogiskAdressOnAnslutning(logiskAdress, anslutning);
+        return !_isLogiskAdressOnAnslutning(logiskAdress, anslutning);
       }
 
       $scope.removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
