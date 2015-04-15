@@ -36,8 +36,8 @@ angular.module('avApp')
         var uppdateradProducentanslutningar = [];
         _.each(order.producentbestallning.producentanslutningar, function(anslutning) {
           var cleanAnslutning = cleanObj(anslutning);
-          if (isUppdateraProducentAnslutning(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
-            if (isUppdateraProducentAnslutningChanged) {
+          if (isUppdateraProducentAnslutning(cleanAnslutning)) {
+            if (isUppdateraProducentAnslutningChanged(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
 
               if (!_.isEmpty(cleanAnslutning.befintligaLogiskaAdresser)) {
                 cleanAnslutning.befintligaLogiskaAdresser = _.map(cleanAnslutning.befintligaLogiskaAdresser, function (logiskAdress) {

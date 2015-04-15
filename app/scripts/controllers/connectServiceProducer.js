@@ -65,10 +65,12 @@ angular.module('avApp')
               ServiceComponent.getServiceComponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
                 console.log(result);
                 $scope.order.producentbestallning.tjanstekomponent = result;
+                $scope.updateAnslutningarIValdTjanstedoman();
               });
             } else {
               console.log('detected producer from TAK');
               $scope.order.producentbestallning.tjanstekomponent = _.clone(newValue);
+              $scope.updateAnslutningarIValdTjanstedoman();
             }
           } else {
             reset();
@@ -91,7 +93,7 @@ angular.module('avApp')
         });
       };
 
-      $scope.tjanstedomanSelected = function () {
+      $scope.updateAnslutningarIValdTjanstedoman = function () {
         if ($scope.order.driftmiljo && $scope.order.producentbestallning.tjanstekomponent && $scope.selectedTjanstedoman) {
           var serviceComponentId = $scope.order.producentbestallning.tjanstekomponent.hsaId;
           var environmentId = $scope.order.driftmiljo.id;
@@ -185,9 +187,17 @@ angular.module('avApp')
         _addLogiskAdressToAllAnslutningar(logiskAdress);
       };
 
+      $scope.canAddLogiskAdressToAllAnslutningar = function(logiskAdress) {
+        return _canAddLogiskAdressToAllAnslutningar(logiskAdress);
+      };
+
       $scope.addLogiskAdressToAnslutning = function (logicalAddress, anslutning) {
         _addLogiskAdressToAnslutning(logicalAddress, anslutning);
       };
+
+      $scope.canAddLogiskAdressToAnslutning = function(logiskAdress, anslutning) {
+        return _isLogiskAdressOnAnslutning(logiskAdress, anslutning);
+      }
 
       $scope.removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
         _removeLogiskAdressFromAllAnslutningar(logiskAdress);
@@ -208,6 +218,7 @@ angular.module('avApp')
             console.log('Status: ' + status);
             if (status === 201) {
               console.log('Going to state');
+              reset();
               $state.go('serviceProducerOrderConfirmed');
             }
           });
@@ -253,14 +264,22 @@ angular.module('avApp')
         });
       };
 
+      var _canAddLogiskAdressToAllAnslutningar = function(logiskAdress) {
+        return _.every($scope.order.producentbestallning.producentanslutningar, function(anslutning) {
+          return !_isLogiskAdressOnAnslutning(logiskAdress, anslutning);
+        });
+      }
+
       var _addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = {hsaId: logiskAdress.hsaId};
-        if (logiskAdress._existing) {
+        var nyLogiskAdress = _.clone(logiskAdress);
+        nyLogiskAdress.hsaId = nyLogiskAdress.hsaId.toUpperCase();
+        var logiskAdressId = {hsaId: nyLogiskAdress.hsaId};
+        if (nyLogiskAdress._existing) {
           if (_.isUndefined(anslutning.befintligaLogiskaAdresser)) {
             anslutning.befintligaLogiskaAdresser = [];
           }
-          if (!_isLogiskAdressOnAnslutning(logiskAdress, anslutning)) {
-            anslutning.befintligaLogiskaAdresser.push(_.omit(logiskAdress, '_existing'));
+          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, anslutning)) {
+            anslutning.befintligaLogiskaAdresser.push(_.omit(nyLogiskAdress, '_existing'));
           } else {
             $log.warn('Can\'t add logisk adress twice');
           }
@@ -268,11 +287,11 @@ angular.module('avApp')
           if (_.isUndefined(anslutning.nyaLogiskaAdresser)) {
             anslutning.nyaLogiskaAdresser = [];
           }
-          if (!_isLogiskAdressOnAnslutning(logiskAdress, anslutning)) {
-            if (_isLogiskAdressInBorttagnaLogiskaAdresser(logiskAdress, anslutning)) {
+          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, anslutning)) {
+            if (_isLogiskAdressInBorttagnaLogiskaAdresser(nyLogiskAdress, anslutning)) {
               _.remove(anslutning.borttagnaLogiskaAdresser, logiskAdressId);
             } else {
-              anslutning.nyaLogiskaAdresser.push(logiskAdress);
+              anslutning.nyaLogiskaAdresser.push(nyLogiskAdress);
             }
           } else {
             $log.warn('Can\'t add logisk adress twice');
@@ -283,7 +302,7 @@ angular.module('avApp')
       };
 
       var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = {hsaId: logiskAdress.hsaId};
+        var logiskAdressId = {hsaId: logiskAdress.hsaId.toUpperCase()};
         if (anslutning.nyaLogiskaAdresser && _.find(anslutning.nyaLogiskaAdresser, logiskAdressId)) {
           return true;
         }
@@ -297,7 +316,7 @@ angular.module('avApp')
       };
 
       var _isLogiskAdressInBorttagnaLogiskaAdresser = function (logiskAdress, anslutning) {
-        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
+        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId.toUpperCase()}));
       };
 
       var _removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
@@ -307,7 +326,7 @@ angular.module('avApp')
       };
 
       var _removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = logiskAdress.hsaId;
+        var logiskAdressId = logiskAdress.hsaId.toUpperCase();
         if (angular.isDefined(anslutning.nyaLogiskaAdresser)) {
           _.remove(anslutning.nyaLogiskaAdresser, {hsaId: logiskAdressId});
         }
@@ -341,7 +360,7 @@ angular.module('avApp')
       var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning, tjanstekomponentHsaId, driftmiljoId) {
         LogicalAddress.getConnectedLogicalAddressesForContract(tjanstekomponentHsaId, driftmiljoId, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (anslutnaLogiskaAdresser) {
           _.each(anslutnaLogiskaAdresser, function (logiskAdress) {
-            var where = {hsaId: logiskAdress.hsaId};
+            var where = {hsaId: logiskAdress.hsaId}; //already upper case from backend
             if (!_.find(anslutning.borttagnaLogiskaAdresser, where)) {
               logiskAdress._existing = true;
               _addLogiskAdressToAnslutning(logiskAdress, anslutning);
