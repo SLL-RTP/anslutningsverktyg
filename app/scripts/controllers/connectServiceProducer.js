@@ -185,9 +185,19 @@ angular.module('avApp')
         _addLogiskAdressToAllAnslutningar(logiskAdress);
       };
 
+      $scope.canAddLogiskAdressToAllAnslutningar = function(logiskAdress) {
+        var canAddLogiskAdressToAllAnslutningar = _canAddLogiskAdressToAllAnslutningar(logiskAdress);
+        return canAddLogiskAdressToAllAnslutningar;
+      };
+
       $scope.addLogiskAdressToAnslutning = function (logicalAddress, anslutning) {
         _addLogiskAdressToAnslutning(logicalAddress, anslutning);
       };
+
+      $scope.canAddLogiskAdressToAnslutning = function(logiskAdress, anslutning) {
+        var isLogiskAdressOnAnslutning = _isLogiskAdressOnAnslutning(logiskAdress, anslutning);
+        return !isLogiskAdressOnAnslutning;
+      }
 
       $scope.removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
         _removeLogiskAdressFromAllAnslutningar(logiskAdress);
@@ -252,6 +262,12 @@ angular.module('avApp')
           _addLogiskAdressToAnslutning(logiskAdress, anslutning);
         });
       };
+
+      var _canAddLogiskAdressToAllAnslutningar = function(logiskAdress) {
+        return _.every($scope.order.producentbestallning.producentanslutningar, function(anslutning) {
+          return !_isLogiskAdressOnAnslutning(logiskAdress, anslutning);
+        });
+      }
 
       var _addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
         var logiskAdressId = {hsaId: logiskAdress.hsaId};

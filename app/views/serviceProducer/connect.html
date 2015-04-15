@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="page-header">
-    <h1>Tjänsteproducent: Anslut till tjänstekontrakt
+    <h1>Tjänsteproducent: Administrera anslutning
     </h1>
     <p>Här ansluter du en tjänsteproducent till ett tjänstekontrakt som är installerat i Regional tjänsteplattform.
       För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat.
@@ -29,7 +29,7 @@
   <!-- välj tjänsteproducent panel -->
   <div class="panel panel-primary" ng-show="order.driftmiljo.id">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj tjänsteproducent</h3>
+      <h3 class="panel-title">Välj instans av system som agerar som tjänsteproducent</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -48,48 +48,33 @@
       </div>
       <div ng-show="order.producentbestallning.tjanstekomponent.hsaId">
         <div class="row">
+          <div class="col-md-12">
+            <p>För uppdatering av uppgifter; välj "Administrera systeminformation" i menyn</p>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-3">
             <div class="row">
               <h4>Huvudansvarig</h4>
             </div>
-            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
-              <dl>
-                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.namn}}</dd>
-                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.epost}}</dd>
-                <dd>{{order.producentbestallning.tjanstekomponent.huvudansvarigKontakt.telefon}}</dd>
-              </dl>
-            </div>
-            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
-              <em>ingen information</em>
+            <div class="row">
+              <personkontakt kontakt="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt"></personkontakt>
             </div>
           </div>
           <div class="col-md-3">
             <div class="row">
               <h4>Teknisk kontaktperson</h4>
             </div>
-            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.tekniskKontakt">
-              <dl>
-                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.namn}}</dd>
-                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.epost}}</dd>
-                <dd>{{order.producentbestallning.tjanstekomponent.tekniskKontakt.telefon}}</dd>
-              </dl>
-            </div>
-            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.huvudansvarigKontakt">
-              <em>ingen information</em>
+            <div class="row">
+              <personkontakt kontakt="order.producentbestallning.tjanstekomponent.tekniskKontakt"></personkontakt>
             </div>
           </div>
           <div class="col-md-3">
             <div class="row">
               <h4>Teknisk support</h4>
             </div>
-            <div class="row" ng-show="order.producentbestallning.tjanstekomponent.tekniskSupportKontakt">
-              <dl>
-                <dd>{{order.producentbestallning.tjanstekomponent.tekniskSupportKontakt.epost}}</dd>
-                <dd>{{order.producentbestallning.tjanstekomponent.tekniskSupportKontakt.telefon}}</dd>
-              </dl>
-            </div>
-            <div class="row" ng-hide="order.producentbestallning.tjanstekomponent.tekniskSupportKontakt">
-              <em>ingen information</em>
+            <div class="row">
+              <funktionkontakt kontakt="order.producentbestallning.tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
             </div>
           </div>
           <div class="col-md-3">
@@ -251,6 +236,7 @@
                   type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
                   typeahead-editable="false"
                   typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                  typeahead-on-select="disableFirst = !canAddLogiskAdressToAllAnslutningar($item)"
                   class="form-control">
               </div>
             </div>
@@ -258,7 +244,7 @@
             <div class="row">
               <label>Lägg till ny logisk address</label>
               <div class="form-group">
-                <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID"
+                <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID" ng-change="disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
                        placeholder="HSA ID">
               </div>
             </div>
@@ -271,28 +257,23 @@
             </div>
           </div>
 
-          <div class="col-md-2 col-md-offset-1">
+          <div class="col-md-3">
             <div class="row">
-
-              <div class="form-group top25">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                  </button>
-                </div>
+              <div class="centered-content top25">
+                <button type="button" class="btn btn-primary" ng-disabled="disableFirst" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
+                  <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableFirst"></span>
+                  <span ng-show="disableFirst">redan vald</span>
+                </button>
               </div>
             </div>
-
             <div class="row">
-              <div class="form-group top45">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                  </button>
-                </div>
+              <div class="centered-content top45">
+                <button type="button" class="btn btn-primary" ng-disabled="disableSecond" ng-click="addLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
+                  <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
+                  <span ng-show="disableSecond">redan vald</span>
+                </button>
               </div>
             </div>
-
           </div>
 
           <div class="form-group col-md-5" ng-if="!order.producentbestallning.producentanslutningar[0]._anslutetForProducent">
@@ -382,6 +363,7 @@
                        type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
                        typeahead-editable="false"
                        typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                       typeahead-on-select="this.disableFirst = !canAddLogiskAdressToAnslutning($item, anslutning)"
                        class="form-control">
               </div>
             </div>
@@ -389,7 +371,7 @@
             <div class="row">
               <label>Lägg till ny logisk address</label>
               <div class="form-group">
-                <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID_{{$index}}"
+                <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID_{{$index}}" ng-change="this.disableSecond = !canAddLogiskAdressToAnslutning(newLogicalAddress, anslutning)"
                        placeholder="HSA ID">
               </div>
             </div>
@@ -402,24 +384,22 @@
             </div>
           </div>
 
-          <div class="col-md-2 col-md-offset-1">
+          <div class="col-md-3">
             <div class="row">
-              <div class="form-group top25">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning); this.selectedLogicalAddress = '';">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                  </button>
-                </div>
+              <div class="centered-content top25">
+                <button type="button" class="btn btn-primary" ng-disabled="this.disableFirst" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning); this.selectedLogicalAddress = '';">
+                  <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableFirst"></span>
+                  <span ng-show="this.disableFirst">redan vald</span>
+                </button>
               </div>
             </div>
 
             <div class="row">
-              <div class="form-group top45">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addLogiskAdressToAnslutning(newLogicalAddress, anslutning); newLogicalAddress = {};">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                  </button>
-                </div>
+              <div class="centered-content top45">
+                <button type="button" class="btn btn-primary" ng-disabled="this.disableSecond" ng-click="addLogiskAdressToAnslutning(newLogicalAddress, anslutning); newLogicalAddress = {};">
+                  <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableSecond"></span>
+                  <span ng-show="this.disableSecond">redan vald</span>
+                </button>
               </div>
             </div>
           </div>
@@ -491,7 +471,7 @@
             <label>
               <input ng-model="callPermissionInSeparateOrder" ng-value="true" type="radio" name="callPermissionRadios"
                      id="callPermissionRadios1" ng-init="callPermissionInSeparateOrder=true">
-              Anropsbehörighet kommer begäras via en konsumentanslutningsbeställning
+              Anropsbehörighet kommer begäras via en separat beställning för konsument
             </label>
           </div>
           <div class="radio">
@@ -561,7 +541,7 @@
         <div class="col-md-12">
           <div class="row">
             <div class="form-group">
-              <label for="ovrigInformation">Övrig information</label>
+              <label for="ovrigInformation">Övrig information om beställningen samt feedback om beställningsflödet</label>
               <textarea ng-model="order.otherInfo" id="ovrigInformation" class="form-control"
                         cols="30" rows="10"></textarea>
             </div>
@@ -619,11 +599,10 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
-                <label for="bestallareRoll" class="control-label">* Roll</label>
+              <div class="form-group">
+                <label for="bestallareRoll" class="control-label">Roll</label>
                 <input ng-model="order.bestallareRoll" type="text" class="form-control"
                        id="bestallareRoll" name="bestallareRoll" placeholder="" required>
-                <span class="help-block hide-no-error " ng-if="bestallareForm.bestallareRoll.$error.required">Roll måste vara ifyllt</span>
               </div>
             </div>
           </div>
@@ -642,7 +621,7 @@
   </div>
   <div class="row" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length">
     <div class="col-md-4 col-md-offset-8">
-      <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="sendServiceProducerConnectionOrder()">Skicka</button>
+      <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="sendServiceProducerConnectionOrder()">Beställ</button>
     </div>
   </div>
 
