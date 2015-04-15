@@ -108,6 +108,8 @@ angular.module('avApp')
             return false;
           } else if (propertyName === 'class') {
             return false;
+          } else if (!value) { //remove null properties
+            return false;
           }
           return true;
         });
