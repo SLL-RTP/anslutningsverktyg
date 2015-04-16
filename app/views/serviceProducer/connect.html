@@ -223,7 +223,7 @@
   <!-- samma logiska adresser panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
     <div class="panel-heading">
-      <h3 class="panel-title">Konsument ska ha åtkomst till följande adress/er</h3>
+      <h3 class="panel-title">Välj logisk/a adress/er som skall peka ut tjänsteproducent/er</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -328,7 +328,7 @@
        ng-repeat="anslutning in order.producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
     <div class="panel-heading">
       <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">Välj version av RIVTA-profil och URL för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och logisk/a adress/er som skall peka ut tjänsteproducent/er avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
     </div>
     <div class="panel-body">
       <div class="row">
