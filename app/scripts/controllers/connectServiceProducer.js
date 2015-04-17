@@ -39,7 +39,7 @@ angular.module('avApp')
       $scope.linkLogicalAddressChoice = 'sameForAllAnslutningar';
 
       $scope.orderValid = true;
-
+      $scope.sendOrderClicked = false;
 
       $scope.canHandleLogiskaAdresserInUnity = true;
 
@@ -208,6 +208,7 @@ angular.module('avApp')
       };
 
       $scope.sendServiceProducerConnectionOrder = function () {
+        $scope.sendOrderClicked = true;
         if (!validateForms()) {
           console.log('order is not valid');
           $scope.orderValid = false;
@@ -404,6 +405,7 @@ angular.module('avApp')
       };
 
       var reset = function () {
+        $scope.sendOrderClicked = false;
         $scope.selectedServiceDomain = {};
         $scope.selectedLogicalAddress = {};
         $scope.order = {
@@ -436,6 +438,20 @@ angular.module('avApp')
         });
       };
 
+      $scope.$on('gv-leaving-element-invalid', _recheckOrderValidity);
+      $scope.$on('gv-leaving-element-valid', _recheckOrderValidity);
+      $scope.$on('gv-element-invalid', _recheckOrderValidity);
+      $scope.$on('gv-element-invalid-in-focus', _recheckOrderValidity);
+      $scope.$on('gv-element-valid', _recheckOrderValidity);
+      $scope.$on('gv-element-valid-in-focus', _recheckOrderValidity);
+
+      function _recheckOrderValidity() {
+        if ($scope.sendOrderClicked) {
+          var valid = _checkGlobalValidation();
+          $scope.orderValid = valid;
+        }
+      };
+
       var validateForms = function () {
         $scope.$broadcast('show-errors-check-validity');
         //Get all divs with class form-group, since it is these that show the
@@ -445,6 +461,12 @@ angular.module('avApp')
             return angular.element(formGroup).hasClass('has-error');
           }
         );
+      };
+
+      var _checkGlobalValidation = function() {
+        var formGroupElements = document.querySelectorAll('.form-group.gv-invalid');
+        var returnVal = formGroupElements.length === 0;
+        return returnVal;
       };
     }
   ]

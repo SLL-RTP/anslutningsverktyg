@@ -62,6 +62,4 @@ angular
   }])
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('SessionInterceptor');
-  }]).config(['showErrorsConfigProvider', function(showErrorsConfigProvider) {
-    showErrorsConfigProvider.showSuccess(true);
   }]);

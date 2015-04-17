@@ -341,7 +341,7 @@
                       ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
                       ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
             </div>
-            <div class="form-group" show-errors>
+            <div class="form-group" show-errors global-validation>
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">* URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
@@ -566,7 +566,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label class=" control-label" for="bestallareNamnInput">* För- och efternamn</label>
                 <input ng-model="order.bestallare.namn"
                        type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
@@ -575,7 +575,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label for="bestallareEmailInput" class="control-label">* E-postadress</label>
                 <input ng-model="order.bestallare.epost" type="email" class="form-control"
                        id="bestallareEmailInput" name="bestallareMail" required>
@@ -584,7 +584,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label for="bestallareTelefonInput" class="control-label">* Telefon</label>
                 <input ng-model="order.bestallare.telefon" type="text" class="form-control"
                        id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
