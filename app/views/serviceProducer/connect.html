@@ -223,7 +223,7 @@
   <!-- samma logiska adresser panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
     <div class="panel-heading">
-      <h3 class="panel-title">Konsument ska ha åtkomst till följande adress/er</h3>
+      <h3 class="panel-title">Välj logisk/a adress/er som skall peka ut tjänsteproducent/er</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -328,7 +328,7 @@
        ng-repeat="anslutning in order.producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
     <div class="panel-heading">
       <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">Välj version av RIVTA-profil och URL för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och åtkomst till logisk adress för konsument avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och logisk/a adress/er som skall peka ut tjänsteproducent/er avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -341,7 +341,7 @@
                       ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
                       ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
             </div>
-            <div class="form-group" show-errors>
+            <div class="form-group" show-errors global-validation>
               <div class="col-md-9">
                 <label class="control-label" for="urlInput">* URL</label>
                 <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
@@ -566,7 +566,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label class=" control-label" for="bestallareNamnInput">* För- och efternamn</label>
                 <input ng-model="order.bestallare.namn"
                        type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
@@ -575,7 +575,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label for="bestallareEmailInput" class="control-label">* E-postadress</label>
                 <input ng-model="order.bestallare.epost" type="email" class="form-control"
                        id="bestallareEmailInput" name="bestallareMail" required>
@@ -584,7 +584,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group" show-errors>
+              <div class="form-group" show-errors global-validation>
                 <label for="bestallareTelefonInput" class="control-label">* Telefon</label>
                 <input ng-model="order.bestallare.telefon" type="text" class="form-control"
                        id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
