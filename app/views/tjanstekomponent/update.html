@@ -1,0 +1,173 @@
+<div class="container-fluid">
+  <div class="page-header">
+    <h1>Administrera systeminformation
+    </h1>
+    <p>
+      Här kan du uppdatera den kontaktinformation som gäller för vald tjänsteproducent/tjänstekonsument.
+    </p>
+  </div>
+  <!-- välj tjänstekomponent panel -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj instans av system/e-tjänst som agerar i roll som tjänsteproducent och/eller tjänstekonsument</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="radio-inline">
+              <input type="radio" ng-model="createNew" ng-value="true" ng-change="tjanstekomponent = {}; selectedTjanstekomponent = null;"> Skapa
+            </label>
+            <label class="radio-inline">
+              <input type="radio" ng-model="createNew" ng-value="false"> Administrera befintlig
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-hide="createNew">
+        <div class="col-md-5">
+          <div class="form-group">
+            <input type="text" placeholder="Sök befintlig"
+                   ng-model="selectedTjanstekomponent"
+                   typeahead-wait-ms="200"
+                   typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                   typeahead-editable="false"
+                   typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                   class="form-control">
+          </div>
+        </div>
+      </div>
+      <form role="form" name="tjanstekomponentForm" ng-show="createNew || tjanstekomponent.hsaId">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group" show-errors global-validation>
+              <label for="beskrivning">* Namn</label>
+              <input type="text" class="form-control" id="beskrivning" required
+                     name="beskrivning" ng-model="tjanstekomponent.beskrivning">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.beskrivning.$error.required">Namn måste vara ifyllt</span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="hsaId"><span ng-if="createNew">* </span>HSA-ID</label>
+              <i class="fa fa-info-circle" popover="HSA-id skall vara identiskt med det funktions-HSA-id som står i komponentens SITHS-certifikat." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="hsaId"
+                     name="hsaId" ng-model="tjanstekomponent.hsaId" ng-readonly="!createNew" ng-required="createNew">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.hsaId.$error.required">HSA-ID måste vara ifyllt</span>
+            </div>
+            <div class="form-group">
+              <label for="organisation">Organisation</label>
+              <input type="text" class="form-control" id="organisation"
+                     ng-model="tjanstekomponent.organisation">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <h4>Huvudansvarig</h4>
+            <div class="form-group" show-errors global-validation>
+              <label for="huvudansvarigNamn">* För- och efternamn</label>
+              <input type="text" class="form-control" id="huvudansvarigNamn" required
+                     name="huvudansvarigNamn" ng-model="tjanstekomponent.huvudansvarigKontakt.namn">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigNamn.$error.required">För- och efternamn måste vara ifyllt</span>
+            </div>
+            <div class="form-group">
+              <label for="huvudansvarigHsaId">HSA-ID</label>
+              <input type="text" class="form-control" id="huvudansvarigHsaId"
+                     name="tekniskKontaktHsaId" ng-model="tjanstekomponent.huvudansvarigKontakt.hsaId">
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="huvudansvarigEpost">* E-postadress</label>
+              <input type="email" class="form-control" id="huvudansvarigEpost" required
+                     name="huvudansvarigEpost" ng-model="tjanstekomponent.huvudansvarigKontakt.epost">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigEpost.$error.required">E-postadress måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigEpost.$error.email">E-postadress är ej giltig</span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="huvudansvarigTelefon">* Telefon</label>
+              <input type="text" class="form-control" id="huvudansvarigTelefon" required
+                     name="huvudansvarigTelefon" ng-model="tjanstekomponent.huvudansvarigKontakt.telefon">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigTelefon.$error.required">Telefon måste vara ifyllt</span>
+            </div>
+          </div>
+          <div class="col-md-5 col-md-offset-2">
+            <h4>Teknisk kontaktperson</h4>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskKontaktNamn">* För- och efternamn</label>
+              <input type="text" class="form-control" id="tekniskKontaktNamn" required
+                     name="tekniskKontaktNamn" ng-model="tjanstekomponent.tekniskKontakt.namn">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktNamn.$error.required">För- och efternamn måste vara ifyllt</span>
+            </div>
+            <div class="form-group">
+              <label for="tekniskKontaktHsaId">HSA-ID</label>
+              <input type="text" class="form-control" id="tekniskKontaktHsaId"
+                     name="tekniskKontaktHsaId" ng-model="tjanstekomponent.tekniskKontakt.hsaId">
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskKontaktEpost">* E-postadress</label>
+              <input type="email" class="form-control" id="tekniskKontaktEpost" required
+                     name="tekniskKontaktEpost" ng-model="tjanstekomponent.tekniskKontakt.epost">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktEpost.$error.required">E-postadress måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktEpost.$error.email">E-postadress är ej giltig</span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskKontaktTelefon">* Telefon</label>
+              <input type="text" class="form-control" id="tekniskKontaktTelefon" required
+                     name="tekniskKontaktTelefon" ng-model="tjanstekomponent.tekniskKontakt.telefon">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktTelefon.$error.required">Telefon måste vara ifyllt</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <h4>Teknisk support</h4>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskSupportEpost">* Funktionsbrevlåda</label>
+              <i class="fa fa-info-circle" popover="RTP-förvaltningen använder funktionsbrevlådan för att kontakta tjänsteproducentens tekniska support." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="email" class="form-control" id="tekniskSupportEpost" required
+                     name="tekniskSupportEpost" ng-model="tjanstekomponent.tekniskSupportKontakt.epost">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportEpost.$error.required">E-postadress måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportEpost.$error.email">E-postadress är ej giltig</span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskSupportTelefon">* Telefon</label>
+              <input type="text" class="form-control" id="tekniskSupportTelefon" required
+                     name="tekniskSupportTelefon" ng-model="tjanstekomponent.tekniskSupportKontakt.telefon">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportTelefon.$error.required">Telefon måste vara ifyllt</span>
+            </div>
+          </div>
+          <div class="col-md-5 col-md-offset-2">
+            <h4>Teknisk information</h4>
+            <div class="form-group">
+              <label for="ipaddress">IP-adress</label>
+              <i class="fa fa-info-circle" popover="RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt anges här." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="ipaddress"
+                     ng-model="tjanstekomponent.ipadress">
+            </div>
+            <div class="form-group">
+              <label for="pingForConfigurationURL">URL till övervakningstjänst</label>
+              <i class="fa fa-info-circle" popover="Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="pingForConfigurationURL"
+                     ng-model="tjanstekomponent.pingForConfigurationURL">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- / välj tjänstekomponent panel -->
+  <div class="row" ng-show="!tjanstekomponentValid && tjanstekomponent.hsaId">
+    <div class="col-md-4 col-md-offset-8">
+      <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Det finns fel i beställningen som behöver rättas till!
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="tjanstekomponent.hsaId || createNew">
+    <div class="col-md-4 col-md-offset-8">
+      <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="updateTjanstekomponent()">
+        <span ng-if="createNew">Spara</span>
+        <span ng-if="!createNew">Uppdatera</span>
+      </button>
+    </div>
+  </div>
+</div>
