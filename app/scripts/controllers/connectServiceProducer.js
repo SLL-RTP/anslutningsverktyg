@@ -9,8 +9,8 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'ServiceComponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
-    function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, ServiceComponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'Tjanstekomponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
+    function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, Tjanstekomponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
       $scope.targetEnvironments = environments;
       $scope.rivProfiles = rivProfiles;
       $scope.showDevStuff = configuration.devDebug;
@@ -46,7 +46,7 @@ angular.module('avApp')
       $scope.getFilteredTjanstekomponenter = function(query) {
         var deferred = $q.defer();
         if (!_.isEmpty(query)) {
-          ServiceComponent.getFilteredServiceComponents(query, $scope.order.driftmiljo.id).then(function (result) {
+          Tjanstekomponent.getFilteredTjanstekomponenter(query, $scope.order.driftmiljo.id).then(function (result) {
             if ($scope.order.producentbestallning.tjanstekomponent && $scope.order.producentbestallning.tjanstekomponent.hsaId) {
               _.remove(result, {hsaId: $scope.order.producentbestallning.tjanstekomponent.hsaId});
             }
@@ -62,7 +62,7 @@ angular.module('avApp')
           if (newValue) {
             reset();
             if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
-              ServiceComponent.getServiceComponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
+              Tjanstekomponent.getTjanstekomponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
                 console.log(result);
                 $scope.order.producentbestallning.tjanstekomponent = result;
                 $scope.updateAnslutningarIValdTjanstedoman();

@@ -29,10 +29,14 @@ angular
         url: '/',
         templateUrl: 'views/landing.html'
       })
-      .state('updateContact', {
-        url: '/contact/update',
-        templateUrl: 'views/contact/update.html',
-        controller: 'UpdateContactCtrl'
+      .state('updateTjanstekomponent', {
+        url: '/tjanstekomponent/update',
+        templateUrl: 'views/tjanstekomponent/update.html',
+        controller: 'UpdateTjanstekomponentCtrl'
+      })
+      .state('updateTjanstekomponentConfirmation', {
+        url: '/tjanstekomponent/update/confirmation',
+        templateUrl: 'views/tjanstekomponent/confirmation.html'
       })
       .state('connectServiceProducer', {
         url: '/connectServiceProducer',
