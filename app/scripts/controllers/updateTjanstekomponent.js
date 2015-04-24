@@ -31,7 +31,8 @@ angular.module('avApp')
         } else {
           $scope.tjanstekomponentValid = true;
           console.log($scope.tjanstekomponent);
-          Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, $scope.createNew).then(function(status) {
+          var newForDb = $scope.createNew || _.isUndefined($scope.tjanstekomponent.id) || _.isNull($scope.tjanstekomponent.id);
+          Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, newForDb).then(function(status) {
             console.log('status: ' + status);
             if (Math.floor(status/100) === 2) { //some 200 status
               reset();
