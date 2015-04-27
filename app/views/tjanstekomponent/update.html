@@ -69,11 +69,6 @@
                      name="huvudansvarigNamn" ng-model="tjanstekomponent.huvudansvarigKontakt.namn">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigNamn.$error.required">För- och efternamn måste vara ifyllt</span>
             </div>
-            <div class="form-group">
-              <label for="huvudansvarigHsaId">HSA-ID</label>
-              <input type="text" class="form-control" id="huvudansvarigHsaId"
-                     name="tekniskKontaktHsaId" ng-model="tjanstekomponent.huvudansvarigKontakt.hsaId">
-            </div>
             <div class="form-group" show-errors global-validation>
               <label for="huvudansvarigEpost">* E-postadress</label>
               <input type="email" class="form-control" id="huvudansvarigEpost" required
@@ -95,11 +90,6 @@
               <input type="text" class="form-control" id="tekniskKontaktNamn" required
                      name="tekniskKontaktNamn" ng-model="tjanstekomponent.tekniskKontakt.namn">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktNamn.$error.required">För- och efternamn måste vara ifyllt</span>
-            </div>
-            <div class="form-group">
-              <label for="tekniskKontaktHsaId">HSA-ID</label>
-              <input type="text" class="form-control" id="tekniskKontaktHsaId"
-                     name="tekniskKontaktHsaId" ng-model="tjanstekomponent.tekniskKontakt.hsaId">
             </div>
             <div class="form-group" show-errors global-validation>
               <label for="tekniskKontaktEpost">* E-postadress</label>
