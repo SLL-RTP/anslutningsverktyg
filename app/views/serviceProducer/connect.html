@@ -2,11 +2,11 @@
   <div class="page-header">
     <h1>Tjänsteproducent: Administrera anslutning
     </h1>
-    <p>Här ansluter du en tjänsteproducent till ett tjänstekontrakt som är installerat i Regional tjänsteplattform.
+    <p>Här beställer du anslutning av en tjänsteproducent till, i plattformen, redan installerade tjänstekontrakt.
       För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat.
       Om du inte redan har certifikat, kan du läsa mer om certifikat <a href="http://www.inera.se/siths" target="_blank">här</a>.
       Ofta behövs även brandväggsöppning/ar hos producenten.</p>
-    <p>RTP-förvaltningen konfigurerar upp angiven producent i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>
+    <p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>
   </div>
 
   <!-- välj driftmiljö panel -->
@@ -104,7 +104,7 @@
   <!-- välj tjänstekontrakt panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent.hsaId && order.driftmiljo.id">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj tjänstekontrakt att ansluta till</h3>
+      <h3 class="panel-title">Välj tjänstekontrakt som omfattas</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -193,12 +193,16 @@
   <!-- konfigurera tjänstekontrakt panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent.hsaId && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
-      <h3 class="panel-title">Konfigurera åtkomst till producentens tjänst/er</h3>
+      <!--<h3 class="panel-title">Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information</h3>-->
+      <!--<h3 class="panel-title">Administrera logiska adresser</h3>-->
+      <h3 class="panel-title">Välj hantering av logiska adresser</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <p>Lägg till de logiska adresser som en konsument ska kunna adressera. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.</p>
+          <p>Välj att hantera valda tjänstekontrakt gemensamt eller individuellt. Om du har valt tjänstekontrakt med olika anslutningsstatus eller om valda tjänstekontrakt är konfigurerade med olika logiska adresser måste du administrera dessa tjänstekontrakt individuellt.</p>
+          <!--<p>Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.</p>-->
+
         </div>
       </div>
       <div class="row">
@@ -206,13 +210,13 @@
           <div class="radio" ng-class="{'disabled': !canHandleLogiskaAdresserInUnity}">
             <label>
               <input ng-model="linkLogicalAddressChoice" value="sameForAllAnslutningar" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios1" ng-disabled="!canHandleLogiskaAdresserInUnity">
-              Lägg till samma logiska adresser för alla tjänstekontrakt
+              Administrera samma logiska adresser för valda tjänstekontrakt
             </label>
           </div>
           <div class="radio">
             <label>
               <input ng-model="linkLogicalAddressChoice" value="individualPerAnslutning" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios2">
-              Lägg till logiska adresser individuellt för varje tjänstekontrakt
+              Administrera logiska adresser individuellt för valda tjänstekontrakt
             </label>
           </div>
         </div>
@@ -223,9 +227,14 @@
   <!-- samma logiska adresser panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj logisk/a adress/er som skall peka ut tjänsteproducent/er</h3>
+      <h3 class="panel-title">Administrera samma logiska adresser för valda tjänstekontrakt</h3>
     </div>
     <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <p>Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</p>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-4">
@@ -328,7 +337,7 @@
        ng-repeat="anslutning in order.producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
     <div class="panel-heading">
       <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">Välj version av RIVTA-profil och URL för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
-      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och logisk/a adress/er som skall peka ut tjänsteproducent/er avseende {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+      <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och administrera logisk/a adress/er för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -351,6 +360,11 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+      <div  ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'" class="row top25">
+        <div class="col-md-12">
+          <p>Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</p>
         </div>
       </div>
       <div ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'" class="row top25">
