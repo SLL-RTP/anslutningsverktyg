@@ -40,6 +40,11 @@
       <form role="form" name="tjanstekomponentForm" ng-show="createNew || tjanstekomponent.hsaId">
         <div class="row">
           <div class="col-md-5">
+            <div class="form-group">
+              <label for="organisation">Organisation</label>
+              <input type="text" class="form-control" id="organisation"
+                     ng-model="tjanstekomponent.organisation">
+            </div>
             <div class="form-group" show-errors global-validation>
               <label for="beskrivning">* Namn</label>
               <input type="text" class="form-control" id="beskrivning" required
@@ -52,11 +57,6 @@
               <input type="text" class="form-control" id="hsaId"
                      name="hsaId" ng-model="tjanstekomponent.hsaId" ng-readonly="!createNew" ng-required="createNew">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.hsaId.$error.required">HSA-ID måste vara ifyllt</span>
-            </div>
-            <div class="form-group">
-              <label for="organisation">Organisation</label>
-              <input type="text" class="form-control" id="organisation"
-                     ng-model="tjanstekomponent.organisation">
             </div>
           </div>
         </div>
