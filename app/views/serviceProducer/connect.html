@@ -40,7 +40,7 @@
                      ng-model="$parent.selectedTjansteproducent"
                      typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                      typeahead-editable="false"
-                     typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                     typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                      class="form-control">
             </div>
           </div>
