@@ -1,5 +1,9 @@
 <a>
-  <p bind-html-unsafe="match.model.beskrivning | typeaheadHighlight:query" style="margin-bottom: 0"></p>
+  <p style="margin-bottom: 0">
+    <span ng-if="match.model.organisation" bind-html-unsafe="match.model.organisation | typeaheadHighlight:query"></span>
+    <span ng-if="match.model.organisation">-</span>
+    <span bind-html-unsafe="match.model.beskrivning | typeaheadHighlight:query"></span>
+  </p>
   <p style="margin-bottom: 0; margin-top: -2px">
     <small>
       <span bind-html-unsafe="match.model.hsaId | typeaheadHighlight:query"></span>

@@ -4,6 +4,15 @@ angular.module('avApp')
   .controller('UpdateTjanstekomponentCtrl', ['$scope', '$q', '$state', 'Tjanstekomponent',
     function ($scope, $q, $state, Tjanstekomponent) {
 
+      $scope.$watch('createNew', function(newTjanstekomponent) {
+        console.log('newTjanstekomponent: ' + newTjanstekomponent);
+        $scope.tjanstekomponentForm.$setPristine();
+        $scope.tjanstekomponentForm.$setValidity();
+        $scope.$broadcast('show-errors-reset');
+        $scope.tjanstekomponent = {};
+        $scope.selectedTjanstekomponent = null;
+      });
+
       $scope.getFilteredTjanstekomponenter = function(query) {
         var deferred = $q.defer();
         if (!_.isEmpty(query)) {
@@ -40,6 +49,21 @@ angular.module('avApp')
             }
           });
         }
+      };
+
+      $scope.checkHsaIdUnique = function(hsaId) {
+        hsaId = hsaId.toUpperCase();
+        var deferred = $q.defer();
+        Tjanstekomponent.getTjanstekomponent(hsaId).then(function(tjanstekomponent) {
+          if (_.isUndefined(tjanstekomponent.hsaId) || tjanstekomponent.hsaId === null || tjanstekomponent.hsaId !== hsaId) { //backend might perform freetext search and return non-matching tjanstekomponent
+            deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        }, function() {
+          deferred.resolve();
+        });
+        return deferred.promise;
       };
 
       function _recheckOrderValidity() {
