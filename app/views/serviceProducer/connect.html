@@ -113,7 +113,7 @@
       <div class="row">
         <div class="col-md-5 form-group">
           <label for="service-domain">Tjänstedomän</label>
-          <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain.tjansteDomanId for serviceDomain in serviceDomains" id="service-domain">
+          <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
             <option value="">Välj tjänstedomän</option>
           </select>
         </div>
