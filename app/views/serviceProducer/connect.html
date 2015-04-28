@@ -196,15 +196,15 @@
   <!-- konfigurera tjänstekontrakt panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent.hsaId && order.producentbestallning.producentanslutningar.length">
     <div class="panel-heading">
-      <!--<h3 class="panel-title">Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information</h3>-->
+      <h3 class="panel-title">Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information</h3>
       <!--<h3 class="panel-title">Administrera logiska adresser</h3>-->
-      <h3 class="panel-title">Välj hantering av logiska adresser</h3>
+      <!--<h3 class="panel-title">Välj hantering av logiska adresser</h3>-->
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <p>Välj att hantera valda tjänstekontrakt gemensamt eller individuellt. Om du har valt tjänstekontrakt med olika anslutningsstatus eller om valda tjänstekontrakt är konfigurerade med olika logiska adresser måste du administrera dessa tjänstekontrakt individuellt.</p>
-          <!--<p>Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.</p>-->
+          <!--<p>Välj att hantera valda tjänstekontrakt gemensamt eller individuellt. Om du har valt tjänstekontrakt med olika anslutningsstatus eller om valda tjänstekontrakt är konfigurerade med olika logiska adresser måste du administrera dessa tjänstekontrakt individuellt.</p>-->
+          <p>Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.</p>
 
         </div>
       </div>
@@ -230,14 +230,15 @@
   <!-- samma logiska adresser panel -->
   <div class="panel panel-primary" ng-show="order.producentbestallning.tjanstekomponent && order.producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
     <div class="panel-heading">
-      <h3 class="panel-title">Administrera samma logiska adresser för valda tjänstekontrakt</h3>
+      <h3 class="panel-title">Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</h3>
+      <!--<h3 class="panel-title">Administrera samma logiska adresser för valda tjänstekontrakt</h3>-->
     </div>
     <div class="panel-body">
-      <div class="row">
-        <div class="col-md-12">
-          <p>Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</p>
-        </div>
-      </div>
+      <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+          <!--<p>Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</p>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-4">
