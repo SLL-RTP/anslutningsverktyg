@@ -133,11 +133,13 @@
           </div>
           <div class="col-md-5 col-md-offset-2">
             <h4>Teknisk information</h4>
-            <div class="form-group">
-              <label for="ipaddress">IP-adress</label>
+            <div class="form-group" show-errors global-validation>
+              <label for="ipaddress">* IP-adress</label>
               <i class="fa fa-info-circle" popover="RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt anges här." popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="ipaddress"
-                     ng-model="tjanstekomponent.ipadress">
+              <input type="text" class="form-control" id="ipaddress" required
+                     name="ipadress" ng-model="tjanstekomponent.ipadress" ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.ipadress.$error.required">IP-adress måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.ipadress.$error.pattern">IP-adress ej korrekt ifylld</span>
             </div>
             <div class="form-group">
               <label for="pingForConfigurationURL">URL till övervakningstjänst</label>
