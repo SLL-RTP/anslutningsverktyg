@@ -16,7 +16,7 @@
         <div class="col-md-5">
           <div class="form-group">
             <label class="radio-inline">
-              <input type="radio" ng-model="createNew" ng-value="true" ng-change="tjanstekomponent = {}; selectedTjanstekomponent = null;"> Skapa
+              <input type="radio" ng-model="createNew" ng-value="true"> Skapa
             </label>
             <label class="radio-inline">
               <input type="radio" ng-model="createNew" ng-value="false"> Administrera befintlig
@@ -51,12 +51,19 @@
                      name="beskrivning" ng-model="tjanstekomponent.beskrivning">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.beskrivning.$error.required">Namn måste vara ifyllt</span>
             </div>
-            <div class="form-group" show-errors global-validation>
-              <label for="hsaId"><span ng-if="createNew">* </span>HSA-ID</label>
+            <div ng-if="createNew"><div class="form-group" show-errors="{ trigger: 'keypress' }" global-validation>
+              <label for="hsaIdCreateNew">* HSA-ID</label>
               <i class="fa fa-info-circle" popover="HSA-id skall vara identiskt med det funktions-HSA-id som står i komponentens SITHS-certifikat." popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="hsaId"
-                     name="hsaId" ng-model="tjanstekomponent.hsaId" ng-readonly="!createNew" ng-required="createNew">
-              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.hsaId.$error.required">HSA-ID måste vara ifyllt</span>
+              <input type="text" class="form-control" id="hsaIdCreateNew" one-off-validation="checkHsaIdUnique" one-off-validation-property="unique"
+                     name="hsaIdCreateNew" ng-model="tjanstekomponent.hsaId" required>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.hsaIdCreateNew.$error.required">HSA-ID måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.hsaIdCreateNew.$error.unique">HSA-ID finns redan, välj Administrera befintlig istället</span>
+            </div></div>
+            <div ng-if="!createNew" class="form-group" >
+              <label for="hsaIdNowCreateNew">HSA-ID</label>
+              <i class="fa fa-info-circle" popover="HSA-id skall vara identiskt med det funktions-HSA-id som står i komponentens SITHS-certifikat." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="hsaIdNowCreateNew"
+                     name="hsaId" ng-value="tjanstekomponent.hsaId" readonly>
             </div>
           </div>
         </div>
