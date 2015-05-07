@@ -1,4 +1,4 @@
-**_Moved to https://github.com/skltp-incubator/anslutningsverktyg_**
+**_Moved to https://github.com/SLL-RTP/anslutningsverktyg_**
 
 anslutningsverktyg
 ==================
