@@ -9,14 +9,16 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'Tjanstekomponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
-    function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, Tjanstekomponent, Url, environments, rivProfiles, currentUser, LogicalAddress, Order, configuration, $state, intersectionFilter) {
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'Tjanstekomponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'nat', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
+    function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, Tjanstekomponent, Url, environments, rivProfiles, currentUser, nat, LogicalAddress, Order, configuration, $state, intersectionFilter) {
       $scope.targetEnvironments = environments;
+      $scope.nat = nat;
       $scope.rivProfiles = rivProfiles;
       $scope.showDevStuff = configuration.devDebug;
 
       $scope.order = {
         driftmiljo: {},
+        nat: [],
         producentbestallning: {
           tjanstekomponent: {},
           producentanslutningar: []
@@ -77,6 +79,16 @@ angular.module('avApp')
           }
         }
       );
+
+      $scope.$watch('nat', function() {
+        _.each($scope.nat, function(nat) {
+          if (nat._checked) {
+            _addNatToOrder(nat);
+          } else {
+            _removeNatFromOrder(nat);
+          }
+        });
+      }, true);
 
       $scope.$watch('callPermissionInSeparateOrder', function () {
         $scope.order.konsumentbestallningar = [];
@@ -404,11 +416,26 @@ angular.module('avApp')
         return _.find($scope.order.producentbestallning.producentanslutningar, anslutningId);
       };
 
+      var _addNatToOrder = function (nat) {
+        var newNat = _.cloneDeep(nat);
+        var natId = {id: newNat.id};
+        if (!_.find($scope.order.nat, natId)) {
+          $scope.order.nat.push(newNat);
+        }
+      }
+
+      var _removeNatFromOrder = function(nat) {
+        var natId = {id: nat.id};
+        _.remove($scope.order.nat, natId);
+      }
+
+
       var reset = function () {
         $scope.sendOrderClicked = false;
         $scope.selectedServiceDomain = {};
         $scope.selectedLogicalAddress = {};
         $scope.order = {
+          nat: [],
           driftmiljo: $scope.order.driftmiljo, //keep driftmiljo
           bestallare: $scope.order.bestallare, //keep client info
           producentbestallning: {
