@@ -18,6 +18,7 @@ angular.module('avApp')
 
       var fixOrder = function(order) {
         var driftmiljo = cleanObj(order.driftmiljo);
+        var nat = _.map(order.nat, cleanObj);
         var bestallare = cleanObj(order.bestallare);
         var tjanstekomponent = cleanObj(order.producentbestallning.tjanstekomponent);
         tjanstekomponent.huvudansvarigKontakt = cleanObj(tjanstekomponent.huvudansvarigKontakt);
@@ -26,6 +27,7 @@ angular.module('avApp')
         var bestallningDTO = {
           driftmiljo: driftmiljo,
           bestallare: bestallare,
+          nat: nat,
           bestallareRoll: order.bestallareRoll,
           producentbestallning: {
             tjanstekomponent: tjanstekomponent
