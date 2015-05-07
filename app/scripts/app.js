@@ -56,6 +56,12 @@ angular
             function(UserFactory) {
               return UserFactory.getCurrentUser();
             }
+          ],
+          nat: ['Nat',
+            function(NatFactory) {
+              return NatFactory.getNat();
+            }
+
           ]
         }
       })
