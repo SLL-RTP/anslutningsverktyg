@@ -274,7 +274,7 @@
               <label>Lägg till ny logisk address</label>
               <div class="form-group">
                 <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID" ng-change="disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
-                       placeholder="HSA ID">
+                       placeholder="Adressidentitet">
               </div>
             </div>
 
@@ -406,7 +406,7 @@
               <label>Lägg till ny logisk address</label>
               <div class="form-group">
                 <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID_{{$index}}" ng-change="this.disableSecond = !canAddLogiskAdressToAnslutning(newLogicalAddress, anslutning)"
-                       placeholder="HSA ID">
+                       placeholder="Adressidentitet">
               </div>
             </div>
 
