@@ -9,6 +9,34 @@ Frontend applikation för anslutningsverktyget
 * Node.js
 * Bower
 * Grunt
+* Ruby
+* Compass
+
+Se respektive hemsida för installationsinstruktioner för ditt operativsystem
+
+testat med Node.js v0.12.2, grunt-cli v0.1.13, grunt v0.4.5, bower 1.4.1, ruby 1.9.3p484, Compass 1.0.3
+
+## Project setup
+installera beroenden för att bygga projektet
+
+    npm install
+
+installera beroenden för applikationen
+
+    bower install
+    
+bygga projektet för produktion (hamnar i dist-katalogen)
+
+    grunt build
+    
+bygga projektet för development (hamnar i dist-katalogen)
+
+    grunt build-development
+    
+starta lokal utvecklingsserver på port 9000
+
+    grunt serve
+
 
 ## Config
 Konfiguration för olika miljöer görs i
