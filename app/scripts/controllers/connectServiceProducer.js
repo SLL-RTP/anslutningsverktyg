@@ -239,10 +239,6 @@ angular.module('avApp')
         }
       };
 
-      $scope.copyPersonInChargeToClient = function () {
-        $scope.order.bestallare = _.omit($scope.order.producentbestallning.tjanstekomponent.huvudansvarigKontakt, ['hsaId']);
-      };
-
       $scope.addTjanstekonsumentToOrder = function(tjanstekomponent) {
         if (!$scope.order.konsumentbestallningar) {
           $scope.order.konsumentbestallningar = [];
