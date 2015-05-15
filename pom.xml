@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>se.sll</groupId>
+  <artifactId>av</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <description>Anslutningsplattform GUI</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <scm>
+    <url>https://github.com/SLL-RTP/anslutningsverktyg</url>
+    <connection>scm:git:git@github.com:SLL-RTP/anslutningsverktyg.git</connection>
+    <developerConnection>scm:git:git@github.com:SLL-RTP/anslutningsverktyg.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>external.atlassian.jgitflow</groupId>
+        <artifactId>jgitflow-maven-plugin</artifactId>
+        <version>1.0-m5</version>
+        <configuration>
+          <!-- For specific plugin configuration options,
+          see the Goals documentation page -->
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>pl.allegro</groupId>
+        <artifactId>grunt-maven-plugin</artifactId>
+        <version>1.5.0</version>
+        <configuration>
+          <jsSourceDirectory>./</jsSourceDirectory>
+          <sourceDirectory>${basedir}</sourceDirectory>
+          <!-- grunt target to run -->
+          <target>build</target>
+          <showColors>true</showColors>
+          <gruntBuildDirectory>${basedir}/target/grunt-build</gruntBuildDirectory>
+          <!-- example options usage to filter variables in given resource -->
+          <filteredResources>
+            <filteredResource>maven-properties.json</filteredResource>
+          </filteredResources>
+          <excludedResources>
+            <excludedResource>pom.xml</excludedResource>
+          </excludedResources>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>create-resources</goal>
+              <goal>npm</goal>
+              <!-- or npm-offline if npm failure is not an option -->
+              <goal>bower</goal>
+              <goal>grunt</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <warName>${project.artifactId}##${project.version}</warName>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <resource>
+              <directory>target/grunt-build/dist</directory>
+            </resource>
+          </webResources>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <update>true</update>
+          <mode>war</mode>
+          <uriEncoding>UTF-8</uriEncoding>
+          <port>8999</port>
+          <addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
+          <path>/</path>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+
+
+  </project>
