@@ -37,7 +37,7 @@
           <div class="row">
             <div class="form-group">
               <input type="text" placeholder="Sök befintlig tjänsteproducent"
-                     ng-model="$parent.selectedTjansteproducent"
+                     ng-model="mep.selectedTjansteproducent"
                      typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                      typeahead-editable="false"
                      typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
@@ -662,7 +662,7 @@ canHandleLogiskaAdresserInUnity = {{canHandleLogiskaAdresserInUnity}}
 
 order: {{order | json}}
 
-selectedServiceComponent: {{selectedServiceComponent | json}}
+mep: {{mep | json}}
 
 anslutningarIValdTjanstedoman: {{anslutningarIValdTjanstedoman | json}}
 

@@ -60,9 +60,8 @@ angular.module('avApp')
         return deferred.promise;
       };
 
-      $scope.$watch('selectedTjansteproducent', function (newValue) {
+      $scope.$watch('mep.selectedTjansteproducent', function (newValue) {
           if (newValue) {
-            reset();
             if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
               Tjanstekomponent.getTjanstekomponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
                 console.log(result);
@@ -99,7 +98,7 @@ angular.module('avApp')
       });
 
       $scope.driftmiljoSelected = function () {
-        resetServiceComponent();
+        reset();
         ServiceDomain.listDomains().then(function (domains) {
           $scope.serviceDomains = domains;
         });
@@ -427,8 +426,9 @@ angular.module('avApp')
 
 
       var reset = function () {
+        console.log('--- RESET ---');
         $scope.sendOrderClicked = false;
-        $scope.selectedServiceDomain = {};
+        delete $scope.selectedTjanstedoman;
         $scope.selectedLogicalAddress = {};
         $scope.order = {
           nat: [],
@@ -446,6 +446,14 @@ angular.module('avApp')
         //Reset all form validation that we might have done
         $scope.$broadcast('show-errors-reset');
         $scope.orderValid = true;
+
+        //clear nat checked status on reset
+        _.each($scope.nat, function(nat) {
+          delete nat._checked;
+        });
+
+        $scope.mep = {};
+        $scope.anslutningarIValdTjanstedoman = [];
       };
 
       var resetServiceComponent = function () {
