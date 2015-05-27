@@ -4,7 +4,7 @@
 
   <groupId>se.sll.rtp</groupId>
   <artifactId>av</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <description>Anslutningsplattform GUI</description>
 
@@ -16,7 +16,7 @@
     <url>https://github.com/SLL-RTP/anslutningsverktyg</url>
     <connection>scm:git:git@github.com:SLL-RTP/anslutningsverktyg.git</connection>
     <developerConnection>scm:git:git@github.com:SLL-RTP/anslutningsverktyg.git</developerConnection>
-    <tag>av-1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
