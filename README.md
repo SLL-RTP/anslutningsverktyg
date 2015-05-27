@@ -5,7 +5,7 @@ anslutningsverktyg
 
 Frontend applikation för anslutningsverktyget
 
-## Prerequisites
+## Prerequisites for development
 * Node.js
 * Bower
 * Grunt
@@ -71,3 +71,13 @@ Således in din service kan du göra följande:
 		configuration.enProperty
 	}
 	...
+
+## Maven
+
+bygga projektet (war)
+
+    mvn clean install
+
+release (bygga, tagga, pusha, uppdatera version)
+
+    mvn release:prepare
