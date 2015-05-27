@@ -1,0 +1,5 @@
+<div
+  ng-click="getExternalScopes().fnOne(row)"
+  ng-repeat="col in colContainer.renderedColumns track by col.colDef.name"
+  ng-class="{'ui-grid-cell-disabled': !row.entity.installedInEnvironment || row.entity.installedForProducerHsaId}"
+  class="ui-grid-cell" ui-grid-cell></div>
