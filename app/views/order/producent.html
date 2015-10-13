@@ -1,0 +1,516 @@
+<!-- välj tjänstekontrakt panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.nat.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Välj tjänstekontrakt som omfattas</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-5 form-group">
+        <label for="service-domain">Tjänstedomän</label>
+        <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
+          <option value="">Välj tjänstedomän</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5">
+        <label>Tillgängliga tjänstekontrakt</label>
+        <table class="table table-condensed table-bordered contract-selector">
+          <thead>
+          <tr>
+            <th class="col-md-11">Namn</th>
+            <th class="col-md-1">Version</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-hide="anslutningarIValdTjanstedoman.length">
+            <td colspan="2">
+              <em>inga tillgängliga tjänstekontrakt</em>
+            </td>
+          </tr>
+          <tr ng-repeat="anslutning in anslutningarIValdTjanstedoman"
+              ng-class="{'success': anslutning._selected, 'contract-disabled': !anslutning._finnsIDriftmiljo}"
+              ng-click="anslutning._selected = !anslutning._selected && anslutning._finnsIDriftmiljo"
+              class="contract-row">
+            <td>
+              <span>{{anslutning._namn}}</span>
+              <span class="label label-default" ng-show="!anslutning._finnsIDriftmiljo">ej installerat</span>
+              <span class="label label-warning" ng-show="anslutning._finnsIDriftmiljo && !anslutning._anslutetForProducent">installerat, ej ansluten</span>
+              <span class="label label-info" ng-show="anslutning._anslutetForProducent">ansluten</span>
+              <span class="label label-success" ng-show="anslutning._paBestallning">för beställning</span>
+            </td>
+            <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-2">
+        <label>&nbsp;</label>
+        <div class="centered-content">
+          <button type="button" class="btn btn-primary" ng-show="anslutningarIValdTjanstedoman.length" ng-click="updateValdaAnslutningar()">
+            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <label>Tjänstekontrakt för beställning</label>
+        <table class="table table-condensed table-bordered contract-selector">
+          <thead>
+          <tr>
+            <th class="col-md-1"></th>
+            <th class="col-md-9">Namn</th>
+            <th class="col-md-2">Version</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-hide="producentbestallning.producentanslutningar.length">
+            <td colspan="3">
+              <em>inga tjänstekontrakt valda</em>
+            </td>
+          </tr>
+          <tr ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: '_namn'">
+            <td class="contract-button" style="text-align: center" ng-click="removeAnslutningFromOrder(anslutning)">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </td>
+            <td>
+              <p style="margin-bottom: -5px">{{anslutning._namn}}</p>
+                  <span>
+                    <small>({{anslutning._tjanstedoman}})</small>
+                  </span>
+            </td>
+            <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / välj tjänstekontrakt panel -->
+<!-- konfigurera tjänstekontrakt panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent.hsaId && producentbestallning.producentanslutningar.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <p>Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="radio" ng-class="{'disabled': !canHandleLogiskaAdresserInUnity}">
+          <label>
+            <input ng-model="linkLogicalAddressChoice" value="sameForAllAnslutningar" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios1" ng-disabled="!canHandleLogiskaAdresserInUnity">
+            Administrera samma logiska adresser för valda tjänstekontrakt
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input ng-model="linkLogicalAddressChoice" value="individualPerAnslutning" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios2">
+            Administrera logiska adresser individuellt för valda tjänstekontrakt
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / konfigurera tjänstekontrakt panel -->
+<!-- samma logiska adresser panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
+  <div class="panel-heading">
+    <h3 class="panel-title">Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-4">
+          <div class="row">
+            <div class="form-group">
+              <label>Sök efter logisk adress</label>
+              <input type="text" ng-model="selectedLogicalAddress.selected"
+                     type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
+                     typeahead-editable="false"
+                     typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                     typeahead-on-select="disableFirst = !canAddLogiskAdressToAllAnslutningar($item)"
+                     class="form-control">
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Lägg till ny logisk address</label>
+            <div class="form-group">
+              <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID" ng-change="disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
+                     placeholder="Adressidentitet">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <input ng-model="newLogicalAddress.namn" type="text" class="form-control" id="newLogicalAddress_Name"
+                     placeholder="Namn">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="row">
+            <div class="centered-content top25">
+              <button type="button" class="btn btn-primary" ng-disabled="disableFirst" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
+                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableFirst"></span>
+                <span ng-show="disableFirst">redan vald</span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="centered-content top45">
+              <button type="button" class="btn btn-primary" ng-disabled="disableSecond" ng-click="addLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
+                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
+                <span ng-show="disableSecond">redan vald</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5" ng-if="!producentbestallning.producentanslutningar[0]._anslutetForProducent">
+          <label>Valda logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="success"
+            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+            ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+          </logisk-adress-alert>
+          <p ng-hide="nyaLogiskaAdresser.length">
+            <em>inga logiska adresser valda</em>
+          </p>
+        </div>
+        <div class="form-group col-md-5" ng-if="producentbestallning.producentanslutningar[0]._anslutetForProducent">
+          <label>Nyvalda logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="success"
+            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+            ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+          </logisk-adress-alert>
+          <p ng-hide="nyaLogiskaAdresser.length">
+            <em>inga nya logiska adresser valda</em>
+          </p>
+          <label>Redan anslutna logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="info"
+            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
+            ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = ((producentbestallning.producentanslutningar | intersection:'befintligaLogiskaAdresser') | notIn:(producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser'):'hsaId')">
+          </logisk-adress-alert>
+          <p ng-hide="befintligaLogiskaAdresserAfterFilter.length">
+            <em>samtliga redan anslutna logiska adresser kommer tas bort</em>
+          </p>
+          <label ng-show="(producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser').length">Bortvalda redan anslutna logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="danger"
+            close="addLogiskAdressToAllAnslutningar(logiskAdress)"
+            ng-repeat="logiskAdress in borttagnaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser')">
+          </logisk-adress-alert>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / samma logiska adresser panel -->
+<!-- enskilda tjänstekontrakt panel(er) -->
+<div class="panel panel-primary"
+     ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length"
+     ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
+  <div class="panel-heading">
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">Välj version av RIVTA-profil och URL för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">Välj version av RIVTA-profil, URL och administrera logisk/a adress/er för {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <form name="serviceContractForm">
+          <div class="col-md-3">
+            <label for="rivtaVersion">Version av RIVTA-profil</label>
+            <i class="fa fa-info-circle" popover="Välj den version av RIV TA Basic Profile som kontraktet implementerar." popover-trigger="mouseenter" popover-placement="right"></i>
+            <select id="rivtaVersion" class="form-control" ng-model="anslutning.rivtaProfil"
+                    ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
+                    ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
+          </div>
+          <div class="form-group" show-errors global-validation>
+            <div class="col-md-9">
+              <label class="control-label" for="urlInput">* URL</label>
+              <i class="fa fa-info-circle" popover="För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här." popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" validity-bind-fix required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
+              <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.required">Url måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.url">Url är ej korrekt</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'" class="row top25">
+      <div class="col-md-12">
+        <div class="col-md-4">
+          <div class="row">
+            <div class="form-group">
+              <label>Sök efter logisk adress</label>
+              <input type="text" ng-model="this.selectedLogicalAddress" ng-init="this.selectedLogicalAddress = ''"
+                     type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
+                     typeahead-editable="false"
+                     typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue)"
+                     typeahead-on-select="this.disableFirst = !canAddLogiskAdressToAnslutning($item, anslutning)"
+                     class="form-control">
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Lägg till ny logisk address</label>
+            <div class="form-group">
+              <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID_{{$index}}" ng-change="this.disableSecond = !canAddLogiskAdressToAnslutning(newLogicalAddress, anslutning)"
+                     placeholder="Adressidentitet">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <input ng-model="newLogicalAddress.namn" type="text" class="form-control" id="newLogicalAddress_Name_{{$index}}"
+                     placeholder="Namn">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="row">
+            <div class="centered-content top25">
+              <button type="button" class="btn btn-primary" ng-disabled="this.disableFirst" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning); this.selectedLogicalAddress = '';">
+                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableFirst"></span>
+                <span ng-show="this.disableFirst">redan vald</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="centered-content top45">
+              <button type="button" class="btn btn-primary" ng-disabled="this.disableSecond" ng-click="addLogiskAdressToAnslutning(newLogicalAddress, anslutning); newLogicalAddress = {};">
+                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableSecond"></span>
+                <span ng-show="this.disableSecond">redan vald</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5" ng-if="!anslutning._anslutetForProducent">
+          <label>Valda logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="success"
+            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+            ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+          </logisk-adress-alert>
+          <p ng-hide="anslutning.nyaLogiskaAdresser.length">
+            <em>inga logiska adresser valda</em>
+          </p>
+        </div>
+        <div class="form-group col-md-5" ng-if="anslutning._anslutetForProducent">
+          <label>Nyvalda logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="success"
+            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+            ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+          </logisk-adress-alert>
+          <p ng-hide="anslutning.nyaLogiskaAdresser.length">
+            <em>inga nya logiska adresser valda</em>
+          </p>
+          <label>Redan anslutna logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="info"
+            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
+            ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = (anslutning.befintligaLogiskaAdresser | notIn:anslutning.borttagnaLogiskaAdresser:'hsaId')">
+          </logisk-adress-alert>
+          <p ng-show="!befintligaLogiskaAdresserAfterFilter.length">
+            <em ng-hide="!anslutning.borttagnaLogiskaAdresser.length">samtliga redan anslutna logiska adresser kommer tas bort</em>
+            <em ng-show="!anslutning.borttagnaLogiskaAdresser.length">inga logiska adresser anslutna</em>
+          </p>
+          <label ng-show="anslutning.borttagnaLogiskaAdresser.length">Bortvalda redan anslutna logiska adresser</label>
+          <logisk-adress-alert
+            logisk-adress="logiskAdress"
+            type="danger"
+            close="addLogiskAdressToAnslutning(logiskAdress, anslutning);"
+            ng-repeat="logiskAdress in anslutning.borttagnaLogiskaAdresser">
+          </logisk-adress-alert>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- / enskilda tjänstekontrakt panel(er) -->
+<!-- anropsbehörighet panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Lägg till anropsbehörighet för tjänstekonsument</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <p>För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna.
+          Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="radio">
+          <label>
+            <input ng-model="callPermissionInSeparateOrder" ng-value="true" type="radio" name="callPermissionRadios"
+                   id="callPermissionRadios1" ng-init="callPermissionInSeparateOrder=true">
+            Anropsbehörighet kommer begäras via en separat beställning för konsument
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input ng-model="callPermissionInSeparateOrder" ng-value="false" type="radio" name="callPermissionRadios" id="callPermissionRadios2">
+            Anropsbehörighet ska begäras i samband med denna beställning
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row top25" ng-show="!callPermissionInSeparateOrder">
+      <div class="col-md-12">
+        <div class="col-md-4">
+          <div class="row">
+            <div class="form-group">
+              <label>Sök efter tjänstekonsument</label>
+              <input type="text" placeholder="Sök befintlig tjänstekonsument" ng-init="selectedTjanstekonsument.selected = '';"
+                     ng-model="selectedTjanstekonsument.selected"
+                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                     typeahead-editable="false"
+                     typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
+                     class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+          <div class="row">
+            <div class="form-group top25">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
+                  <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5">
+          <label>Valda tjänstekonsumenter</label>
+          <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
+            <button type="button" class="close" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)">×</button>
+            <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
+            <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
+          </div>
+          <p ng-hide="konsumentbestallningar.length">
+            <em>inga tjänstekonsumenter valda</em>
+          </p>
+          <p class="top25" ng-show="konsumentbestallningar.length">
+            Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / anropsbehörighet panel -->
+<!-- övrigt panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Övrigt</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="form-group">
+            <label for="ovrigInformation">Övrig information om beställningen samt feedback om beställningsflödet</label>
+              <textarea ng-model="producentbestallning.otherInfo" id="ovrigInformation" class="form-control"
+                        cols="30" rows="10"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / övrigt panel -->
+<!-- beställare panel -->
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Beställare</h3>
+  </div>
+  <div class="panel-body">
+    <form name="bestallareForm" role="form">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="form-group" show-errors global-validation>
+              <label class=" control-label" for="bestallareNamnInput">* För- och efternamn</label>
+              <input ng-model="producentbestallning.bestallare.namn"
+                     type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
+                     required>
+              <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareNamn.$error.required">För- och efternamn måste vara ifyllt</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group" show-errors global-validation>
+              <label for="bestallareEmailInput" class="control-label">* E-postadress</label>
+              <input ng-model="producentbestallning.bestallare.epost" type="email" class="form-control"
+                     id="bestallareEmailInput" name="bestallareMail" required>
+              <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.required">E-postadress måste vara ifyllt</span>
+              <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.email">E-postadress är ej giltig</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group" show-errors global-validation>
+              <label for="bestallareTelefonInput" class="control-label">* Telefon</label>
+              <input ng-model="producentbestallning.bestallare.telefon" type="text" class="form-control"
+                     id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
+              <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareTelefon.$error.required">Telefon måste vara ifyllt</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="bestallareHsaIdInput" class="control-label">HSA-ID</label>
+              <input ng-model="producentbestallning.bestallare.hsaId" type="text" class="form-control"
+                     id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="bestallareRoll" class="control-label">Roll</label>
+              <input ng-model="producentbestallning.bestallareRoll" type="text" class="form-control"
+                     id="bestallareRoll" name="bestallareRoll" placeholder="" required>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- / beställare panel -->
+<div class="row" ng-show="!orderValid && producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+  <div class="col-md-4 col-md-offset-8">
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      Det finns fel i beställningen som behöver rättas till!
+    </div>
+  </div>
+</div>
+<div class="row" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+  <div class="col-md-4 col-md-offset-8">
+    <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="submitProducentbestallning()">Beställ</button>
+  </div>
+</div>
+<pre>{{producentbestallning | json}}</pre>

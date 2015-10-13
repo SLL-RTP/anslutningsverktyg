@@ -9,7 +9,7 @@
  */
 
 angular.module('avApp')
-  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'Tjanstekomponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'nat', 'LogicalAddress', 'Order', 'configuration', '$state', 'intersectionFilter',
+  .controller('ConnectServiceProducerCtrl', ['$rootScope', '$scope', '$q', '$log', '$timeout', 'ServiceDomain', 'ServiceContract', 'Tjanstekomponent', 'Url', 'environments', 'rivProfiles', 'currentUser', 'nat', 'LogicalAddress', 'Bestallning', 'configuration', '$state', 'intersectionFilter',
     function ($rootScope, $scope, $q, $log, $timeout, ServiceDomain, ServiceContract, Tjanstekomponent, Url, environments, rivProfiles, currentUser, nat, LogicalAddress, Order, configuration, $state, intersectionFilter) {
       $scope.targetEnvironments = environments;
       $scope.nat = nat;

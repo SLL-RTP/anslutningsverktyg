@@ -1,0 +1,134 @@
+<div class="container-fluid">
+  <div class="page-header"></div>
+  <!-- välj driftmiljö panel -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj miljö</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5 form-group">
+          <label for="environment">Miljö</label>
+          <select id="environment" class="form-control" ng-model="order.driftmiljo" ng-change="selectDriftmiljo()" ng-options="environment.namn for environment in targetEnvironments">
+            <option value="">- Välj -</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj driftmiljö panel -->
+  <!-- välj producent/konsument panel -->
+  <div class="panel panel-primary" ng-if="order.driftmiljo">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj typ av beställning</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5 form-group">
+          <label for="mode">Typ</label>
+          <select id="mode" class="form-control" ng-model="mode" ng-change="selectMode(mode)" ng-options="mode.name for mode in modes">
+            <option value="">- Välj -</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj producent/konsument panel -->
+  <!-- välj tjänstekomponent panel -->
+  <div class="panel panel-primary" ng-if="state.id">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj instans av system som agerar som [[tjänsteproducent]]</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="form-group">
+              <input type="text" placeholder="Sök befintlig tjänstekomponent"
+                     ng-model="mep.selectedTjanstekomponent"
+                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                     typeahead-editable="false"
+                     typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                     class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="order.tjanstekomponent.hsaId">
+        <div class="row">
+          <div class="col-md-12">
+            <p>För uppdatering av uppgifter; välj "Administrera systeminformation" i menyn</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="row">
+              <h4>Huvudansvarig</h4>
+            </div>
+            <div class="row">
+              <personkontakt kontakt="tjanstekomponent.huvudansvarigKontakt"></personkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4>Teknisk kontaktperson</h4>
+            </div>
+            <div class="row">
+              <personkontakt kontakt="tjanstekomponent.tekniskKontakt"></personkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4>Teknisk support</h4>
+            </div>
+            <div class="row">
+              <funktionkontakt kontakt="tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4>Teknisk information</h4>
+            </div>
+            <div class="row">
+              <dl>
+                <dt>IP-adress</dt>
+                <dd ng-show="tjanstekomponent.ipadress">{{tjanstekomponent.ipadress}}</dd>
+                <dd ng-hide="tjanstekomponent.ipadress">
+                  <em>ingen information</em>
+                </dd>
+                <dt>
+                  <span>URL till övervakningstjänst</span>
+                  <i class="fa fa-info-circle" popover="Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten." popover-trigger="mouseenter" popover-placement="bottom"></i>
+                </dt>
+                <dd ng-show="tjanstekomponent.pingForConfigurationURL">{{tjanstekomponent.pingForConfigurationURL}}</dd>
+                <dd ng-hide="tjanstekomponent.pingForConfigurationURL">
+                  <em>ingen information</em>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj tjänstekomponent panel -->
+  <!-- välj nät panel -->
+  <div class="panel panel-primary" ng-show="order.tjanstekomponent.hsaId && order.driftmiljo.id">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj nät</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12 form-group">
+          <label ng-repeat="nat in nat" class="checkbox-inline">
+            <input type="checkbox" ng-model="nat._checked"> {{nat.namn}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj nät panel -->
+  <!-- child state -->
+  <div ui-view></div>
+  <!-- / child state -->
+</div>

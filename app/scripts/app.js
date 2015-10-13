@@ -68,6 +68,60 @@ angular
       .state('serviceProducerOrderConfirmed', {
         url: '/connectServiceProducer/confirmed',
         templateUrl: 'views/serviceProducer/confirmed.html'
+      })
+      .state('order', {
+        resolve: {
+          environments: ['Environment',
+            function(EnvironmentFactory) {
+              return EnvironmentFactory.getAvailableEnvironments();
+            }],
+          currentUser: ['User',
+            function(UserFactory) {
+              return UserFactory.getCurrentUser();
+            }
+          ],
+          nat: ['Nat',
+            function(NatFactory) {
+              return NatFactory.getNat();
+            }
+          ],
+          mainOrder: ['BestallningState', '$q',
+            function(BestallningStateFactory, $q) {
+              var deferred = $q.defer();
+              BestallningStateFactory.init().then(function() {
+                deferred.resolve(BestallningStateFactory.current());
+              });
+              return deferred.promise;
+            }
+          ]
+        },
+        url: '/order',
+        controller: 'OrderMainCtrl',
+        templateUrl: 'views/order/main.html'
+      })
+      .state('order.producent', {
+        resolve: {
+          rivProfiles: ['RivProfile',
+            function(RivProfileFactory) {
+              return RivProfileFactory.getAvailableProfiles();
+            }
+          ]
+        },
+        parent: 'order',
+        url: '/producent',
+        controller: 'OrderProducentCtrl',
+        templateUrl: 'views/order/producent.html'
+      })
+      .state('order.konsument', {
+        parent: 'order',
+        url: '/konsument',
+        controller: 'OrderKonsumentCtrl',
+        templateUrl: 'views/order/konsument.html'
+      })
+      .state('exempelmatris', {
+        url: '/exempelmatris',
+        templateUrl: 'views/exempelmatris/exempelmatris.html',
+        controller: 'ExempelMatrisCtrl'
       });
   }])
   .config(['$httpProvider', function ($httpProvider) {
