@@ -1,1 +1,71 @@
-konsument.html
+<!-- välj tjänstekontrakt panel -->
+<div class="panel panel-primary" ng-show="konsumentbestallning.nat.length">
+  <div class="panel-heading">
+    <h3 class="panel-title">Välj tjänstekontrakt som omfattas</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-5 form-group">
+        <label for="service-domain">Tjänstedomän</label>
+        <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
+          <option value="">Välj tjänstedomän</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" ng-show="selectedTjanstedoman">
+      <div class="col-md-12 matrix">
+        <table class="table table-condensed table-bordered detached-header">
+          <thead>
+          <tr>
+            <th class="la-name-container">&nbsp;</th>
+            <th ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="contract-name-container" scrollbar-pad="$last">
+              <div class="rotated-text">
+                <div class="rotated-text__inner">
+                  <span>{{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</span>
+                </div>
+              </div>
+            </th>
+          </tr>
+          </thead>
+          <tbody ng-if="logiskaAdresser.length">
+          <tr>
+            <td>
+              <label for="laFilter">Filtrera adresser:</label>
+              <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
+            </td>
+            <td ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="la-checkbox-container" scrollbar-pad="$last">
+              <div>
+                <label for="checkAll">Välj alla</label>
+                <input id="checkAll" type="checkbox" ng-model="anslutning.checkAll" ng-change="selectAllLogiskaAdresser(anslutning)">
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="selector">
+          <table class="table table-condensed table-bordered">
+            <tbody>
+            <tr ng-repeat="la in logiskaAdresser">
+              <th class="la-name-container">
+                <p>{{la.namn}}</p>
+                <small>{{la.hsaId}}</small>
+              </th>
+              <td ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="la-checkbox-container" ng-class="{'checkbox-disabled': matrix[la.hsaId][contractKey(anslutning)].disabled, 'removed': matrix[la.hsaId][contractKey(anslutning)].installed && !matrix[la.hsaId][contractKey(anslutning)].checked, 'added': !matrix[la.hsaId][contractKey(anslutning)].installed && matrix[la.hsaId][contractKey(anslutning)].checked}">
+                <div ng-if="!matrix[la.hsaId][contractKey(anslutning)].disabled">
+                  <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(anslutning)].checked" ng-disabled="matrix[la.hsaId][contractKey(anslutning)].disabled">
+                </div>
+              </td>
+            </tr>
+            <tr ng-if="!logiskaAdresser.length">
+              <td>
+                <em>inga logiska adresser hittades</em>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / välj tjänstekontrakt panel -->

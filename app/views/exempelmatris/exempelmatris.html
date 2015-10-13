@@ -78,7 +78,7 @@
             <thead>
             <tr>
               <th class="fw">&nbsp;</th>
-              <th ng-repeat="tjk in contractData" style="text-align: center" ng-class="{'last-in-row': $last}">
+              <th ng-repeat="tjk in contractData" style="text-align: center" scrollbar-pad="$last">
                 <div class="rotated-text">
                   <div class="rotated-text__inner">
                     <span>{{tjk.namn}}</span>
@@ -96,7 +96,7 @@
                 <label for="laFilter">Filtrera adresser:</label>
                 <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
               </td>
-              <td ng-repeat="tjk in contractData" style="text-align: center" ng-class="{'last-in-row': $last}">
+              <td ng-repeat="tjk in contractData" style="text-align: center" scrollbar-pad="$last">
                 <div style="margin-top: 5px">
                   <label for="mep">Välj alla</label>
                   <input id="mep" type="checkbox" ng-model="tjk.checkAll" ng-change="selectAll(tjk)">
