@@ -1,4 +1,19 @@
 {
-  "sv": {},
+  "sv": {
+    "navbar": {
+      "title": "Hantera kommunikation via Regional tjänsteplattform",
+      "testenv": "TESTMILJÖ"
+    },
+    "sidebar": {
+      "producer": {
+        "header": "Tjänsteproducent",
+        "admin_link": "Administrera anslutning"
+      },
+      "system_information": {
+        "header": "Systeminformation",
+        "admin_link": "Administrera systeminformation"
+      }
+    }
+  },
   "en": {}
 }
