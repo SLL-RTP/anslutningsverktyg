@@ -56,6 +56,15 @@
           "title": "Välj nät"
         }
       }
+    },
+    "personkontakt": {
+      "no_name": "<<namn>>",
+      "no_email": "<<e-post>>",
+      "no_phone": "<<telefonnummer>>"
+    },
+    "funktionkontakt": {
+      "no_email": "<<e-post>>",
+      "no_phone": "<<telefonnummer>>"
     }
   },
   "en": {}
