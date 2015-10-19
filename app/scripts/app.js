@@ -17,9 +17,10 @@ angular
     'ui.router',
     'ui.bootstrap',
     'ui.bootstrap.showErrors',
-    'ng.shims.placeholder'
+    'ng.shims.placeholder',
+    'pascalprecht.translate'
   ])
-  .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$translateProvider', 'translations', function ($stateProvider, $urlRouterProvider, $translateProvider, translations) {
 
     $urlRouterProvider.otherwise('/');
 
@@ -123,6 +124,16 @@ angular
         templateUrl: 'views/exempelmatris/exempelmatris.html',
         controller: 'ExempelMatrisCtrl'
       });
+
+    //add translations to $translateProvider
+    _.forOwn(translations, function (translationMap, languageKey) {
+      $translateProvider.translations(languageKey, translationMap);
+    });
+
+    //set up $translateProvider
+    $translateProvider.useSanitizeValueStrategy('escape');
+    $translateProvider.preferredLanguage('sv');
+
   }])
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('SessionInterceptor');

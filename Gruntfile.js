@@ -111,11 +111,12 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
+          '.tmp/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       },
       config: {
-        files: ['config/{,*/}*.{js,json}'],
+        files: ['config/{,*/,*/*/}*.{js,json}'],
         tasks: ['ngconstant:development']
       }
     },
