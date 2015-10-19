@@ -3,14 +3,14 @@
   <!-- välj driftmiljö panel -->
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj miljö</h3>
+      <h3 class="panel-title" translate="order.main.env_panel.title"></h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5 form-group">
-          <label for="environment">Miljö</label>
+          <label for="environment" translate="order.main.env_panel.label"></label>
           <select id="environment" class="form-control" ng-model="order.driftmiljo" ng-change="selectDriftmiljo()" ng-options="environment.namn for environment in targetEnvironments">
-            <option value="">- Välj -</option>
+            <option value="" translate="order.main.env_panel.select_placeholder"></option>
           </select>
         </div>
       </div>
@@ -20,14 +20,14 @@
   <!-- välj producent/konsument panel -->
   <div class="panel panel-primary" ng-if="order.driftmiljo">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj typ av beställning</h3>
+      <h3 class="panel-title" translate="order.main.order_type_panel.title"></h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5 form-group">
-          <label for="mode">Typ</label>
+          <label for="mode" translate="order.main.order_type_panel.label"></label>
           <select id="mode" class="form-control" ng-model="mode" ng-change="selectMode(mode)" ng-options="mode.name for mode in modes">
-            <option value="">- Välj -</option>
+            <option value="" translate="order.main.order_type_panel.select_placeholder"></option>
           </select>
         </div>
       </div>
@@ -37,14 +37,14 @@
   <!-- välj tjänstekomponent panel -->
   <div class="panel panel-primary" ng-if="state.id">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj instans av system som agerar som TODO: {{state.id}}</h3>
+      <h3 class="panel-title">{{'order.main.komponent_panel.title' | translate}} {{'order.main.komponent_panel.title_type.' + state.id | translate}}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5">
           <div class="row">
             <div class="form-group">
-              <input type="text" placeholder="Sök befintlig tjänstekomponent"
+              <input type="text" placeholder="{{'order.main.komponent_panel.select_placeholder' | translate}}"
                      ng-model="mep.selectedTjanstekomponent"
                      typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                      typeahead-editable="false"
@@ -57,13 +57,13 @@
       <div ng-show="order.tjanstekomponent.hsaId">
         <div class="row">
           <div class="col-md-12">
-            <p>För uppdatering av uppgifter; välj "Administrera systeminformation" i menyn</p>
+            <p translate="order.main.komponent_panel.update_info_p"></p>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
             <div class="row">
-              <h4>Huvudansvarig</h4>
+              <h4 translate="order.main.komponent_panel.huvudansvarig_h"></h4>
             </div>
             <div class="row">
               <personkontakt kontakt="tjanstekomponent.huvudansvarigKontakt"></personkontakt>
@@ -71,7 +71,7 @@
           </div>
           <div class="col-md-3">
             <div class="row">
-              <h4>Teknisk kontaktperson</h4>
+              <h4 translate="order.main.komponent_panel.teknisk_kontakt_h"></h4>
             </div>
             <div class="row">
               <personkontakt kontakt="tjanstekomponent.tekniskKontakt"></personkontakt>
@@ -79,7 +79,7 @@
           </div>
           <div class="col-md-3">
             <div class="row">
-              <h4>Teknisk support</h4>
+              <h4 translate="order.main.komponent_panel.teknisk_support_h"></h4>
             </div>
             <div class="row">
               <funktionkontakt kontakt="tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
@@ -87,22 +87,22 @@
           </div>
           <div class="col-md-3">
             <div class="row">
-              <h4>Teknisk information</h4>
+              <h4 translate="order.main.komponent_panel.teknisk_info.header"></h4>
             </div>
             <div class="row">
               <dl>
-                <dt>IP-adress</dt>
+                <dt translate="order.main.komponent_panel.teknisk_info.ip"></dt>
                 <dd ng-show="tjanstekomponent.ipadress">{{tjanstekomponent.ipadress}}</dd>
                 <dd ng-hide="tjanstekomponent.ipadress">
-                  <em>ingen information</em>
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt>
-                  <span>URL till övervakningstjänst</span>
-                  <i class="fa fa-info-circle" popover="Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten." popover-trigger="mouseenter" popover-placement="bottom"></i>
+                  <span translate="order.main.komponent_panel.teknisk_info.pingForConfigurationURL"></span>
+                  <i class="fa fa-info-circle" popover="{{'order.main.komponent_panel.teknisk_info.pingForConfigurationURL_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
                 </dt>
                 <dd ng-show="tjanstekomponent.pingForConfigurationURL">{{tjanstekomponent.pingForConfigurationURL}}</dd>
                 <dd ng-hide="tjanstekomponent.pingForConfigurationURL">
-                  <em>ingen information</em>
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
               </dl>
             </div>
@@ -115,7 +115,7 @@
   <!-- välj nät panel -->
   <div class="panel panel-primary" ng-show="order.tjanstekomponent.hsaId && order.driftmiljo.id">
     <div class="panel-heading">
-      <h3 class="panel-title">Välj nät</h3>
+      <h3 class="panel-title" translate="order.main.nat_panel.title"></h3>
     </div>
     <div class="panel-body">
       <div class="row">
