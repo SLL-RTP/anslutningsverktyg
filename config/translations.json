@@ -13,6 +13,11 @@
         "header": "Systeminformation",
         "admin_link": "Administrera systeminformation"
       }
+    },
+    "landing": {
+      "header": "Beställningsstöd för SLL:s regionala tjänsteplattform",
+      "p1": "I menyval Administrera anslutning beställer du anslutning av en tjänsteproducent till tjänstekontrakt som är installerat i regional tjänsteplattform, anger logisk/a adress/er samt har möjlighet att beställa anropsbehörighet (etablera samverkan) mellan producent och redan ansluten konsument.",
+      "p2": "I menyval Administrera systeminformation registrerar du information om instans av system samt information om kontaktpersoner för instansen."
     }
   },
   "en": {}
