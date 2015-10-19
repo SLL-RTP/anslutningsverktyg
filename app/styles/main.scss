@@ -254,3 +254,10 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
 }
 
 // -- consumer matrix [end]
+
+.navbar.navbar-testenv {
+  background-color: #e48723;
+  .navbar-brand {
+    span { background-color: #8B0000; }
+  }
+}

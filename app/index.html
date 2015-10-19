@@ -32,10 +32,10 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-class="{'navbar-testenv': configuration.testBanner}">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Hantera kommunikation via Regional tjänsteplattform</a>
+          <a class="navbar-brand" href="#">Hantera kommunikation via Regional tjänsteplattform <span ng-if="configuration.testBanner">&nbsp;TESTMILJÖ&nbsp;</span></a>
         </div>
       </div>
     </nav>
@@ -90,6 +90,7 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/lodash-compat/lodash.js"></script>
     <script src="bower_components/angular-shims-placeholder/dist/angular-shims-placeholder.js"></script>
     <!-- endbower -->
@@ -97,6 +98,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/constants.js"></script>
         <script src="scripts/controllers/connectServiceProducer.js"></script>
         <script src="scripts/controllers/updateTjanstekomponent.js"></script>
         <script src="scripts/controllers/exempelMatris.js"></script>
@@ -127,9 +129,5 @@
         <script src="scripts/directives/oneOffValidation.js"></script>
         <script src="scripts/directives/scrollbarPad.js"></script>
         <!-- endbuild -->
-
-    <!-- build:js config.js -->
-        <script src="scripts/services/config.js"></script>
-    <!-- endbuild -->
 </body>
 </html>

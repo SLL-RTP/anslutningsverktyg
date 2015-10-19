@@ -10,7 +10,7 @@
  */
 angular
   .module('avApp', [
-    'services.config',
+    'avApp.constants',
     'ngAnimate',
     'ngResource',
     'ngSanitize',
@@ -126,4 +126,7 @@ angular
   }])
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('SessionInterceptor');
+  }])
+  .run(['$rootScope', 'configuration', function($rootScope, configuration) {
+    $rootScope.configuration = configuration;
   }]);
