@@ -63,10 +63,12 @@ angular.module('avApp')
         }, 100));
 
         $scope.$on('anslutning-added', _.debounce(function () {
+          $scope.updateAnslutningarIValdTjanstedoman();
           _recalculateLogiskaAdresserUnity();
         }, 100));
 
         $scope.$on('anslutning-removed', _.debounce(function () {
+          $scope.updateAnslutningarIValdTjanstedoman();
           _recalculateLogiskaAdresserUnity();
         }, 100));
 
