@@ -55,6 +55,157 @@
         "nat_panel": {
           "title": "Välj nät"
         }
+      },
+      "producent": {
+        "select_kontrakt_panel": {
+          "title": "Välj tjänstekontrakt som omfattas",
+          "tjanstedoman": {
+            "label": "Tjänstedomän",
+            "select_placeholder": "- Välj -"
+          },
+          "tjanstekontrakt": {
+            "label": "Tillgängliga tjänstekontrakt",
+            "thead": {
+              "name": "Namn",
+              "version": "Version"
+            },
+            "no_contracts": "inga tillgängliga tjänstekontrakt"
+          },
+          "anslutning": {
+            "status": {
+              "not_installed": "ej installerat",
+              "not_connected": "installerat, ej ansluten",
+              "connected": "ansluten",
+              "on_order": "för beställning"
+            }
+          },
+          "order": {
+            "label": "Tjänstekontrakt för beställning",
+            "thead": {
+              "name": "Namn",
+              "version": "Version"
+            },
+            "no_contracts": "inga tjänstekontrakt valda"
+          }
+        },
+        "logiska_adresser_choices_panel": {
+          "title": "Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information",
+          "p": "Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.",
+          "label": {
+            "unified": "Administrera samma logiska adresser för valda tjänstekontrakt",
+            "individual": "Administrera logiska adresser individuellt för valda tjänstekontrakt"
+          }
+        },
+        "logiska_adresser_selections_panel": {
+          "title": "Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning",
+          "search": {
+            "label": "Sök efter logisk adress"
+          },
+          "add": {
+            "label": "Lägg till ny logisk address",
+            "placeholder": {
+              "hsaId": "Adressidentitet",
+              "namn": "Namn"
+            },
+            "disabled_button": "redan vald"
+          },
+          "selection": {
+            "current": {
+              "label": "Valda logiska adresser",
+              "none": "inga logiska adresser valda"
+            },
+            "new": {
+              "label": "Nyvalda logiska adresser",
+              "none": "inga nya logiska adresser valda"
+            },
+            "previous": {
+              "label": "Redan anslutna logiska adresser",
+              "all_removed": "samtliga redan anslutna logiska adresser kommer tas bort",
+              "none": "inga logiska adresser anslutna"
+            },
+            "deselected_previous": {
+              "label": "Bortvalda redan anslutna logiska adresser"
+            }
+          }
+        },
+        "anslutning_config_panel": {
+          "title": {
+            "unified": "Välj version av RIVTA-profil och URL för",
+            "individual": "Välj version av RIVTA-profil, URL och administrera logisk/a adress/er för"
+          },
+          "rivta_version": {
+            "label": "Version av RIVTA-profil",
+            "info": "Välj den version av RIV TA Basic Profile som kontraktet implementerar."
+          },
+          "url": {
+            "label": "* URL",
+            "info": "För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här.",
+            "error": {
+              "required": "Url måste vara ifyllt",
+              "url": "Url är ej korrekt"
+            }
+          }
+        },
+        "anropsbehorighet_panel": {
+          "title": "Lägg till anropsbehörighet för tjänstekonsument",
+          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
+          "choice": {
+            "label": {
+              "call_permission_separate_order": "Anropsbehörighet kommer begäras via en separat beställning för konsument",
+              "call_permission_this_order": "Anropsbehörighet ska begäras i samband med denna beställning"
+            }
+          },
+          "konsument_search": {
+            "label": "Sök efter tjänstekonsument",
+            "placeholder": "Sök befintlig tjänstekonsument"
+          },
+          "selected_konsumenter": {
+            "label": "Valda tjänstekonsumenter",
+            "none": "inga tjänstekonsumenter valda",
+            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt."
+          }
+        },
+        "other_panel": {
+          "title": "Övrigt",
+          "ovrig_information": {
+            "label": "Övrig information om beställningen samt feedback om beställningsflödet"
+          }
+        },
+        "bestallare_panel": {
+          "title": "Beställare",
+          "namn": {
+            "label": "* För- och efternamn",
+            "error": {
+              "required": "För- och efternamn måste vara ifyllt"
+            }
+          },
+          "email": {
+            "label": "* E-postadress",
+            "error": {
+              "required": "E-postadress måste vara ifyllt",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "telefon": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifyllt"
+            }
+          },
+          "hsaId": {
+            "label": "HSA-ID"
+          },
+          "roll": {
+            "label": "Roll",
+            "error": {
+              "required": "Roll måste vara ifyllt"
+            }
+          }
+        },
+        "submit": {
+          "order_error_msg": "Det finns fel i beställningen som behöver rättas till!",
+          "button": "Beställ"
+        }
       }
     },
     "personkontakt": {
