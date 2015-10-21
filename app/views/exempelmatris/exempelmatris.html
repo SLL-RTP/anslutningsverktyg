@@ -1,0 +1,145 @@
+<style>
+  .rotated-text {
+    display: inline-block;
+    width: 1.5em;
+    line-height: 10px;
+  }
+  .rotated-text__inner {
+    display: inline-block;
+    white-space: nowrap;
+    -webkit-transform: translate(1.1em,0) rotate(90deg);
+    -moz-transform: translate(1.1em,0) rotate(90deg);
+    -o-transform: translate(1.1em,0) rotate(90deg);
+    transform: translate(1.1em,0) rotate(90deg);
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    transform-origin: 0 0;
+    /* IE9+ */
+    -ms-transform: none;
+    -ms-transform-origin: none;
+    /* IE8+ */
+    -ms-writing-mode: tb-rl;
+    /* IE7 and below */
+    *writing-mode: tb-rl;
+  }
+  .rotated-text__inner:before {
+    content: "";
+    float: left;
+    margin-top: 100%;
+  }
+  .checkbox-disabled {
+    background-color: #f5f5f5;
+  }
+
+  .added {
+    background-color: #b1f5c5;
+  }
+
+  .removed {
+    background-color: #f5a7a4;
+  }
+
+  .scrollbar-measure {
+    width: 100px;
+    height: 100px;
+    overflow: scroll;
+    position: absolute;
+    top: -9999px;
+  }
+
+  .last-in-row {
+    padding-right: 17px !important;
+  }
+
+  .fw {
+    width: 200px !important;
+  }
+
+  .detached-header {
+    margin-bottom: 0;
+  }
+
+</style>
+<div class="container-fluid">
+  <div class="page-header">
+    <h1>Exempelmatris
+    </h1>
+  </div>
+  <!-- välj tjänstekontrakt panel -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Välj tjänstekontrakt som omfattas</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-condensed table-bordered detached-header">
+            <thead>
+            <tr>
+              <th class="fw">&nbsp;</th>
+              <th ng-repeat="tjk in contractData" style="text-align: center" scrollbar-pad="$last">
+                <div class="rotated-text">
+                  <div class="rotated-text__inner">
+                    <span>{{tjk.namn}}</span>
+                  </div>
+                </div>
+                <!--<div style="text-align: center; margin-top: 5px">
+                  <input type="checkbox" ng-model="tjk.checkAll" ng-change="selectAll(tjk)">
+                </div>-->
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <label for="laFilter">Filtrera adresser:</label>
+                <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
+              </td>
+              <td ng-repeat="tjk in contractData" style="text-align: center" scrollbar-pad="$last">
+                <div style="margin-top: 5px">
+                  <label for="mep">Välj alla</label>
+                  <input id="mep" type="checkbox" ng-model="tjk.checkAll" ng-change="selectAll(tjk)">
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div style="overflow-y: scroll; height: 400px">
+            <table class="table table-condensed table-bordered">
+
+              <tbody>
+              <tr ng-repeat="la in logicalAddresses">
+                <th class="fw">
+                  <p>{{la.namn}}</p>
+                  <small>{{la.hsaId}}</small>
+                </th>
+                <td ng-repeat="tjk in contractData" style="text-align: center; vertical-align: middle" ng-class="{'checkbox-disabled': apa[la.hsaId][tjk.namn].disabled, 'removed': apa[la.hsaId][tjk.namn].installed && !apa[la.hsaId][tjk.namn].checked, 'added': !apa[la.hsaId][tjk.namn].installed && apa[la.hsaId][tjk.namn].checked}">
+                  <div ng-if="!apa[la.hsaId][tjk.namn].disabled">
+                    <input type="checkbox" ng-model="apa[la.hsaId][tjk.namn].checked" ng-disabled="apa[la.hsaId][tjk.namn].disabled">
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj tjänstekontrakt panel -->
+</div>
+
+
+<script>
+  var scrollDiv = document.createElement("div");
+  scrollDiv.className = "scrollbar-measure";
+  document.body.appendChild(scrollDiv);
+
+  // Get the scrollbar width
+  var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  console.warn(scrollbarWidth); // Mac:  15
+
+  // Delete the DIV
+  document.body.removeChild(scrollDiv);
+</script>

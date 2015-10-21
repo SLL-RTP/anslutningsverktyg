@@ -32,10 +32,10 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-class="{'navbar-testenv': configuration.testBanner}">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Hantera kommunikation via Regional tjänsteplattform</a>
+          <a class="navbar-brand" href="#">{{'navbar.title' | translate}} <span ng-if="configuration.testBanner" translate="navbar.testenv"></span></a>
         </div>
       </div>
     </nav>
@@ -43,10 +43,13 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <p>Tjänsteproducent</p>
-            <li> <a ui-sref="connectServiceProducer" ui-sref-active="active">Administrera anslutning</a></li>
-            <p>Systeminformation</p>
-            <li><a ui-sref="updateTjanstekomponent" ui-sref-active="active">Administrera systeminformation</a></li>
+            <p translate="sidebar.producer.header"></p>
+            <li> <a ui-sref="connectServiceProducer" ui-sref-active="active" translate="sidebar.producer.admin_link"></a></li>
+            <p translate="sidebar.system_information.header"></p>
+            <li><a ui-sref="updateTjanstekomponent" ui-sref-active="active" translate="sidebar.system_information.admin_link"></a></li>
+            <p>Exempel</p>
+            <li><a ui-sref="exempelmatris" ui-sref-active="active">Exempelmatris</a></li>
+            <li><a ui-sref="order" ui-sref-active="active">Order</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -87,6 +90,7 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/lodash-compat/lodash.js"></script>
     <script src="bower_components/angular-shims-placeholder/dist/angular-shims-placeholder.js"></script>
     <!-- endbower -->
@@ -94,8 +98,13 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/constants.js"></script>
         <script src="scripts/controllers/connectServiceProducer.js"></script>
         <script src="scripts/controllers/updateTjanstekomponent.js"></script>
+        <script src="scripts/controllers/exempelMatris.js"></script>
+        <script src="scripts/controllers/order/orderMain.js"></script>
+        <script src="scripts/controllers/order/orderProducent.js"></script>
+        <script src="scripts/controllers/order/orderKonsument.js"></script>
         <script src="scripts/factories/logicalAddress.js"></script>
         <script src="scripts/factories/rivProfile.js"></script>
         <script src="scripts/factories/url.js"></script>
@@ -105,8 +114,12 @@
         <script src="scripts/factories/environment.js"></script>
         <script src="scripts/factories/nat.js"></script>
         <script src="scripts/factories/sessionInterceptor.js"></script>
-        <script src="scripts/factories/order.js"></script>
+        <script src="scripts/factories/bestallning.js"></script>
         <script src="scripts/factories/user.js"></script>
+        <script src="scripts/factories/bestallningState.js"></script>
+        <script src="scripts/factories/producentbestallningState.js"></script>
+        <script src="scripts/factories/konsumentbestallningState.js"></script>
+        <script src="scripts/factories/formValidation.js"></script>
         <script src="scripts/filters/intersection.js"></script>
         <script src="scripts/filters/notIn.js"></script>
         <script src="scripts/directives/logiskAdressAlert.js"></script>
@@ -115,10 +128,7 @@
         <script src="scripts/directives/funktionkontakt.js"></script>
         <script src="scripts/directives/globalValidation.js"></script>
         <script src="scripts/directives/oneOffValidation.js"></script>
+        <script src="scripts/directives/scrollbarPad.js"></script>
         <!-- endbuild -->
-
-    <!-- build:js config.js -->
-        <script src="scripts/services/config.js"></script>
-    <!-- endbuild -->
 </body>
 </html>

@@ -10,7 +10,11 @@
 module.exports = function (grunt) {
 
   // Load grunt tasks automatically
-  require('load-grunt-tasks')(grunt);
+  require('jit-grunt')(grunt, {
+    useminPrepare: 'grunt-usemin',
+    cdnify: 'grunt-google-cdn',
+    ngconstant: 'grunt-ng-constant'
+  });
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
@@ -21,12 +25,61 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  var runConfig = {
+    development: (function() {
+      return grunt.file.readJSON('./config/environments/development.json');
+    })(),
+    production: (function() {
+      return grunt.file.readJSON('./config/environments/production.json');
+    })()
+  };
+
+  var translations = (function() {
+    return grunt.file.readJSON('./config/translations.json');
+  })();
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
     // Project settings
     yeoman: appConfig,
 
+    ngconstant: {
+      options: {
+        name: 'avApp.constants',
+        constants: {
+          translations: translations
+        }
+      },
+      development: {
+        options: {
+          dest: '.tmp/scripts/constants.js'
+        },
+        constants: {
+          configuration: runConfig.development
+        }
+      },
+      acceptance: {},
+      production: {
+        options: {
+          dest: '<%= yeoman.dist %>/scripts/constants.js'
+        },
+        constants: {
+          configuration: runConfig.development
+        }
+      }
+      //server: {
+      //  options: {
+      //    dest: '.tmp/scripts/constants.js'
+      //  }
+      //},
+      //dist: {
+      //  options: {
+      //    dest: '<%= yeoman.dist %>/scripts/constants.js'
+      //  }
+      //}
+
+    },
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -56,14 +109,15 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         },
         files: [
-          '<%= yeoman.app %>/{,*/}*.html',
+          '<%= yeoman.app %>/{,*/,*/*/,*/*/*/}*.html',
           '.tmp/styles/{,*/}*.css',
+          '.tmp/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       },
       config: {
-        files: ['config/{,*/}*.{js,json}'],
-        tasks: ['replace:development']
+        files: ['config/{,*/,*/*/}*.{js,json}'],
+        tasks: ['ngconstant:development']
       }
     },
 
@@ -271,35 +325,6 @@ module.exports = function (grunt) {
     //   dist: {}
     // },
 
-    replace: {
-      development: {
-        options: {
-          patterns: [{
-            json: grunt.file.readJSON('./config/environments/development.json')
-          }]
-        },
-        files: [{
-          expand: true,
-          flatten: true,
-          src: ['./config/config.js'],
-          dest: '<%= yeoman.app %>/scripts/services/'
-        }]
-      },
-      production: {
-        options: {
-          patterns: [{
-            json: grunt.file.readJSON('./config/environments/production.json')
-          }]
-        },
-        files: [{
-          expand: true,
-          flatten: true,
-          src: ['./config/config.js'],
-          dest: '<%= yeoman.app %>/scripts/services/'
-        }]
-      }
-    },
-
     imagemin: {
       dist: {
         files: [{
@@ -444,9 +469,9 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
-      'replace:development',
       'connect:livereload',
       'watch'
     ]);
@@ -468,10 +493,28 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
+    'ngconstant:production',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'replace:production',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin'
+  ]);
+
+  grunt.registerTask('build-acceptance', [
+    'clean:dist',
+    'wiredep',
+    'ngconstant:acceptance',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
     'concat',
     'ngAnnotate',
     'copy:dist',
@@ -486,10 +529,10 @@ module.exports = function (grunt) {
   grunt.registerTask('build-development', [
     'clean:dist',
     'wiredep',
+    'ngconstant:development',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'replace:development',
     'concat',
     'ngAnnotate',
     'copy:dist',
@@ -506,6 +549,4 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-
-  grunt.loadNpmTasks('grunt-replace');
 };

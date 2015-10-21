@@ -1,0 +1,228 @@
+<div class="container-fluid">
+  <div class="page-header">
+    <h1 translate="order.main.title"></h1>
+    <div translate="order.main.p"></div>
+  </div>
+  <!-- välj driftmiljö panel -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title" translate="order.main.env_panel.title"></h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5 form-group">
+          <label for="environment" translate="order.main.env_panel.label"></label>
+          <select id="environment" class="form-control" ng-model="order.driftmiljo" ng-change="selectDriftmiljo()" ng-options="environment.namn for environment in targetEnvironments">
+            <option value="" translate="order.main.env_panel.select_placeholder"></option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj driftmiljö panel -->
+  <!-- välj producent/konsument panel -->
+  <div class="panel panel-primary" ng-if="order.driftmiljo">
+    <div class="panel-heading">
+      <h3 class="panel-title" translate="order.main.order_type_panel.title"></h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5 form-group">
+          <label for="mode" translate="order.main.order_type_panel.label"></label>
+          <select id="mode" class="form-control" ng-model="mode" ng-change="selectMode(mode)" ng-options="mode.name for mode in modes">
+            <option value="" translate="order.main.order_type_panel.select_placeholder"></option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj producent/konsument panel -->
+  <!-- välj tjänstekomponent panel -->
+  <div class="panel panel-primary" ng-if="state.id">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{'order.main.komponent_panel.title' | translate}} {{'order.main.komponent_panel.title_type.' + state.id | translate}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="form-group">
+              <input type="text" placeholder="{{'order.main.komponent_panel.select_placeholder' | translate}}"
+                     ng-model="mep.selectedTjanstekomponent"
+                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                     typeahead-editable="false"
+                     typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                     class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="order.tjanstekomponent.hsaId">
+        <div class="row">
+          <div class="col-md-12">
+            <p translate="order.main.komponent_panel.update_info_p"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="row">
+              <h4 translate="order.main.komponent_panel.huvudansvarig_h"></h4>
+            </div>
+            <div class="row">
+              <personkontakt kontakt="tjanstekomponent.huvudansvarigKontakt"></personkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4 translate="order.main.komponent_panel.teknisk_kontakt_h"></h4>
+            </div>
+            <div class="row">
+              <personkontakt kontakt="tjanstekomponent.tekniskKontakt"></personkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4 translate="order.main.komponent_panel.teknisk_support_h"></h4>
+            </div>
+            <div class="row">
+              <funktionkontakt kontakt="tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <h4 translate="order.main.komponent_panel.teknisk_info.header"></h4>
+            </div>
+            <div class="row">
+              <dl>
+                <dt translate="order.main.komponent_panel.teknisk_info.ip"></dt>
+                <dd ng-show="tjanstekomponent.ipadress">{{tjanstekomponent.ipadress}}</dd>
+                <dd ng-hide="tjanstekomponent.ipadress">
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
+                </dd>
+                <dt>
+                  <span translate="order.main.komponent_panel.teknisk_info.pingForConfigurationURL"></span>
+                  <i class="fa fa-info-circle" popover="{{'order.main.komponent_panel.teknisk_info.pingForConfigurationURL_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
+                </dt>
+                <dd ng-show="tjanstekomponent.pingForConfigurationURL">{{tjanstekomponent.pingForConfigurationURL}}</dd>
+                <dd ng-hide="tjanstekomponent.pingForConfigurationURL">
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj tjänstekomponent panel -->
+  <!-- välj nät panel -->
+  <div class="panel panel-primary" ng-show="order.tjanstekomponent.hsaId && order.driftmiljo.id">
+    <div class="panel-heading">
+      <h3 class="panel-title" translate="order.main.nat_panel.title"></h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12 form-group">
+          <label ng-repeat="nat in nat" class="checkbox-inline">
+            <input type="checkbox" ng-model="nat._checked"> {{nat.namn}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / välj nät panel -->
+  <!-- producent/konsument child state -->
+  <div ui-view></div>
+  <!-- / producent/konsument child state -->
+  <div ng-show="displayCommonEnding">
+    <!-- övrigt panel -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title" translate="order.main.other_panel.title"></h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="form-group">
+                <label for="ovrigInformation" translate="order.main.other_panel.ovrig_information.label"></label>
+              <textarea ng-model="order.otherInfo" id="ovrigInformation" class="form-control"
+                        cols="30" rows="10"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / övrigt panel -->
+    <!-- beställare panel -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title" translate="order.main.bestallare_panel.title"></h3>
+      </div>
+      <div class="panel-body">
+        <form name="bestallareForm" role="form">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label class=" control-label" for="bestallareNamnInput" translate="order.main.bestallare_panel.namn.label"></label>
+                  <input ng-model="order.bestallare.namn"
+                         type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
+                         required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareNamn.$error.required" translate="order.main.bestallare_panel.namn.error.required"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareEmailInput" class="control-label" translate="order.main.bestallare_panel.email.label"></label>
+                  <input ng-model="order.bestallare.epost" type="email" class="form-control"
+                         id="bestallareEmailInput" name="bestallareMail" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.required" translate="order.main.bestallare_panel.email.error.required"> måste vara ifyllt</span>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.email" translate="order.main.bestallare_panel.email.error.email"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareTelefonInput" class="control-label" translate="order.main.bestallare_panel.telefon.label"></label>
+                  <input ng-model="order.bestallare.telefon" type="text" class="form-control"
+                         id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareTelefon.$error.required" translate="order.main.bestallare_panel.telefon.error.required"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label for="bestallareHsaIdInput" class="control-label" translate="order.main.bestallare_panel.hsaId.label"></label>
+                  <input ng-model="order.bestallare.hsaId" type="text" class="form-control"
+                         id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" readonly>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareRoll" class="control-label" translate="order.main.bestallare_panel.roll.label"></label>
+                  <input ng-model="order.bestallareRoll" type="text" class="form-control"
+                         id="bestallareRoll" name="bestallareRoll" placeholder="" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareRoll.$error.required" translate="order.main.bestallare_panel.roll.error.required"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- / beställare panel -->
+    <div class="row" ng-hide="orderValid">
+      <div class="col-md-4 col-md-offset-8">
+        <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {{'order.main.submit.order_error_msg' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-8">
+        <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="triggerSendOrder()" translate="order.main.submit.button"></button>
+      </div>
+    </div>
+  </div>
+</div>

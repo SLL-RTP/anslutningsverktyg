@@ -3,5 +3,5 @@
   "apiToken": "secret-token",
   "devMode": false,
   "devDebug": "false",
-  "testBanner": "false"
+  "testBanner": "true"
 }

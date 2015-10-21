@@ -1,0 +1,354 @@
+{
+  "sv": {
+    "navbar": {
+      "title": "Hantera kommunikation via Regional tjänsteplattform",
+      "testenv": "TESTMILJÖ"
+    },
+    "sidebar": {
+      "producer": {
+        "header": "Tjänsteproducent",
+        "admin_link": "Administrera anslutning"
+      },
+      "system_information": {
+        "header": "Systeminformation",
+        "admin_link": "Administrera systeminformation"
+      }
+    },
+    "landing": {
+      "header": "Beställningsstöd för SLL:s regionala tjänsteplattform",
+      "p1": "I menyval Administrera anslutning beställer du anslutning av en tjänsteproducent till tjänstekontrakt som är installerat i regional tjänsteplattform, anger logisk/a adress/er samt har möjlighet att beställa anropsbehörighet (etablera samverkan) mellan producent och redan ansluten konsument.",
+      "p2": "I menyval Administrera systeminformation registrerar du information om instans av system samt information om kontaktpersoner för instansen."
+    },
+    "order": {
+      "main": {
+        "title": "Administrera anslutning",
+        "p": "<p><strong style=\"color: red\">[CHANGEME]</strong> Här beställer du anslutning av en tjänsteproducent till, i plattformen, redan installerade tjänstekontrakt. För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppning/ar hos producenten.</p><p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>",
+        "env_panel": {
+          "title": "Välj miljö",
+          "label": "Miljö",
+          "select_placeholder": "- Välj -"
+        },
+        "order_type_panel": {
+          "title": "Välj typ av beställning",
+          "label": "Typ",
+          "select_placeholder": "- Välj -",
+          "mode": {
+            "order": {
+              "producent": "Producentbeställning",
+              "konsument": "Konsumentbeställning"
+            }
+          }
+        },
+        "komponent_panel": {
+          "title": "Välj instans av system som agerar som ",
+          "title_type": {
+            "order": {
+              "producent": "tjänsteproducent",
+              "konsument": "tjänstekonsument"
+            }
+          },
+          "select_placeholder": "Sök befintlig tjänstekomponent",
+          "update_info_p": "För uppdatering av uppgifter; välj \"Administrera systeminformation\" i menyn",
+          "huvudansvarig_h": "Huvudansvarig",
+          "teknisk_kontakt_h": "Teknisk kontaktperson",
+          "teknisk_support_h": "Teknisk support",
+          "teknisk_info": {
+            "header": "Teknisk information",
+            "ip": "IP-adress",
+            "pingForConfigurationURL": "URL till övervakningstjänst",
+            "pingForConfigurationURL_info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten.",
+            "no_info": "ingen information"
+          }
+        },
+        "nat_panel": {
+          "title": "Välj nät"
+        },
+        "other_panel": {
+          "title": "Övrigt",
+          "ovrig_information": {
+            "label": "Övrig information om beställningen samt feedback om beställningsflödet"
+          }
+        },
+        "bestallare_panel": {
+          "title": "Beställare",
+          "namn": {
+            "label": "* För- och efternamn",
+            "error": {
+              "required": "För- och efternamn måste vara ifyllt"
+            }
+          },
+          "email": {
+            "label": "* E-postadress",
+            "error": {
+              "required": "E-postadress måste vara ifyllt",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "telefon": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifyllt"
+            }
+          },
+          "hsaId": {
+            "label": "HSA-ID"
+          },
+          "roll": {
+            "label": "Roll",
+            "error": {
+              "required": "Roll måste vara ifyllt"
+            }
+          }
+        },
+        "submit": {
+          "order_error_msg": "Det finns fel i beställningen som behöver rättas till!",
+          "button": "Beställ"
+        }
+      },
+      "producent": {
+        "select_kontrakt_panel": {
+          "title": "Välj tjänstekontrakt som omfattas",
+          "tjanstedoman": {
+            "label": "Tjänstedomän",
+            "select_placeholder": "- Välj -"
+          },
+          "tjanstekontrakt": {
+            "label": "Tillgängliga tjänstekontrakt",
+            "thead": {
+              "name": "Namn",
+              "version": "Version"
+            },
+            "no_contracts": "inga tillgängliga tjänstekontrakt"
+          },
+          "anslutning": {
+            "status": {
+              "not_installed": "ej installerat",
+              "not_connected": "installerat, ej ansluten",
+              "connected": "ansluten",
+              "on_order": "för beställning"
+            }
+          },
+          "order": {
+            "label": "Tjänstekontrakt för beställning",
+            "thead": {
+              "name": "Namn",
+              "version": "Version"
+            },
+            "no_contracts": "inga tjänstekontrakt valda"
+          }
+        },
+        "logiska_adresser_choices_panel": {
+          "title": "Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information",
+          "p": "Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.",
+          "label": {
+            "unified": "Administrera samma logiska adresser för valda tjänstekontrakt",
+            "individual": "Administrera logiska adresser individuellt för valda tjänstekontrakt"
+          }
+        },
+        "logiska_adresser_selections_panel": {
+          "title": "Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning",
+          "search": {
+            "label": "Sök efter logisk adress"
+          },
+          "add": {
+            "label": "Lägg till ny logisk address",
+            "placeholder": {
+              "hsaId": "Adressidentitet",
+              "namn": "Namn"
+            },
+            "disabled_button": "redan vald"
+          },
+          "selection": {
+            "current": {
+              "label": "Valda logiska adresser",
+              "none": "inga logiska adresser valda"
+            },
+            "new": {
+              "label": "Nyvalda logiska adresser",
+              "none": "inga nya logiska adresser valda"
+            },
+            "previous": {
+              "label": "Redan anslutna logiska adresser",
+              "all_removed": "samtliga redan anslutna logiska adresser kommer tas bort",
+              "none": "inga logiska adresser anslutna"
+            },
+            "deselected_previous": {
+              "label": "Bortvalda redan anslutna logiska adresser"
+            }
+          }
+        },
+        "anslutning_config_panel": {
+          "title": {
+            "unified": "Välj version av RIVTA-profil och URL för",
+            "individual": "Välj version av RIVTA-profil, URL och administrera logisk/a adress/er för"
+          },
+          "rivta_version": {
+            "label": "Version av RIVTA-profil",
+            "info": "Välj den version av RIV TA Basic Profile som kontraktet implementerar."
+          },
+          "url": {
+            "label": "* URL",
+            "info": "För att konsument ska kunna nå tjänsten behöver Tjänsteplattformen ha information om den länk där producentens tjänst finns. URL:en anges här.",
+            "error": {
+              "required": "Url måste vara ifyllt",
+              "url": "Url är ej korrekt"
+            }
+          }
+        },
+        "anropsbehorighet_panel": {
+          "title": "Lägg till anropsbehörighet för tjänstekonsument",
+          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
+          "choice": {
+            "label": {
+              "call_permission_separate_order": "Anropsbehörighet kommer begäras via en separat beställning för konsument",
+              "call_permission_this_order": "Anropsbehörighet ska begäras i samband med denna beställning"
+            }
+          },
+          "konsument_search": {
+            "label": "Sök efter tjänstekonsument",
+            "placeholder": "Sök befintlig tjänstekonsument"
+          },
+          "selected_konsumenter": {
+            "label": "Valda tjänstekonsumenter",
+            "none": "inga tjänstekonsumenter valda",
+            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt."
+          }
+        }
+      },
+      "konsument": {
+        "select_kontrakt_panel": {
+          "title": "Välj tjänstekontrakt som omfattas",
+          "tjanstedoman": {
+            "label": "Tjänstedomän",
+            "select_placeholder": "- Välj -"
+          },
+          "logiska_adresser_filter_label": "Filtrera adresser:",
+          "check_all_kontrakt_label": "Välj alla",
+          "no_logiska_adresser_found": "inga logiska adresser hittades"
+        }
+      }
+    },
+    "komponent_admin": {
+      "title": "Administrera systeminformation",
+      "p": "Här kan du uppdatera den kontaktinformation som gäller för vald tjänsteproducent/tjänstekonsument.",
+      "panel": {
+        "title": "Välj instans av system/e-tjänst som agerar i roll som tjänsteproducent och/eller tjänstekonsument",
+        "mode": {
+          "create": "Skapa",
+          "edit": "Administrera befintlig"
+        },
+        "tjanstekomponent_select_placeholder": "Sök befintlig",
+        "organisation": {
+          "label": "Organisation"
+        },
+        "namn": {
+          "label": "* Namn",
+          "error": {
+            "required": "Namn måste vara ifyllt"
+          }
+        },
+        "hsaId": {
+          "label": "* HSA ID",
+          "info": "HSA-id skall vara identiskt med det funktions-HSA-id som står i komponentens SITHS-certifikat.",
+          "error": {
+            "required": "HSA-ID måste vara ifyllt",
+            "unique": "HSA-ID finns redan, välj \"Administrera befintlig\" istället"
+          }
+        },
+        "huvudansvarig": {
+          "title": "Huvudansvarig",
+          "namn": {
+            "label": "* För- och efternamn",
+            "error": {
+              "required": "För- och efternamn måste vara ifyllt"
+            }
+          },
+          "email": {
+            "label": "* E-postadress",
+            "error": {
+              "required": "E-postadress måste vara ifylld",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "phone": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifylld"
+            }
+          }
+        },
+        "teknisk_kontaktperson": {
+          "title": "Teknisk kontaktperson",
+          "namn": {
+            "label": "* För- och efternamn",
+            "error": {
+              "required": "För- och efternamn måste vara ifyllt"
+            }
+          },
+          "email": {
+            "label": "* E-postadress",
+            "error": {
+              "required": "E-postadress måste vara ifylld",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "phone": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifylld"
+            }
+          }
+        },
+        "teknisk_support": {
+          "title": "Teknisk support",
+          "email": {
+            "label": "* Funktionsbrevlåda",
+            "info": "RTP-förvaltningen använder funktionsbrevlådan för att kontakta tjänsteproducentens tekniska support.",
+            "error": {
+              "required": "E-postadress måste vara ifylld",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "phone": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifylld"
+            }
+          }
+        },
+        "teknisk_information": {
+          "title": "Teknisk information",
+          "ip": {
+            "label": "* IP-adress",
+            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt anges här.",
+            "error": {
+              "required": "IP-adress måste vara ifylld",
+              "pattern": "IP-adress ej korrekt ifylld"
+            }
+          },
+          "pingForConfigurationURL": {
+            "label": "URL till övervakningstjänst",
+            "info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten."
+          }
+        }
+      },
+      "submit": {
+        "form_error_msg": "Det finns fel i formuläret som behöver rättas till!",
+        "button": {
+          "save": "Spara",
+          "update": "Uppdatera"
+        }
+      }
+    },
+    "personkontakt": {
+      "no_name": "&lt;&lt;namn&gt;&gt;",
+      "no_email": "&lt;&lt;e-post&gt;&gt;",
+      "no_phone": "&lt;&lt;telefonnummer&gt;&gt;"
+    },
+    "funktionkontakt": {
+      "no_email": "&lt;&lt;e-post&gt;&gt;",
+      "no_phone": "&lt;&lt;telefonnummer&gt;&gt;"
+    }
+  },
+  "en": {}
+}

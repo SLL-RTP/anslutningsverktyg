@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('avApp')
-  .directive('globalValidation', ['$interpolate',function ($interpolate) {
+  .directive('globalValidation', ['$rootScope','$interpolate',function ($rootScope, $interpolate) {
     return {
       require: '^form',
       priority: 9999,
@@ -16,10 +16,10 @@ angular.module('avApp')
             blurred = true;
             if (formController[inputName].$invalid) {
               toggleClasses(true);
-              $scope.$emit('gv-leaving-element-invalid');
+              $rootScope.$broadcast('gv-leaving-element-invalid');
             } else {
               toggleClasses(false);
-              $scope.$emit('gv-leaving-element-valid');
+              $rootScope.$broadcast('gv-leaving-element-valid');
             }
           });
           angularInputElement.bind('focus', function() {
@@ -31,16 +31,16 @@ angular.module('avApp')
             if (invalid) {
               toggleClasses(true);
               if (blurred) {
-                $scope.$emit('gv-element-invalid');
+                $rootScope.$broadcast('gv-element-invalid');
               } else if (formController[inputName].$dirty) {
-                $scope.$emit('gv-element-invalid-in-focus');
+                $rootScope.$broadcast('gv-element-invalid-in-focus');
               }
             } else {
               toggleClasses(false);
               if (blurred) {
-                $scope.$emit('gv-element-valid');
+                $rootScope.$broadcast('gv-element-valid');
               } else if (formController[inputName].$dirty) {
-                $scope.$emit('gv-element-valid-in-focus');
+                $rootScope.$broadcast('gv-element-valid-in-focus');
               }
             }
           });

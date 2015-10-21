@@ -174,3 +174,90 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
 .empty {
   color: #a9a9a9;
 }
+
+// -- consumer matrix [start]
+
+.scrollbar-measure {
+  width: 100px;
+  height: 100px;
+  overflow: scroll;
+  position: absolute;
+  top: -9999px;
+}
+
+.rotated-text {
+  display: inline-block;
+  width: 1.5em;
+  line-height: 10px;
+}
+.rotated-text__inner {
+  display: inline-block;
+  white-space: nowrap;
+  -webkit-transform: translate(1.1em,0) rotate(90deg);
+  -moz-transform: translate(1.1em,0) rotate(90deg);
+  -o-transform: translate(1.1em,0) rotate(90deg);
+  transform: translate(1.1em,0) rotate(90deg);
+  -webkit-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  transform-origin: 0 0;
+  /* IE9+ */
+  -ms-transform: none;
+  -ms-transform-origin: none;
+  /* IE8+ */
+  -ms-writing-mode: tb-rl;
+  /* IE7 and below */
+  *writing-mode: tb-rl;
+}
+.rotated-text__inner:before {
+  content: "";
+  float: left;
+  margin-top: 100%;
+}
+
+.matrix {
+  .contract-name-container {
+    text-align: center;
+  }
+
+  .la-name-container {
+    width: 200px !important;
+  }
+
+  .la-checkbox-container {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .selector {
+    overflow-y: scroll;
+    height: 400px; //TODO: find way to make it work with max-height
+  }
+
+  .checkbox-disabled {
+    background-color: #f5f5f5;
+  }
+
+  .added {
+    background-color: #b1f5c5;
+  }
+
+  .removed {
+    background-color: #f5a7a4;
+  }
+}
+
+
+
+.detached-header {
+  margin-bottom: 0;
+}
+
+// -- consumer matrix [end]
+
+.navbar.navbar-testenv {
+  background-color: #e48723;
+  .navbar-brand {
+    span { background-color: #8B0000; }
+  }
+}
