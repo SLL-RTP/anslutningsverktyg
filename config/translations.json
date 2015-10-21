@@ -341,13 +341,13 @@
       }
     },
     "personkontakt": {
-      "no_name": "<<namn>>",
-      "no_email": "<<e-post>>",
-      "no_phone": "<<telefonnummer>>"
+      "no_name": "&lt;&lt;namn&gt;&gt;",
+      "no_email": "&lt;&lt;e-post&gt;&gt;",
+      "no_phone": "&lt;&lt;telefonnummer&gt;&gt;"
     },
     "funktionkontakt": {
-      "no_email": "<<e-post>>",
-      "no_phone": "<<telefonnummer>>"
+      "no_email": "&lt;&lt;e-post&gt;&gt;",
+      "no_phone": "&lt;&lt;telefonnummer&gt;&gt;"
     }
   },
   "en": {}
