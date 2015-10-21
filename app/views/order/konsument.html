@@ -1,14 +1,14 @@
 <!-- välj tjänstekontrakt panel -->
 <div class="panel panel-primary" ng-show="konsumentbestallning.nat.length">
   <div class="panel-heading">
-    <h3 class="panel-title">Välj tjänstekontrakt som omfattas</h3>
+    <h3 class="panel-title" translate="order.konsument.select_kontrakt_panel.title"></h3>
   </div>
   <div class="panel-body">
     <div class="row">
       <div class="col-md-5 form-group">
-        <label for="service-domain">Tjänstedomän</label>
+        <label for="service-domain" translate="order.konsument.select_kontrakt_panel.tjanstedoman.label"></label>
         <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
-          <option value="">Välj tjänstedomän</option>
+          <option value="" translate="order.konsument.select_kontrakt_panel.tjanstedoman.select_placeholder"></option>
         </select>
       </div>
     </div>
@@ -30,12 +30,12 @@
           <tbody ng-if="logiskaAdresser.length">
           <tr>
             <td>
-              <label for="laFilter">Filtrera adresser:</label>
+              <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
               <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
             </td>
             <td ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="la-checkbox-container" scrollbar-pad="$last">
               <div>
-                <label for="checkAll">Välj alla</label>
+                <label for="checkAll" translate="order.konsument.select_kontrakt_panel.check_all_kontrakt_label"></label>
                 <input id="checkAll" type="checkbox" ng-model="anslutning.checkAll" ng-change="selectAllLogiskaAdresser(anslutning)">
               </div>
             </td>
@@ -58,7 +58,7 @@
             </tr>
             <tr ng-if="!logiskaAdresser.length">
               <td>
-                <em>inga logiska adresser hittades</em>
+                <em translate="order.konsument.select_kontrakt_panel.no_logiska_adresser_found"></em>
               </td>
             </tr>
             </tbody>

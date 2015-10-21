@@ -1,19 +1,17 @@
 'use strict';
 angular.module('avApp')
-  .factory('KonsumentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState', 'LogicalAddress', 'Url',
-    function ($rootScope, $q, User, BestallningState, LogicalAddress, Url) {
+  .factory('KonsumentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState', 'LogicalAddress',
+    function ($rootScope, $q, User, BestallningState, LogicalAddress) {
       var _order;
 
       var init = function () {
         console.info('--- KonsumentbestallningState.init ---');
         var deferred = $q.defer();
-        BestallningState.init().then(function () {
-          _order = {
-            konsumentanslutningar: []
-          };
-          _.assign(_order, BestallningState.current());
-          deferred.resolve();
-        });
+        _order = {
+          konsumentanslutningar: []
+        };
+        _.assign(_order, BestallningState.current());
+        deferred.resolve();
         return deferred.promise;
       };
 
