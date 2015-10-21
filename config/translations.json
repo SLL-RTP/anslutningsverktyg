@@ -31,7 +31,13 @@
         "order_type_panel": {
           "title": "Välj typ av beställning",
           "label": "Typ",
-          "select_placeholder": "- Välj -"
+          "select_placeholder": "- Välj -",
+          "mode": {
+            "order": {
+              "producent": "Producentbeställning",
+              "konsument": "Konsumentbeställning"
+            }
+          }
         },
         "komponent_panel": {
           "title": "Välj instans av system som agerar som ",

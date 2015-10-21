@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'nat', 'mainOrder',
-      function ($scope, $rootScope, $state, $q, $timeout, Tjanstekomponent, BestallningState, ServiceDomain, environments, nat, mainOrder) {
+  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', '$translate', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'nat', 'mainOrder',
+      function ($scope, $rootScope, $state, $q, $timeout, $translate, Tjanstekomponent, BestallningState, ServiceDomain, environments, nat, mainOrder) {
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -91,11 +91,11 @@ angular.module('avApp')
             mep: {},
             modes: [ //child states that define the two order modes
               {
-                name: 'Producentbeställning',
+                name: $translate.instant('order.main.order_type_panel.mode.order.producent'),
                 stateId: 'order.producent'
               },
               {
-                name: 'Konsumentbeställning',
+                name: $translate.instant('order.main.order_type_panel.mode.order.konsument'),
                 stateId: 'order.konsument'
               }
             ],
