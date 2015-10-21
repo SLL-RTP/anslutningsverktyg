@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', 'Tjanstekomponent', 'ServiceDomain', 'environments', 'nat', 'mainOrder',
-      function ($scope, $rootScope, $state, $q, $timeout, Tjanstekomponent, ServiceDomain, environments, nat, mainOrder) {
+  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'nat', 'mainOrder',
+      function ($scope, $rootScope, $state, $q, $timeout, Tjanstekomponent, BestallningState, ServiceDomain, environments, nat, mainOrder) {
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -11,14 +11,14 @@ angular.module('avApp')
           });
         };
 
-        $scope.selectMode = function(mode) { //trigger child state
+        $scope.selectMode = function (mode) { //trigger child state
           $scope.state = {
             id: mode.stateId
           };
           $state.go(mode.stateId);
         };
 
-        $scope.getFilteredTjanstekomponenter = function(query, removeFromResult) {
+        $scope.getFilteredTjanstekomponenter = function (query, removeFromResult) {
           var deferred = $q.defer();
           if (!_.isEmpty(query)) {
             Tjanstekomponent.getFilteredTjanstekomponenter(query, $scope.order.driftmiljo.id).then(function (result) {
@@ -36,6 +36,10 @@ angular.module('avApp')
           return deferred.promise;
         };
 
+        $scope.triggerSendOrder = function () {
+          $scope.$broadcast('send-order');
+        };
+
         $scope.$watch('mep.selectedTjanstekomponent', function (newValue) {
             if (newValue) {
               if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
@@ -50,8 +54,8 @@ angular.module('avApp')
           }
         );
 
-        $scope.$watch('nat', function() {
-          _.each($scope.nat, function(nat) {
+        $scope.$watch('nat', function () {
+          _.each($scope.nat, function (nat) {
             var newNat = _.cloneDeep(nat);
             var natId = {id: newNat.id};
             if (nat._checked) {
@@ -64,7 +68,19 @@ angular.module('avApp')
           });
         }, true);
 
-        var _reset = function() {
+        $scope.$watch(function () {
+          return BestallningState.specificOrderSatisfied();
+        }, function (newVal) {
+          $scope.displayCommonEnding = newVal;
+        });
+
+        $scope.$watch(function () {
+          return BestallningState.specificOrderValid();
+        }, function (newVal) {
+          $scope.orderValid = newVal;
+        });
+
+        var _reset = function () {
           console.info('--- reset ---');
           _.assign($scope, {
             targetEnvironments: environments,
@@ -82,7 +98,9 @@ angular.module('avApp')
                 name: 'Konsumentbeställning',
                 stateId: 'order.konsument'
               }
-            ]
+            ],
+            displayCommonEnding: false,
+            orderValid: false
           });
         };
 

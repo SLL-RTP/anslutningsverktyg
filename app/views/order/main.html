@@ -128,7 +128,98 @@
     </div>
   </div>
   <!-- / välj nät panel -->
-  <!-- child state -->
+  <!-- producent/konsument child state -->
   <div ui-view></div>
-  <!-- / child state -->
+  <!-- / producent/konsument child state -->
+  <div ng-show="displayCommonEnding">
+    <!-- övrigt panel -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title" translate="order.main.other_panel.title"></h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="form-group">
+                <label for="ovrigInformation" translate="order.main.other_panel.ovrig_information.label"></label>
+              <textarea ng-model="order.otherInfo" id="ovrigInformation" class="form-control"
+                        cols="30" rows="10"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / övrigt panel -->
+    <!-- beställare panel -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title" translate="order.main.bestallare_panel.title"></h3>
+      </div>
+      <div class="panel-body">
+        <form name="bestallareForm" role="form">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label class=" control-label" for="bestallareNamnInput" translate="order.main.bestallare_panel.namn.label"></label>
+                  <input ng-model="order.bestallare.namn"
+                         type="text" class="form-control" id="bestallareNamnInput" name="bestallareNamn"
+                         required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareNamn.$error.required" translate="order.main.bestallare_panel.namn.error.required"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareEmailInput" class="control-label" translate="order.main.bestallare_panel.email.label"></label>
+                  <input ng-model="order.bestallare.epost" type="email" class="form-control"
+                         id="bestallareEmailInput" name="bestallareMail" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.required" translate="order.main.bestallare_panel.email.error.required"> måste vara ifyllt</span>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareMail.$error.email" translate="order.main.bestallare_panel.email.error.email"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareTelefonInput" class="control-label" translate="order.main.bestallare_panel.telefon.label"></label>
+                  <input ng-model="order.bestallare.telefon" type="text" class="form-control"
+                         id="bestallareTelefonInput" name="bestallareTelefon" placeholder="" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareTelefon.$error.required" translate="order.main.bestallare_panel.telefon.error.required"></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label for="bestallareHsaIdInput" class="control-label" translate="order.main.bestallare_panel.hsaId.label"></label>
+                  <input ng-model="order.bestallare.hsaId" type="text" class="form-control"
+                         id="bestallareHsaIdInput" name="bestallareHsaId" placeholder="" readonly>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group" show-errors global-validation>
+                  <label for="bestallareRoll" class="control-label" translate="order.main.bestallare_panel.roll.label"></label>
+                  <input ng-model="order.bestallareRoll" type="text" class="form-control"
+                         id="bestallareRoll" name="bestallareRoll" placeholder="" required>
+                  <span class="help-block hide-no-error" ng-if="bestallareForm.bestallareRoll.$error.required" translate="order.main.bestallare_panel.roll.error.required"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- / beställare panel -->
+    <div class="row" ng-hide="orderValid">
+      <div class="col-md-4 col-md-offset-8">
+        <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {{'order.main.submit.order_error_msg' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-8">
+        <button type="button" class="btn btn-primary btn-lg btn-wrap pull-right" ng-click="triggerSendOrder()" translate="order.main.submit.button"></button>
+      </div>
+    </div>
+  </div>
 </div>

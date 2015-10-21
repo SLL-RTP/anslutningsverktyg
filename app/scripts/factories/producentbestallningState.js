@@ -5,15 +5,13 @@ angular.module('avApp')
       var _order;
 
       var init = function () {
-        console.info('--- Producentbestallning.init ---');
+        console.info('--- Producentbestallning.init() ---');
         var deferred = $q.defer();
-        BestallningState.init().then(function () {
-          _order = {
-            producentanslutningar: []
-          };
-          _.assign(_order, BestallningState.current());
-          deferred.resolve();
-        });
+        _order = {
+          producentanslutningar: []
+        };
+        _.assign(_order, BestallningState.current());
+        deferred.resolve();
         return deferred.promise;
       };
 

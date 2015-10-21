@@ -2,38 +2,22 @@
 angular.module('avApp')
   .factory('BestallningState', ['$rootScope', '$q', '$timeout', '$interval', 'User',
     function ($rootScope, $q, $timeout, $interval, User) {
-      var _order, _producerOrder;
+      var _order;
+      var _specificOrderSatisfied = false, _specificOrderValid = false;
 
       var init = function () {
-        console.info('--- init ---');
+        console.info('--- BestallningState.init() ---');
         var deferred = $q.defer();
-        if (_order === undefined) {
-          User.getCurrentUser().then(function(currentUser) {
-            _order = {
-              nat: [],
-              tjanstekomponent: {},
-              bestallare: currentUser
-            };
-            deferred.resolve(_order);
-          });
-        } else {
-          console.warn('--- order already initialized ---');
-          deferred.resolve();
-        }
-        return deferred.promise;
-      };
-
-      var initProducentBestallning = function() {
-        console.info('--- initProducentBestallning ---');
-        var deferred = $q.defer();
-          _producerOrder = {};
-          _.assign(_producerOrder, _order, {
-            producentanslutningar: []
-          });
-          deferred.resolve();
-        $interval(function() {
-          console.log('producer order is now', _.cloneDeep(_producerOrder));
-        }, 10000);
+        User.getCurrentUser().then(function(currentUser) {
+          _order = {
+            nat: [],
+            tjanstekomponent: {},
+            bestallare: currentUser
+          };
+          deferred.resolve(_order);
+        });
+        _specificOrderSatisfied = false;
+        _specificOrderValid = false;
         return deferred.promise;
       };
 
@@ -41,14 +25,28 @@ angular.module('avApp')
         return _order;
       };
 
-      var producentbestallning = function() {
-        return _producerOrder;
+      var specificOrderSatisfied = function() {
+        return _specificOrderSatisfied;
+      };
+
+      var setSpecificOrderSatisfied = function(satisfied) {
+        _specificOrderSatisfied = satisfied;
+      };
+
+      var specificOrderValid = function() {
+        return _specificOrderValid;
+      };
+
+      var setSpecificOrderValid = function(valid) {
+        _specificOrderValid = valid;
       };
 
       return {
         init: init,
-        initProducentBestallning: initProducentBestallning,
         current: order,
-        producentbestallning: producentbestallning
+        specificOrderSatisfied: specificOrderSatisfied,
+        setSpecificOrderSatisfied: setSpecificOrderSatisfied,
+        specificOrderValid: specificOrderValid,
+        setSpecificOrderValid: setSpecificOrderValid
       };
     }]);

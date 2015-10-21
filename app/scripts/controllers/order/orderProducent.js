@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', 'ServiceContract', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'intersectionFilter', 'rivProfiles',
-      function ($scope, $state, $timeout, ServiceContract, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, intersectionFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', 'ServiceContract', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
+      function ($scope, $state, $timeout, ServiceContract, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           console.warn('going to parent state');
@@ -85,9 +85,9 @@ angular.module('avApp')
           }
         });
 
-        var _recheckOrderValidity = function() {
+        var _recheckOrderValidity = function () {
           if ($scope.sendOrderClicked) {
-            $scope.orderValid = _checkGlobalValidation();
+            $scope.orderValid = FormValidation.checkGlobalValidation();
           }
         };
 
@@ -98,32 +98,32 @@ angular.module('avApp')
         $scope.$on('gv-element-valid', _recheckOrderValidity);
         $scope.$on('gv-element-valid-in-focus', _recheckOrderValidity);
 
-        var validateForms = function () {
-          $scope.$broadcast('show-errors-check-validity');
-          //Get all divs with class form-group, since it is these that show the
-          //has-success or has-error classes
-          var formGroupElements = document.querySelectorAll('.form-group');
-          return !_.any(formGroupElements, function (formGroup) {
-              return angular.element(formGroup).hasClass('has-error');
-            }
-          );
-        };
+        //var validateForms = function () {
+        //  $scope.$broadcast('show-errors-check-validity');
+        //  //Get all divs with class form-group, since it is these that show the
+        //  //has-success or has-error classes
+        //  var formGroupElements = document.querySelectorAll('.form-group');
+        //  return !_.any(formGroupElements, function (formGroup) {
+        //      return angular.element(formGroup).hasClass('has-error');
+        //    }
+        //  );
+        //};
 
-        var _checkGlobalValidation = function () {
-          var formGroupElements = document.querySelectorAll('.form-group.gv-invalid');
-          var returnVal = formGroupElements.length === 0;
-          return returnVal;
-        };
+        //var _checkGlobalValidation = function () {
+        //  var formGroupElements = document.querySelectorAll('.form-group.gv-invalid');
+        //  var returnVal = formGroupElements.length === 0;
+        //  return returnVal;
+        //};
 
-        $scope.submitProducentbestallning = function () {
+        $scope.$on('send-order', function() {
           $scope.sendOrderClicked = true;
-          if (!validateForms()) {
+          if (!FormValidation.validateForms()) {
             console.warn('--- order is not valid ---');
             $scope.orderValid = false;
           } else {
             console.info('--- order is valid ---');
             $scope.orderValid = true;
-            Bestallning.createProducentbestallning(ProducentbestallningState.current()).then(function (status) {
+            Bestallning.createProducentbestallning(ProducentbestallningState.current(), BestallningState.current()).then(function (status) {
               console.log('Status: ' + status);
               if (status === 201) {
                 console.log('Going to state');
@@ -131,9 +131,8 @@ angular.module('avApp')
                 $state.go('serviceProducerOrderConfirmed');
               }
             });
-
           }
-        };
+        });
 
         _.assign($scope, {
           addLogiskAdressToAllAnslutningar: ProducentbestallningState.addLogiskAdressToAllAnslutningar,
@@ -148,7 +147,7 @@ angular.module('avApp')
           getFilteredLogiskaAdresser: LogicalAddress.getFilteredLogicalAddresses
         });
 
-        var _reset = function() {
+        var _reset = function () {
           console.info('--- reset ---');
           _.assign($scope, {
             rivProfiles: rivProfiles,
@@ -161,7 +160,7 @@ angular.module('avApp')
             requestForCallPermissionInSeparateOrder: true
           });
           $scope.$broadcast('show-errors-reset');
-          _.each($scope.nat, function(nat) {
+          _.each($scope.nat, function (nat) {
             delete nat._checked;
           });
         };
@@ -191,8 +190,17 @@ angular.module('avApp')
           }
         }, true);
 
+        $scope.$watch(function () {
+          return !!$scope.producentbestallning.tjanstekomponent && !!$scope.producentbestallning.producentanslutningar.length;
+        }, function (newVal) {
+          BestallningState.setSpecificOrderSatisfied(newVal);
+        });
 
-
+        $scope.$watch(function () {
+          return $scope.orderValid;
+        }, function (newVal) {
+          BestallningState.setSpecificOrderValid(newVal);
+        });
       }
     ]
   );

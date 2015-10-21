@@ -54,6 +54,47 @@
         },
         "nat_panel": {
           "title": "Välj nät"
+        },
+        "other_panel": {
+          "title": "Övrigt",
+          "ovrig_information": {
+            "label": "Övrig information om beställningen samt feedback om beställningsflödet"
+          }
+        },
+        "bestallare_panel": {
+          "title": "Beställare",
+          "namn": {
+            "label": "* För- och efternamn",
+            "error": {
+              "required": "För- och efternamn måste vara ifyllt"
+            }
+          },
+          "email": {
+            "label": "* E-postadress",
+            "error": {
+              "required": "E-postadress måste vara ifyllt",
+              "email": "E-postadress är ej giltig"
+            }
+          },
+          "telefon": {
+            "label": "* Telefon",
+            "error": {
+              "required": "Telefon måste vara ifyllt"
+            }
+          },
+          "hsaId": {
+            "label": "HSA-ID"
+          },
+          "roll": {
+            "label": "Roll",
+            "error": {
+              "required": "Roll måste vara ifyllt"
+            }
+          }
+        },
+        "submit": {
+          "order_error_msg": "Det finns fel i beställningen som behöver rättas till!",
+          "button": "Beställ"
         }
       },
       "producent": {
@@ -164,47 +205,6 @@
             "none": "inga tjänstekonsumenter valda",
             "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt."
           }
-        },
-        "other_panel": {
-          "title": "Övrigt",
-          "ovrig_information": {
-            "label": "Övrig information om beställningen samt feedback om beställningsflödet"
-          }
-        },
-        "bestallare_panel": {
-          "title": "Beställare",
-          "namn": {
-            "label": "* För- och efternamn",
-            "error": {
-              "required": "För- och efternamn måste vara ifyllt"
-            }
-          },
-          "email": {
-            "label": "* E-postadress",
-            "error": {
-              "required": "E-postadress måste vara ifyllt",
-              "email": "E-postadress är ej giltig"
-            }
-          },
-          "telefon": {
-            "label": "* Telefon",
-            "error": {
-              "required": "Telefon måste vara ifyllt"
-            }
-          },
-          "hsaId": {
-            "label": "HSA-ID"
-          },
-          "roll": {
-            "label": "Roll",
-            "error": {
-              "required": "Roll måste vara ifyllt"
-            }
-          }
-        },
-        "submit": {
-          "order_error_msg": "Det finns fel i beställningen som behöver rättas till!",
-          "button": "Beställ"
         }
       }
     },
