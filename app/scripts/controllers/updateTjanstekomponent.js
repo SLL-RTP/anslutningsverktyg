@@ -52,7 +52,6 @@ angular.module('avApp')
       };
 
       $scope.checkHsaIdUnique = function(hsaId) {
-        hsaId = hsaId.toUpperCase();
         var deferred = $q.defer();
         Tjanstekomponent.getTjanstekomponent(hsaId).then(function(tjanstekomponent) {
           if (_.isUndefined(tjanstekomponent.hsaId) || tjanstekomponent.hsaId === null || tjanstekomponent.hsaId !== hsaId) { //backend might perform freetext search and return non-matching tjanstekomponent

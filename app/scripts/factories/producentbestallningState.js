@@ -87,15 +87,15 @@ angular.module('avApp')
       };
 
       var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = logiskAdress.hsaId.toUpperCase();
+        var logiskAdressId = _.pick(logiskAdress, 'hsaId');
         if (angular.isDefined(anslutning.nyaLogiskaAdresser)) {
-          _.remove(anslutning.nyaLogiskaAdresser, {hsaId: logiskAdressId});
+          _.remove(anslutning.nyaLogiskaAdresser, logiskAdressId);
         }
-        if (angular.isDefined(anslutning.befintligaLogiskaAdresser) && _.find(anslutning.befintligaLogiskaAdresser, {hsaId: logiskAdressId})) {
+        if (angular.isDefined(anslutning.befintligaLogiskaAdresser) && _.find(anslutning.befintligaLogiskaAdresser, logiskAdressId)) {
           if (!anslutning.borttagnaLogiskaAdresser) {
             anslutning.borttagnaLogiskaAdresser = [];
           }
-          if (!_.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdressId})) {
+          if (!_.find(anslutning.borttagnaLogiskaAdresser, logiskAdressId)) {
             anslutning.borttagnaLogiskaAdresser.push(logiskAdress);
           }
         }
@@ -104,8 +104,7 @@ angular.module('avApp')
 
       var addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
         var nyLogiskAdress = _.clone(logiskAdress);
-        nyLogiskAdress.hsaId = nyLogiskAdress.hsaId.toUpperCase();
-        var logiskAdressId = {hsaId: nyLogiskAdress.hsaId};
+        var logiskAdressId = _.pick(nyLogiskAdress, 'hsaId');
         if (nyLogiskAdress._existing) {
           if (_.isUndefined(anslutning.befintligaLogiskaAdresser)) {
             anslutning.befintligaLogiskaAdresser = [];
@@ -157,7 +156,7 @@ angular.module('avApp')
       };
 
       var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = {hsaId: logiskAdress.hsaId.toUpperCase()};
+        var logiskAdressId = _.pick(logiskAdress, 'hsaId');
         if (anslutning.nyaLogiskaAdresser && _.find(anslutning.nyaLogiskaAdresser, logiskAdressId)) {
           return true;
         }
@@ -169,13 +168,13 @@ angular.module('avApp')
       };
 
       var _isLogiskAdressInBorttagnaLogiskaAdresser = function (logiskAdress, anslutning) {
-        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId.toUpperCase()}));
+        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
       };
 
       var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning, tjanstekomponentHsaId, driftmiljoId) {
         LogicalAddress.getConnectedLogicalAddressesForContract(tjanstekomponentHsaId, driftmiljoId, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (anslutnaLogiskaAdresser) {
           _.each(anslutnaLogiskaAdresser, function (logiskAdress) {
-            var where = {hsaId: logiskAdress.hsaId}; //already upper case from backend
+            var where = {hsaId: logiskAdress.hsaId};
             if (!_.find(anslutning.borttagnaLogiskaAdresser, where)) {
               logiskAdress._existing = true;
               addLogiskAdressToAnslutning(logiskAdress, anslutning);
