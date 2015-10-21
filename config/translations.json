@@ -21,6 +21,8 @@
     },
     "order": {
       "main": {
+        "title": "Administrera anslutning",
+        "p": "<p><strong style=\"color: red\">[CHANGEME]</strong> Här beställer du anslutning av en tjänsteproducent till, i plattformen, redan installerade tjänstekontrakt. För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppning/ar hos producenten.</p><p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>",
         "env_panel": {
           "title": "Välj miljö",
           "label": "Miljö",

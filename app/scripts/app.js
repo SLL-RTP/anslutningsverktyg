@@ -131,7 +131,7 @@ angular
     });
 
     //set up $translateProvider
-    $translateProvider.useSanitizeValueStrategy('escape');
+    $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
     $translateProvider.preferredLanguage('sv');
 
   }])
