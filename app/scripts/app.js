@@ -33,7 +33,14 @@ angular
       .state('updateTjanstekomponent', {
         url: '/tjanstekomponent/update',
         templateUrl: 'views/tjanstekomponent/update.html',
-        controller: 'UpdateTjanstekomponentCtrl'
+        controller: 'UpdateTjanstekomponentCtrl',
+        resolve: {
+          nat: ['Nat',
+            function(NatFactory) {
+              return NatFactory.getNat();
+            }
+          ]
+        }
       })
       .state('updateTjanstekomponentConfirmation', {
         url: '/tjanstekomponent/update/confirmation',
@@ -62,7 +69,6 @@ angular
             function(NatFactory) {
               return NatFactory.getNat();
             }
-
           ]
         }
       })

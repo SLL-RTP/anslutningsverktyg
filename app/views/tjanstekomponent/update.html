@@ -148,6 +148,17 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12 form-group">
+            <h4 translate="komponent_admin.panel.nat.title"></h4>
+            <div class="form-group">
+              <label ng-repeat="nat in nat" class="checkbox-inline">
+              <input type="checkbox" name="nat-{{nat.id}}" ng-model="nat._checked"> {{nat.namn}}
+            </label>
+            <span class="help-block manual-error" ng-if="displayNatError" translate="komponent_admin.panel.nat.error.empty"></span>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>

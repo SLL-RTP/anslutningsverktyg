@@ -165,6 +165,10 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
   }
 }
 
+.manual-error {
+  color: $brand-danger;
+}
+
 .centered-content {
   display: block;
   text-align: center;

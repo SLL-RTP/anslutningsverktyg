@@ -1,15 +1,20 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('UpdateTjanstekomponentCtrl', ['$scope', '$q', '$state', 'Tjanstekomponent',
-    function ($scope, $q, $state, Tjanstekomponent) {
-
+  .controller('UpdateTjanstekomponentCtrl', ['$scope', '$q', '$state', 'Tjanstekomponent', 'nat',
+    function ($scope, $q, $state, Tjanstekomponent, nat) {
       $scope.$watch('createNew', function(newTjanstekomponent) {
         console.log('newTjanstekomponent: ' + newTjanstekomponent);
         $scope.tjanstekomponentForm.$setPristine();
         $scope.tjanstekomponentForm.$setValidity();
         $scope.$broadcast('show-errors-reset');
-        $scope.tjanstekomponent = {};
+        $scope.tjanstekomponentValid = true;
+        $scope.updateClicked = false;
+        $scope.displayNatError = false;
+        $scope.nat = _.cloneDeep(nat);
+        $scope.tjanstekomponent = {
+          nat: []
+        };
         $scope.selectedTjanstekomponent = null;
       });
 
@@ -28,14 +33,46 @@ angular.module('avApp')
       $scope.$watch('selectedTjanstekomponent', function(newTjanstekomponent) {
         if (newTjanstekomponent && newTjanstekomponent.hsaId) {
           Tjanstekomponent.getTjanstekomponent(newTjanstekomponent.hsaId).then(function (result) {
+            $scope.tjanstekomponentValid = true;
+            $scope.updateClicked = false;
+            $scope.displayNatError = false;
+            if (_.isUndefined(result.nat) || _.isNull(result.nat)) {
+              result.nat = [];
+            }
             $scope.tjanstekomponent = result;
+            _.each($scope.tjanstekomponent.nat, function(nat) {
+              var natId = {id: nat.id};
+              var scopeNat = _.find($scope.nat, natId);
+              if (scopeNat) {
+                scopeNat._checked = true;
+              } else {
+                console.warn('tjanstekomponent specifies unknown nat', nat.id);
+              }
+            });
           });
         }
       });
 
+      $scope.$watch('nat', function () {
+        _.each($scope.nat, function (nat) {
+          var newNat = _.cloneDeep(nat);
+          var natId = {id: newNat.id};
+          if (nat._checked) {
+            if (!_.find($scope.tjanstekomponent.nat, natId)) {
+              $scope.tjanstekomponent.nat.push(newNat);
+            }
+          } else {
+            _.remove($scope.tjanstekomponent.nat, natId);
+          }
+        });
+        _triggerNatError();
+        _recheckOrderValidity();
+      }, true);
+
       $scope.updateTjanstekomponent = function () {
         $scope.updateClicked = true;
-        if (!_validateForms()) {
+        _triggerNatError();
+        if (!_validateForms() || !_checkNatValidation()) {
           $scope.tjanstekomponentValid = false;
         } else {
           $scope.tjanstekomponentValid = true;
@@ -65,9 +102,13 @@ angular.module('avApp')
         return deferred.promise;
       };
 
+      var _triggerNatError = function() {
+        $scope.displayNatError = !_checkNatValidation() && $scope.updateClicked;
+      };
+
       function _recheckOrderValidity() {
         if ($scope.updateClicked) {
-          $scope.tjanstekomponentValid = _checkGlobalValidation();
+          $scope.tjanstekomponentValid = _checkGlobalValidation() && _checkNatValidation();
         }
       }
 
@@ -89,10 +130,24 @@ angular.module('avApp')
         return formGroupElements.length === 0;
       };
 
+      var _checkNatValidation = function() {
+        return !!$scope.tjanstekomponent.nat.length;
+      };
+
       var reset = function() {
         $scope.tjanstekomponentValid = true;
         $scope.updateClicked = false;
         $scope.createNew = true;
+        $scope.displayNatError = false;
+        if ($scope.tjanstekomponentForm) {
+          $scope.tjanstekomponentForm.$setPristine();
+          $scope.tjanstekomponentForm.$setValidity();
+        }
+        $scope.tjanstekomponent = {
+          nat: []
+        };
+        $scope.$broadcast('show-errors-reset');
+        $scope.nat = _.cloneDeep(nat);
       };
 
       reset();

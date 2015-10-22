@@ -330,6 +330,12 @@
             "label": "URL till övervakningstjänst",
             "info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten."
           }
+        },
+        "nat": {
+          "title": "Nät",
+          "error": {
+            "empty": "Inga nät valda"
+          }
         }
       },
       "submit": {
