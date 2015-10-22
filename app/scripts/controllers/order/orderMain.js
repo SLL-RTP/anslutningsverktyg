@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', '$translate', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'nat', 'mainOrder',
-      function ($scope, $rootScope, $state, $q, $timeout, $translate, Tjanstekomponent, BestallningState, ServiceDomain, environments, nat, mainOrder) {
+  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', '$translate', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
+      function ($scope, $rootScope, $state, $q, $timeout, $translate, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -54,20 +54,6 @@ angular.module('avApp')
           }
         );
 
-        $scope.$watch('nat', function () {
-          _.each($scope.nat, function (nat) {
-            var newNat = _.cloneDeep(nat);
-            var natId = {id: newNat.id};
-            if (nat._checked) {
-              if (!_.find($scope.order.nat, natId)) {
-                $scope.order.nat.push(newNat);
-              }
-            } else {
-              _.remove($scope.order.nat, natId);
-            }
-          });
-        }, true);
-
         $scope.$watch(function () {
           return BestallningState.specificOrderSatisfied();
         }, function (newVal) {
@@ -84,8 +70,6 @@ angular.module('avApp')
           console.info('--- reset ---');
           _.assign($scope, {
             targetEnvironments: environments,
-            nat: nat,
-            valdaNat: [],
             serviceDomains: [],
             state: {},
             mep: {},
@@ -102,6 +86,7 @@ angular.module('avApp')
             displayCommonEnding: false,
             orderValid: false
           });
+          $scope.order.tjanstekomponent = {};
         };
 
         _reset();

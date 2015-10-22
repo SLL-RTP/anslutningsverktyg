@@ -160,9 +160,6 @@ angular.module('avApp')
             requestForCallPermissionInSeparateOrder: true
           });
           $scope.$broadcast('show-errors-reset');
-          _.each($scope.nat, function (nat) {
-            delete nat._checked;
-          });
         };
 
         _reset();
@@ -177,15 +174,6 @@ angular.module('avApp')
           if (newVal) {
             _reset();
             ProducentbestallningState.setTjanstekomponent(newVal);
-            $scope.updateAnslutningarIValdTjanstedoman();
-          }
-        }, true);
-
-        $scope.$watch(function () { //watching for changed nat in 'main' Bestallning
-          return BestallningState.current().nat;
-        }, function (newVal) {
-          if (newVal) {
-            ProducentbestallningState.setNat(newVal);
             $scope.updateAnslutningarIValdTjanstedoman();
           }
         }, true);
