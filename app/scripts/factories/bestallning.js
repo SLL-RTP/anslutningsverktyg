@@ -43,6 +43,9 @@ angular.module('avApp')
           },
           otherInfo: order.otherInfo
         };
+        if (!_.isUndefined(order.namnPaEtjanst)) {
+          bestallningDTO.producentbestallning.namnPaEtjanst = order.namnPaEtjanst;
+        }
         var producentanslutningar = [];
         var uppdateradProducentanslutningar = [];
         _.each(order.producentanslutningar, function(anslutning) {

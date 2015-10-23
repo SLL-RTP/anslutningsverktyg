@@ -50,6 +50,7 @@ angular.module('avApp')
                 console.log('detected producer from TAK');
                 $scope.order.tjanstekomponent = _.clone(newValue);
               }
+              delete $scope.order.namnPaEtjanst;
             }
           }
         );

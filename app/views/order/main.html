@@ -58,6 +58,14 @@
         </div>
       </div>
       <div ng-show="order.tjanstekomponent.hsaId">
+        <div class="row" ng-if="state.id == 'order.producent'">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label"></label>
+              <input type="text" class="form-control" name="namnPaEtjanst" id="namnPaEtjanst" ng-model="order.namnPaEtjanst">
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <p translate="order.main.komponent_panel.update_info_p"></p>

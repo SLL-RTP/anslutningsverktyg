@@ -23,6 +23,10 @@ angular.module('avApp')
         _order.tjanstekomponent = tjk;
       };
 
+      var setNamnPaEtjanst = function(namnPaEtjanst) {
+        _order.namnPaEtjanst = namnPaEtjanst;
+      };
+
       var setNat = function (natArr) {
         _order.nat = natArr;
       };
@@ -200,6 +204,7 @@ angular.module('avApp')
         init: init,
         current: order,
         setTjanstekomponent: setTjanstekomponent,
+        setNamnPaEtjanst: setNamnPaEtjanst,
         setNat: setNat,
         addAnslutning: addAnslutningToOrder,
         removeAnslutning: removeAnslutningFromOrder,

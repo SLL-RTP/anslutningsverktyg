@@ -178,6 +178,12 @@ angular.module('avApp')
           }
         }, true);
 
+        $scope.$watch(function() {
+          return BestallningState.current().namnPaEtjanst;
+        }, function(newVal) {
+          ProducentbestallningState.setNamnPaEtjanst(newVal);
+        });
+
         $scope.$watch(function () {
           return !!$scope.producentbestallning.tjanstekomponent && !!$scope.producentbestallning.producentanslutningar.length;
         }, function (newVal) {

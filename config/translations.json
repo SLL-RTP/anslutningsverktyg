@@ -58,7 +58,8 @@
             "pingForConfigurationURL": "URL till övervakningstjänst",
             "pingForConfigurationURL_info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten.",
             "no_info": "ingen information"
-          }
+          },
+          "etjanst_label": "Namn på E-tjänst som är tjänsteproducent"
         },
         "nat_panel": {
           "title": "Välj nät"
