@@ -61,9 +61,6 @@
           },
           "etjanst_label": "Namn på E-tjänst som är tjänsteproducent"
         },
-        "nat_panel": {
-          "title": "Välj nät"
-        },
         "other_panel": {
           "title": "Övrigt",
           "ovrig_information": {
