@@ -126,23 +126,6 @@ angular.module('avApp')
         $scope.$on('gv-element-valid', _recheckOrderValidity);
         $scope.$on('gv-element-valid-in-focus', _recheckOrderValidity);
 
-        //var validateForms = function () {
-        //  $scope.$broadcast('show-errors-check-validity');
-        //  //Get all divs with class form-group, since it is these that show the
-        //  //has-success or has-error classes
-        //  var formGroupElements = document.querySelectorAll('.form-group');
-        //  return !_.any(formGroupElements, function (formGroup) {
-        //      return angular.element(formGroup).hasClass('has-error');
-        //    }
-        //  );
-        //};
-
-        //var _checkGlobalValidation = function () {
-        //  var formGroupElements = document.querySelectorAll('.form-group.gv-invalid');
-        //  var returnVal = formGroupElements.length === 0;
-        //  return returnVal;
-        //};
-
         $scope.$on('send-order', function() {
           $scope.sendOrderClicked = true;
           if (!FormValidation.validateForms()) {

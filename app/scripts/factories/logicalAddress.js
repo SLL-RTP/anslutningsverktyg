@@ -3,14 +3,15 @@ angular.module('avApp')
   .factory('LogicalAddress', ['$q', '$http', 'configuration',
     function ($q, $http, configuration) {
     return {
-      getFilteredLogicalAddresses: function(query) {
+      getFilteredLogicalAddresses: function(query, environmentId) {
         var deferred = $q.defer();
         console.log('getFilteredLogicalAddresses query[' + query + ']');
         if (query) {
           var lowerCaseQuery = query.toLowerCase();
           $http.get(configuration.basePath + '/api/logicalAddresses', {
             params: {
-              query: lowerCaseQuery
+              query: lowerCaseQuery,
+              environmentId: environmentId
             }
           }).success(function (data) {
             deferred.resolve(data);
