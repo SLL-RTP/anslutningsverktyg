@@ -15,6 +15,10 @@ angular.module('avApp')
           $scope.state = {
             id: mode.stateId
           };
+          _.assign($scope, {
+            mep: {}
+          });
+          $scope.order.tjanstekomponent = {};
           $state.go(mode.stateId);
         };
 
