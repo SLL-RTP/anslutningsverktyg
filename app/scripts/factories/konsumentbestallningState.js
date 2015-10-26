@@ -30,18 +30,15 @@ angular.module('avApp')
       };
 
       var addAnslutningToOrder = function (anslutning) {
-        console.log('add: ' + anslutning.tjanstekontraktNamnrymd + ', _anslutetForProducent: ' + anslutning._anslutetForProducent);
-        if (!isAnslutningOnOrder(anslutning)) {
-          var nyAnslutning = _.cloneDeep(anslutning);
-          //TODO: how to handle logiska adresser already added to anslutningar when new anslutning is to be added?
-          if (nyAnslutning._anslutetForProducent) {
-            var serviceComponent = _order.tjanstekomponent;
-            var environment = _order.driftmiljo;
-            _populateAnslutningWithExistingLogiskaAdresser(nyAnslutning, serviceComponent.hsaId, environment.id);
-          }
-          _order.producentanslutningar.push(nyAnslutning);
-          $rootScope.$broadcast('anslutning-added');
+        var nyAnslutning = _.cloneDeep(anslutning);
+        var anslutningId = _.pick(nyAnslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']);
+        var index = _.findIndex(_order.konsumentanslutningar, anslutningId);
+        if (index === -1) {
+          _order.konsumentanslutningar.push(nyAnslutning);
+        } else { //replace anslutning if already among anslutningar
+          _order.konsumentanslutningar[index] = nyAnslutning;
         }
+        $rootScope.$broadcast('anslutning-added');
       };
 
       var removeAnslutningFromOrder = function (anslutning) {
@@ -50,82 +47,55 @@ angular.module('avApp')
           tjanstekontraktMajorVersion: anslutning.tjanstekontraktMajorVersion,
           tjanstekontraktMinorVersion: anslutning.tjanstekontraktMinorVersion
         };
-        if (isAnslutningOnOrder(anslutning)) {
-          _.remove(_order.producentanslutningar, anslutningId);
+        if (_isAnslutningOnOrder(anslutning)) {
+          _.remove(_order.konsumentanslutningar, anslutningId);
           $rootScope.$broadcast('anslutning-removed');
         }
       };
 
-      var isAnslutningOnOrder = function (anslutning) {
+      var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
+        var orderAnslutning = _.find(_order.konsumentanslutningar, _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']))
+        if (orderAnslutning) {
+          var logiskAdressId = _.pick(logiskAdress, 'hsaId');
+          if (angular.isDefined(orderAnslutning.nyaLogiskaAdresser)) {
+            _.remove(orderAnslutning.nyaLogiskaAdresser, logiskAdressId);
+          }
+          if (!orderAnslutning.borttagnaLogiskaAdresser) {
+            orderAnslutning.borttagnaLogiskaAdresser = [];
+          }
+          if (!_.find(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId)) {
+            orderAnslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
+          }
+          $rootScope.$broadcast('logisk-adress-removed');
+        }
+      };
+
+      var addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
+        var orderAnslutning = _.find(_order.konsumentanslutningar, _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']))
+        if (orderAnslutning) {
+          var nyLogiskAdress = _.clone(logiskAdress);
+          var logiskAdressId = _.pick(nyLogiskAdress, 'hsaId');
+          if (_.isUndefined(orderAnslutning.nyaLogiskaAdresser)) {
+            orderAnslutning.nyaLogiskaAdresser = [];
+          }
+          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, orderAnslutning)) {
+            if (_isLogiskAdressInBorttagnaLogiskaAdresser(nyLogiskAdress, orderAnslutning)) {
+              _.remove(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId);
+            } else {
+              orderAnslutning.nyaLogiskaAdresser.push(nyLogiskAdress);
+            }
+          }
+          $rootScope.$broadcast('logisk-adress-added');
+        }
+      };
+
+      var _isAnslutningOnOrder = function (anslutning) {
         var anslutningId = {
           tjanstekontraktNamnrymd: anslutning.tjanstekontraktNamnrymd,
           tjanstekontraktMajorVersion: anslutning.tjanstekontraktMajorVersion,
           tjanstekontraktMinorVersion: anslutning.tjanstekontraktMinorVersion
         };
-        return _.find(_order.producentanslutningar, anslutningId);
-      };
-
-      var addLogiskAdressToAllAnslutningar = function (logiskAdress) {
-        _.forEach(_order.producentanslutningar, function (anslutning) {
-          addLogiskAdressToAnslutning(logiskAdress, anslutning);
-        });
-      };
-
-      var canAddLogiskAdressToAllAnslutningar = function (logiskAdress) {
-        return _.every(_order.producentanslutningar, function (anslutning) {
-          return canAddLogiskAdressToAnslutning(logiskAdress, anslutning);
-        });
-      };
-
-      var canAddLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
-        return !_isLogiskAdressOnAnslutning(logiskAdress, anslutning);
-      };
-
-      var removeLogiskAdressFromAllAnslutningar = function (logiskAdress) {
-        _.each(_order.producentanslutningar, function (anslutning) {
-          removeLogiskAdressFromAnslutning(logiskAdress, anslutning);
-        });
-      };
-
-      var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = _.pick(logiskAdress, 'hsaId');
-        if (angular.isDefined(anslutning.nyaLogiskaAdresser)) {
-          _.remove(anslutning.nyaLogiskaAdresser, logiskAdressId);
-        }
-        if (angular.isDefined(anslutning.befintligaLogiskaAdresser) && _.find(anslutning.befintligaLogiskaAdresser, logiskAdressId)) {
-          if (!anslutning.borttagnaLogiskaAdresser) {
-            anslutning.borttagnaLogiskaAdresser = [];
-          }
-          if (!_.find(anslutning.borttagnaLogiskaAdresser, logiskAdressId)) {
-            anslutning.borttagnaLogiskaAdresser.push(logiskAdress);
-          }
-        }
-        $rootScope.$broadcast('logisk-adress-removed');
-      };
-
-      var addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
-        var nyLogiskAdress = _.clone(logiskAdress);
-        var logiskAdressId = _.pick(nyLogiskAdress, 'hsaId');
-        if (nyLogiskAdress._existing) {
-          if (_.isUndefined(anslutning.befintligaLogiskaAdresser)) {
-            anslutning.befintligaLogiskaAdresser = [];
-          }
-          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, anslutning)) {
-            anslutning.befintligaLogiskaAdresser.push(_.omit(nyLogiskAdress, '_existing'));
-          }
-        } else {
-          if (_.isUndefined(anslutning.nyaLogiskaAdresser)) {
-            anslutning.nyaLogiskaAdresser = [];
-          }
-          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, anslutning)) {
-            if (_isLogiskAdressInBorttagnaLogiskaAdresser(nyLogiskAdress, anslutning)) {
-              _.remove(anslutning.borttagnaLogiskaAdresser, logiskAdressId);
-            } else {
-              anslutning.nyaLogiskaAdresser.push(nyLogiskAdress);
-            }
-          }
-        }
-        $rootScope.$broadcast('logisk-adress-added');
+        return !!_.find(_order.konsumentanslutningar, anslutningId);
       };
 
       var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
@@ -144,18 +114,6 @@ angular.module('avApp')
         return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
       };
 
-      var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning, tjanstekomponentHsaId, driftmiljoId) {
-        LogicalAddress.getConnectedLogicalAddressesForContract(tjanstekomponentHsaId, driftmiljoId, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (anslutnaLogiskaAdresser) {
-          _.each(anslutnaLogiskaAdresser, function (logiskAdress) {
-            var where = {hsaId: logiskAdress.hsaId};
-            if (!_.find(anslutning.borttagnaLogiskaAdresser, where)) {
-              logiskAdress._existing = true;
-              addLogiskAdressToAnslutning(logiskAdress, anslutning);
-            }
-          });
-        });
-      };
-
       return {
         init: init,
         current: order,
@@ -163,12 +121,7 @@ angular.module('avApp')
         setNat: setNat,
         addAnslutning: addAnslutningToOrder,
         removeAnslutning: removeAnslutningFromOrder,
-        isAnslutningOnOrder: isAnslutningOnOrder,
-        addLogiskAdressToAllAnslutningar: addLogiskAdressToAllAnslutningar,
         addLogiskAdressToAnslutning: addLogiskAdressToAnslutning,
-        canAddLogiskAdressToAllAnslutningar: canAddLogiskAdressToAllAnslutningar,
-        canAddLogiskAdressToAnslutning: canAddLogiskAdressToAnslutning,
-        removeLogiskAdressFromAllAnslutningar: removeLogiskAdressFromAllAnslutningar,
-        removeLogiskAdressFromAnslutning: removeLogiskAdressFromAnslutning,
+        removeLogiskAdressFromAnslutning: removeLogiskAdressFromAnslutning
       };
     }]);

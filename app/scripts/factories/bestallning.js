@@ -24,6 +24,17 @@ angular.module('avApp')
             deferred.reject();
           });
           return deferred.promise;
+        },
+        createKonsumentbestallning: function (konsumentBestallning, mainOrder) {
+          var deferred = $q.defer();
+          var bestallningDTO = prepareKonsumentbestallning(konsumentBestallning, mainOrder);
+          console.log(JSON.stringify(bestallningDTO, null, 2));
+          $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
+            deferred.resolve(status);
+          }).error(function () { //TODO: handle errors
+            deferred.reject();
+          });
+          return deferred.promise;
         }
       };
 
@@ -172,8 +183,57 @@ angular.module('avApp')
         return bestallningDTO;
       };
 
+      var prepareKonsumentbestallning = function(order, mainOrder) {
+        var driftmiljo = cleanObj(order.driftmiljo);
+        var bestallare = cleanObj(order.bestallare);
+        var tjanstekomponent = cleanObj(order.tjanstekomponent);
+        tjanstekomponent.huvudansvarigKontakt = cleanObj(tjanstekomponent.huvudansvarigKontakt);
+        tjanstekomponent.tekniskKontakt = cleanObj(tjanstekomponent.tekniskKontakt);
+        tjanstekomponent.tekniskSupportKontakt = cleanObj(tjanstekomponent.huvudansvarigKontakt);
+        var bestallningDTO = {
+          driftmiljo: driftmiljo,
+          bestallare: bestallare,
+          bestallareRoll: mainOrder.bestallareRoll,
+          konsumentbestallningar: [{tjanstekomponent: tjanstekomponent}],
+          otherInfo: order.otherInfo
+        };
+        var konsumentanslutningar = [];
+        var uppdateradKonsumentanslutningar = [];
+        _.each(order.konsumentanslutningar, function(anslutning) {
+          var cleanAnslutning = cleanObj(anslutning);
+          if (isUppdateraKonsumentanslutning(cleanAnslutning)) {
+            if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
+              cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function (logiskAdress) {
+                return cleanObj(logiskAdress);
+              });
+            }
+            if (!_.isEmpty(cleanAnslutning.borttagnaLogiskaAdresser)) {
+              cleanAnslutning.borttagnaLogiskaAdresser = _.map(cleanAnslutning.borttagnaLogiskaAdresser, function (logiskAdress) {
+                return cleanObj(logiskAdress);
+              });
+            }
+            uppdateradKonsumentanslutningar.push(cleanAnslutning);
+          } else {
+            if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
+              cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function(logiskAdress) {
+                return cleanObj(logiskAdress);
+              });
+            }
+            delete cleanAnslutning.borttagnaLogiskaAdresser;
+            konsumentanslutningar.push(cleanAnslutning);
+          }
+        });
+        bestallningDTO.konsumentbestallningar[0].konsumentanslutningar = konsumentanslutningar;
+        bestallningDTO.konsumentbestallningar[0].uppdateradKonsumentanslutningar = uppdateradKonsumentanslutningar;
+        return bestallningDTO;
+      };
+
       var isUppdateraProducentAnslutning = function(anslutning) {
         return ((anslutning.befintligaLogiskaAdresser && anslutning.befintligaLogiskaAdresser.length > 0) || anslutning.tidigareRivtaProfil || anslutning.tidigareUrl);
+      };
+
+      var isUppdateraKonsumentanslutning = function(anslutning) {
+        return anslutning.borttagnaLogiskaAdresser && anslutning.borttagnaLogiskaAdresser.length > 0;
       };
 
       var isUppdateraProducentAnslutningChanged = function(uppdateraProducentanslutning) {

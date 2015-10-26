@@ -1,5 +1,5 @@
 {
-  "basePath": "http://192.168.56.1:8080/anslutningsplattform",
+  "basePath": "http://192.168.35.1:8080/anslutningsplattform",
   "apiToken": "secret-token",
   "devMode": false,
   "devDebug": "false",

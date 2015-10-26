@@ -120,6 +120,10 @@ angular
         controller: 'OrderKonsumentCtrl',
         templateUrl: 'views/order/konsument.html'
       })
+      .state('order-confirmation', {
+        url: '/order/confirmation',
+        templateUrl: 'views/order-confirmation/order-confirmation.html'
+      })
       .state('exempelmatris', {
         url: '/exempelmatris',
         templateUrl: 'views/exempelmatris/exempelmatris.html',

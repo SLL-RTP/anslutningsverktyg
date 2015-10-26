@@ -48,6 +48,32 @@ angular.module('avApp')
           deferred.reject();
         });
         return deferred.promise;
+      },
+      getLogicalAddressForHsaId: function(environmentId, hsaId) {
+        var deferred = $q.defer();
+        if (Math.random()<0.5) {
+          deferred.resolve({hsaId: hsaId, namn: 'FOOBAR'});
+        } else {
+          deferred.reject();
+        }
+        return deferred.promise;
+      },
+      getKonsumentanslutningarForDoman: function(environmentId, serviceDomainId, serviceConsumerHsaId) {
+        var deferred = $q.defer();
+        if (environmentId && serviceDomainId && serviceConsumerHsaId) {
+          $http.get(configuration.basePath + '/api/logicalAddresses', {
+            params: {
+              environmentId: environmentId,
+              serviceDomainId: serviceDomainId,
+              serviceConsumerHsaId: serviceConsumerHsaId
+            }
+          }).success(function (data) {
+            deferred.resolve(data);
+          }).error(function () { //TODO: error handling
+            deferred.reject();
+          });
+        }
+        return deferred.promise;
       }
     };
   }]);

@@ -18,25 +18,27 @@
           <thead>
           <tr>
             <th class="la-name-container">&nbsp;</th>
-            <th ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="contract-name-container" scrollbar-pad="$last">
+            <th ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="contract-name-container" scrollbar-pad="$last">
               <div class="rotated-text">
                 <div class="rotated-text__inner">
-                  <span>{{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</span>
+                  <span>{{kontrakt.tjanstekontraktNamn}} {{kontrakt.tjanstekontraktMajorVersion}}.x</span>
                 </div>
               </div>
             </th>
           </tr>
           </thead>
-          <tbody ng-if="logiskaAdresser.length">
+          <tbody ng-if="logiskaAdresserIValdTjanstedoman.length">
           <tr>
             <td>
               <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
               <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
             </td>
-            <td ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="la-checkbox-container" scrollbar-pad="$last">
+            <td ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="la-checkbox-container" scrollbar-pad="$last">
               <div>
                 <label for="checkAll" translate="order.konsument.select_kontrakt_panel.check_all_kontrakt_label"></label>
-                <input id="checkAll" type="checkbox" ng-model="anslutning.checkAll" ng-change="selectAllLogiskaAdresser(anslutning)">
+                <div>
+                  <input id="checkAll" type="checkbox" ng-model="kontrakt._checkAll" ng-change="selectAllLogiskaAdresser(kontrakt)" ng-disabled="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length">
+                </div>
               </div>
             </td>
           </tr>
@@ -50,9 +52,9 @@
                 <p>{{la.namn}}</p>
                 <small>{{la.hsaId}}</small>
               </th>
-              <td ng-repeat="anslutning in anslutningarIValdTjanstedoman" class="la-checkbox-container" ng-class="{'checkbox-disabled': matrix[la.hsaId][contractKey(anslutning)].disabled, 'removed': matrix[la.hsaId][contractKey(anslutning)].installed && !matrix[la.hsaId][contractKey(anslutning)].checked, 'added': !matrix[la.hsaId][contractKey(anslutning)].installed && matrix[la.hsaId][contractKey(anslutning)].checked}">
-                <div ng-if="!matrix[la.hsaId][contractKey(anslutning)].disabled">
-                  <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(anslutning)].checked" ng-disabled="matrix[la.hsaId][contractKey(anslutning)].disabled">
+              <td ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="la-checkbox-container" ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}">
+                <div>
+                  <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(kontrakt)].checked" ng-change="updateAnslutningarOnOrder();" ng-disabled="!matrix[la.hsaId][contractKey(kontrakt)]">
                 </div>
               </td>
             </tr>

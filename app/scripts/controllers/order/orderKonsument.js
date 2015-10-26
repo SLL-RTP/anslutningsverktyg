@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$q', 'BestallningState', 'KonsumentbestallningState', 'ServiceContract', 'LogicalAddress',
-      function ($scope, $state, $q, BestallningState, KonsumentBestallningState, ServiceContract, LogicalAddress) {
+  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$q', 'BestallningState', 'KonsumentbestallningState', 'ServiceContract', 'LogicalAddress', 'FormValidation', 'Bestallning',
+      function ($scope, $state, $q, BestallningState, KonsumentBestallningState, ServiceContract, LogicalAddress, FormValidation, Bestallning) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           console.warn('going to parent state');
@@ -12,68 +12,111 @@ angular.module('avApp')
 
         $scope.updateAnslutningarIValdTjanstedoman = function () {
           if ($scope.konsumentbestallning.driftmiljo && $scope.konsumentbestallning.tjanstekomponent && $scope.selectedTjanstedoman) {
-            $scope.logiskaAdresser = [];
             var tjanstekomponentId = $scope.konsumentbestallning.tjanstekomponent.hsaId;
             var driftmiljoId = $scope.konsumentbestallning.driftmiljo.id;
             var tjanstedomanId = $scope.selectedTjanstedoman.tjansteDomanId;
-            ServiceContract.listAnslutningar(tjanstekomponentId, driftmiljoId, tjanstedomanId).then(function (anslutningar) {
-              $scope.anslutningarIValdTjanstedoman = _.map(anslutningar, function (anslutning) {
-                anslutning._paBestallning = KonsumentBestallningState.isAnslutningOnOrder(anslutning);
-                return anslutning;
-              });
-              updateConnectedLogiskaAdresser(tjanstekomponentId, driftmiljoId, $scope.anslutningarIValdTjanstedoman);
-            });
+            populateScopeWithAnslutningData(driftmiljoId, tjanstedomanId, tjanstekomponentId);
           }
         };
 
-        $scope.selectAllLogiskaAdresser = function(anslutning) {
+        $scope.selectAllLogiskaAdresser = function(kontrakt) {
           if ($scope.matrix) {
-            var cc = contractKey(anslutning);
-            _.forOwn($scope.matrix, function(val, key) {
-              var disabled = $scope.matrix[key][cc].disabled;
-              $scope.matrix[key][cc].checked = !disabled && anslutning.checkAll;
+            var cc = contractKey(kontrakt);
+            _.each(_.keys($scope.matrix), function(key) {
+              if ($scope.matrix[key][cc]) {
+                $scope.matrix[key][cc].checked = kontrakt._checkAll;
+              }
             });
+            updateAnslutningarOnOrder();
           }
         };
 
-        var updateConnectedLogiskaAdresser = function(tjanstekomponentHsaId, driftmiljoId, anslutningar) {
-          console.log('anslutningar', anslutningar);
-          var promises = _.map(anslutningar, function(anslutning) {
-            var deferred = $q.defer();
-            LogicalAddress.getConnectedLogicalAddressesForContract(
-              tjanstekomponentHsaId,
-              driftmiljoId,
-              anslutning.tjanstekontraktNamnrymd,
-              anslutning.tjanstekontraktMajorVersion,
-              anslutning.tjanstekontraktMinorVersion).then(function(logiskaAdresser) {
-              deferred.resolve({
-                anslutning: anslutning,
-                logiskaAdresser: logiskaAdresser
-              });
+        $scope.filterLogiskaAdresser = function(inputText) {
+          if (inputText) {
+            $scope.logiskaAdresser = _.filter($scope.logiskaAdresserIValdTjanstedoman, function(logiskAdress) {
+              return logiskAdress.namn.toLowerCase().indexOf(inputText.toLowerCase()) > -1 ||
+                logiskAdress.hsaId.toLowerCase().indexOf(inputText.toLowerCase()) > -1;
             });
-            return deferred.promise;
-          });
-          $q.all(promises).then(function(holderArr) {
-            var matrix = {};
-            var logiskaAdresser = [];
-            _.each(holderArr, function(holder) {
-              console.log('holder', holder);
-              var cc = contractKey(holder.anslutning);
-              _.each(holder.logiskaAdresser, function(logiskAdress) {
-                if (!_.find(logiskaAdresser, {hsaId: logiskAdress.hsaId})) {
-                  logiskaAdresser.push(logiskAdress);
+          } else {
+            $scope.logiskaAdresser = $scope.logiskaAdresserIValdTjanstedoman;
+          }
+        };
+
+        var populateScopeWithAnslutningData = function(environmentId, serviceDomainId, serviceConsumerHsaId) {
+          var newMatrix = {};
+          var logiskaAdresser = [];
+          var kontraktIValdTjanstedoman = [];
+          LogicalAddress.getKonsumentanslutningarForDoman(environmentId, serviceDomainId, serviceConsumerHsaId)
+            .then(function (matrix) {
+              console.info(matrix);
+              _.each(matrix, function (kaStatus) {
+                kontraktIValdTjanstedoman.push(_.pick(kaStatus, ['tjanstekontraktNamn', 'tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
+                var cc = contractKey(kaStatus);
+                _.each(kaStatus.logiskAdressStatuses, function (laStatus) {
+                  if (!_.find(logiskaAdresser, _.pick(laStatus, 'hsaId'))) {
+                    logiskaAdresser.push(_.pick(laStatus, 'hsaId', 'namn'));
+                  }
+                  if (!newMatrix[laStatus.hsaId]) {
+                    newMatrix[laStatus.hsaId] = {};
+                  }
+                  newMatrix[laStatus.hsaId][cc] = {
+                    enabled: laStatus.enabled,
+                    checked: laStatus.enabled,
+                    possible: laStatus.possible
+                  };
+                });
+              });
+              $scope.matrix = newMatrix;
+              $scope.logiskaAdresserIValdTjanstedoman = logiskaAdresser; //samtliga logiska adresser
+              $scope.logiskaAdresser = logiskaAdresser; //logiska adresser som visas
+              $scope.kontraktIValdTjanstedoman = kontraktIValdTjanstedoman;
+            });
+        };
+
+        //update anslutningar on order based on status in matrix.
+        //The matrix keeps the complete state since we can only work with one tjänstedomän at a time
+        var updateAnslutningarOnOrder = function() {
+          if ($scope.matrix) {
+            var anslutningar = [];
+            _.each(_.pairs($scope.matrix), function(pair) {
+              var logiskAdress = _.find($scope.logiskaAdresser, {hsaId: pair[0]});
+              _.each(_.pairs(pair[1]), function(innerPair) {
+                var cc = innerPair[0];
+                var contractLogiskAdressStatus = innerPair[1];
+                var kontrakt = _.find($scope.kontraktIValdTjanstedoman, function(kontrakt) {
+                  return contractKey(kontrakt) === cc;
+                });
+                var anslutning = _.find(anslutningar, _.pick(kontrakt, [
+                    'tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion'
+                  ]));
+                if (!anslutning) {
+                  anslutning = _.clone(kontrakt);
+                  anslutning.nyaLogiskaAdresser = [];
+                  anslutning.borttagnaLogiskaAdresser = [];
+                  anslutningar.push(anslutning);
                 }
-                if (!matrix[logiskAdress.hsaId]) {matrix[logiskAdress.hsaId] = {};}
-                matrix[logiskAdress.hsaId][cc] = {
-                  installed: true,
-                  checked: true
-                };
+                if (!contractLogiskAdressStatus.enabled && contractLogiskAdressStatus.checked) {
+                  anslutning.nyaLogiskaAdresser.push(_.clone(logiskAdress));
+                }
+                if (contractLogiskAdressStatus.enabled && !contractLogiskAdressStatus.checked) {
+                  anslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
+                }
               });
             });
-            //TODO: need second pass to 'fill in blanks' ?
-            $scope.matrix = matrix;
-            $scope.logiskaAdresser = logiskaAdresser;
-          });
+            _.each(anslutningar, function(anslutning) {
+              if (anslutning.nyaLogiskaAdresser.length || anslutning.borttagnaLogiskaAdresser.length) {
+                KonsumentBestallningState.addAnslutning(anslutning);
+                _.each(anslutning.nyaLogiskaAdresser, function(nyLogiskAdress) {
+                  KonsumentBestallningState.addLogiskAdressToAnslutning(nyLogiskAdress, anslutning);
+                });
+                _.each(anslutning.borttagnaLogiskaAdresser, function(borttagenLogiskAdress) {
+                  KonsumentBestallningState.removeLogiskAdressFromAnslutning(borttagenLogiskAdress, anslutning);
+                });
+              } else {
+                KonsumentBestallningState.removeAnslutning(anslutning);
+              }
+            });
+          }
         };
 
         var contractKey = function(anslutning) {
@@ -83,12 +126,44 @@ angular.module('avApp')
           return namnrymd + '_' + major + '_' + minor;
         };
 
+        var _recheckOrderValidity = function () {
+          if ($scope.sendOrderClicked) {
+            $scope.orderValid = FormValidation.checkGlobalValidation();
+          }
+        };
+
+        $scope.$on('gv-leaving-element-invalid', _recheckOrderValidity);
+        $scope.$on('gv-leaving-element-valid', _recheckOrderValidity);
+        $scope.$on('gv-element-invalid', _recheckOrderValidity);
+        $scope.$on('gv-element-invalid-in-focus', _recheckOrderValidity);
+        $scope.$on('gv-element-valid', _recheckOrderValidity);
+        $scope.$on('gv-element-valid-in-focus', _recheckOrderValidity);
+
+        $scope.$on('send-order', function() {
+          $scope.sendOrderClicked = true;
+          if (!FormValidation.validateForms()) {
+            console.warn('--- order is not valid ---');
+            $scope.orderValid = false;
+          } else {
+            console.info('--- order is valid ---');
+            $scope.orderValid = true;
+            Bestallning.createKonsumentbestallning(KonsumentBestallningState.current(), BestallningState.current()).then(function (status) {
+              if (status === 201) {
+                console.log('Going to state');
+                $state.go('order-confirmation');
+              }
+            });
+          }
+        });
+
         var _reset = function() {
           console.info('--- reset ---');
           _.assign($scope, {
             orderValid: true,
             sendOrderClicked: false,
-            selectedTjanstedoman: undefined
+            selectedTjanstedoman: undefined,
+            logiskaAdresser: [],
+            logiskaAdresserIValdTjanstedoman: []
           });
           $scope.$broadcast('show-errors-reset');
         };
@@ -109,7 +184,20 @@ angular.module('avApp')
           }
         }, true);
 
+        $scope.$watch(function () {
+          return !!$scope.konsumentbestallning.tjanstekomponent && !!$scope.konsumentbestallning.konsumentanslutningar.length;
+        }, function (newVal) {
+          BestallningState.setSpecificOrderSatisfied(newVal);
+        });
+
+        $scope.$watch(function () {
+          return $scope.orderValid;
+        }, function (newVal) {
+          BestallningState.setSpecificOrderValid(newVal);
+        });
+
         $scope.contractKey = contractKey;
+        $scope.updateAnslutningarOnOrder = updateAnslutningarOnOrder;
 
       }
     ]
