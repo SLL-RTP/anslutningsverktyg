@@ -21,6 +21,7 @@ angular.module('avApp')
 
       var setTjanstekomponent = function (tjk) {
         _order.tjanstekomponent = tjk;
+        _order.producentanslutningar = []; //reset when komponent changes
       };
 
       var setNamnPaEtjanst = function(namnPaEtjanst) {

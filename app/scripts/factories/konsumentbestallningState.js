@@ -22,6 +22,7 @@ angular.module('avApp')
       var setTjanstekomponent = function (tjk) {
         console.info('setTjanstekomponent', tjk);
         _order.tjanstekomponent = tjk;
+        _order.konsumentanslutningar = []; //reset on new komponent
       };
 
       var setNat = function (natArr) {
