@@ -24,6 +24,34 @@ angular.module('avApp')
           }
         };
 
+        $scope.updateLogiskAdressWithBackendData = function (logiskAdress) {
+          if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
+            LogicalAddress.getLogicalAddressForHsaId($scope.producentbestallning.driftmiljo.id, logiskAdress.hsaId)
+              .then(function (backendLogiskAdress) {
+                logiskAdress._backend = true;
+                _.assign(logiskAdress, backendLogiskAdress);
+              }, function () {
+                console.warn('no logisk adress found for ' + logiskAdress.hsaId);
+              });
+          }
+        };
+
+        $scope.addNewLogiskAdressToAllAnslutningar = function (logiskAdress) {
+          if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
+            var nyLogiskAdress = _.clone(logiskAdress);
+            $scope.updateLogiskAdressWithBackendData(nyLogiskAdress);
+            ProducentbestallningState.addLogiskAdressToAllAnslutningar(nyLogiskAdress);
+          }
+        };
+
+        $scope.addNewLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
+          if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
+            var nyLogiskAdress = _.clone(logiskAdress);
+            $scope.updateLogiskAdressWithBackendData(nyLogiskAdress);
+            ProducentbestallningState.addLogiskAdressToAnslutning(nyLogiskAdress, anslutning);
+          }
+        };
+
         /**
          * calculate whether the user should be allowed to handle 'anslutningar' in a unified fashion or
          * if she must configure them separately
@@ -156,6 +184,7 @@ angular.module('avApp')
             orderValid: true,
             sendOrderClicked: false,
             selectedTjanstedoman: undefined,
+            anslutningarIValdTjanstedoman: [],
             selectedLogicalAddress: {},
             requestForCallPermissionInSeparateOrder: true
           });

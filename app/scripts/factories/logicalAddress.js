@@ -51,11 +51,16 @@ angular.module('avApp')
       },
       getLogicalAddressForHsaId: function(environmentId, hsaId) {
         var deferred = $q.defer();
-        if (Math.random()<0.5) {
-          deferred.resolve({hsaId: hsaId, namn: 'FOOBAR'});
-        } else {
+        $http.get(configuration.basePath + '/api/logicalAddresses/' + hsaId, {
+          params: {
+            environmentId: environmentId
+          }
+        }).success(function(data) {
+          deferred.resolve(data);
+        }).error(function() {
+          console.warn('no logisk adress found for ' + hsaId);
           deferred.reject();
-        }
+        });
         return deferred.promise;
       },
       getKonsumentanslutningarForDoman: function(environmentId, serviceDomainId, serviceConsumerHsaId) {

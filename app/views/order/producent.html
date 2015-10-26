@@ -141,15 +141,22 @@
           <div class="row">
             <label translate="order.producent.logiska_adresser_selections_panel.add.label"></label>
             <div class="form-group">
-              <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID" ng-change="disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
+              <input ng-model="newLogicalAddress.hsaId"
+                     type="text" class="form-control"
+                     id="newLogicalAddress_HSAID"
+                     ng-change="newLogicalAddress._backend = false; disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
                      placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.hsaId' | translate}}">
             </div>
           </div>
 
           <div class="row">
             <div class="form-group">
-              <input ng-model="newLogicalAddress.namn" type="text" class="form-control" id="newLogicalAddress_Name"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}">
+              <input ng-model="newLogicalAddress.namn"
+                     type="text" class="form-control"
+                     id="newLogicalAddress_Name"
+                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}"
+                     ng-disabled="!newLogicalAddress.hsaId || newLogicalAddress._backend"
+                     ng-focus="updateLogiskAdressWithBackendData(newLogicalAddress)">
             </div>
           </div>
         </div>
@@ -165,7 +172,7 @@
           </div>
           <div class="row">
             <div class="centered-content top45">
-              <button type="button" class="btn btn-primary" ng-disabled="disableSecond" ng-click="addLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
+              <button type="button" class="btn btn-primary" ng-disabled="disableSecond || !newLogicalAddress.hsaId" ng-click="addNewLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
                 <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
                 <span ng-show="disableSecond" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
               </button>
@@ -268,15 +275,22 @@
           <div class="row">
             <label translate="order.producent.logiska_adresser_selections_panel.add.label"></label>
             <div class="form-group">
-              <input ng-model="newLogicalAddress.hsaId" type="text" class="form-control" id="newLogicalAddress_HSAID_{{$index}}" ng-change="this.disableSecond = !canAddLogiskAdressToAnslutning(newLogicalAddress, anslutning)"
+              <input ng-model="this.newLogicalAddress.hsaId"
+                     type="text" class="form-control"
+                     id="newLogicalAddress_HSAID_{{$index}}"
+                     ng-change="this.newLogicalAddress._backend = false; this.disableSecond = !canAddLogiskAdressToAnslutning(this.newLogicalAddress, anslutning)"
                      placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.hsaId' | translate}}">
             </div>
           </div>
 
           <div class="row">
             <div class="form-group">
-              <input ng-model="newLogicalAddress.namn" type="text" class="form-control" id="newLogicalAddress_Name_{{$index}}"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}">
+              <input ng-model="this.newLogicalAddress.namn"
+                     type="text" class="form-control"
+                     id="newLogicalAddress_Name_{{$index}}"
+                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}"
+                     ng-disabled="!this.newLogicalAddress.hsaId || this.newLogicalAddress._backend"
+                     ng-focus="updateLogiskAdressWithBackendData(this.newLogicalAddress)">
             </div>
           </div>
         </div>
@@ -293,7 +307,7 @@
 
           <div class="row">
             <div class="centered-content top45">
-              <button type="button" class="btn btn-primary" ng-disabled="this.disableSecond" ng-click="addLogiskAdressToAnslutning(newLogicalAddress, anslutning); newLogicalAddress = {};">
+              <button type="button" class="btn btn-primary" ng-disabled="this.disableSecond || !this.newLogicalAddress.hsaId" ng-click="addNewLogiskAdressToAnslutning(this.newLogicalAddress, anslutning); this.newLogicalAddress = {};">
                 <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableSecond"></span>
                 <span ng-show="this.disableSecond" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
               </button>
