@@ -3,9 +3,9 @@ angular.module('avApp')
   .factory('Bestallning', ['configuration', '$q', '$http',
     function (configuration, $q, $http) {
       var orderFactory = {
-        createProducentbestallning: function (order) { //FIXME: duplicated until old flow is removed
+        createProducentbestallning: function (producentBestallning, mainOrder) { //FIXME: duplicated until old flow is removed
           var deferred = $q.defer();
-          var bestallningDTO = prepareProducentbestallning(order);
+          var bestallningDTO = prepareProducentbestallning(producentBestallning, mainOrder);
           console.log(JSON.stringify(bestallningDTO, null, 2));
           $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
             deferred.resolve(status);
@@ -38,7 +38,7 @@ angular.module('avApp')
         }
       };
 
-      var prepareProducentbestallning = function(order) {
+      var prepareProducentbestallning = function(order, mainOrder) {
         var driftmiljo = cleanObj(order.driftmiljo);
         var bestallare = cleanObj(order.bestallare);
         var tjanstekomponent = cleanObj(order.tjanstekomponent);
@@ -48,19 +48,23 @@ angular.module('avApp')
         var bestallningDTO = {
           driftmiljo: driftmiljo,
           bestallare: bestallare,
-          bestallareRoll: order.bestallareRoll,
+          bestallareRoll: mainOrder.bestallareRoll,
           producentbestallning: {
             tjanstekomponent: tjanstekomponent
           },
-          otherInfo: order.otherInfo
+          otherInfo: mainOrder.otherInfo
         };
-        if (!_.isUndefined(order.namnPaEtjanst)) {
-          bestallningDTO.producentbestallning.namnPaEtjanst = order.namnPaEtjanst;
+        if (!_.isUndefined(mainOrder.namnPaEtjanst)) {
+          bestallningDTO.producentbestallning.namnPaEtjanst = mainOrder.namnPaEtjanst;
         }
         var producentanslutningar = [];
         var uppdateradProducentanslutningar = [];
         _.each(order.producentanslutningar, function(anslutning) {
           var cleanAnslutning = cleanObj(anslutning);
+          delete cleanAnslutning.installeratIDriftmiljo;
+          delete cleanAnslutning.logiskAdressStatuses;
+          delete cleanAnslutning.producentRivtaProfil;
+          delete cleanAnslutning.producentUrl;
           if (isUppdateraProducentAnslutning(cleanAnslutning)) {
             if (isUppdateraProducentAnslutningChanged(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
 
@@ -195,7 +199,7 @@ angular.module('avApp')
           bestallare: bestallare,
           bestallareRoll: mainOrder.bestallareRoll,
           konsumentbestallningar: [{tjanstekomponent: tjanstekomponent}],
-          otherInfo: order.otherInfo
+          otherInfo: mainOrder.otherInfo
         };
         var konsumentanslutningar = [];
         var uppdateradKonsumentanslutningar = [];
