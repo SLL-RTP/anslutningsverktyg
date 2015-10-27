@@ -63,23 +63,6 @@ angular.module('avApp')
           deferred.reject();
         });
         return deferred.promise;
-      },
-      getKonsumentanslutningarForDoman: function(environmentId, serviceDomainId, serviceConsumerHsaId) {
-        var deferred = $q.defer();
-        if (environmentId && serviceDomainId && serviceConsumerHsaId) {
-          $http.get(configuration.basePath + '/api/anslutningar/konsument', {
-            params: {
-              environmentId: environmentId,
-              serviceDomainId: serviceDomainId,
-              serviceConsumerHsaId: serviceConsumerHsaId
-            }
-          }).success(function (data) {
-            deferred.resolve(data);
-          }).error(function () { //TODO: error handling
-            deferred.reject();
-          });
-        }
-        return deferred.promise;
       }
     };
   }]);

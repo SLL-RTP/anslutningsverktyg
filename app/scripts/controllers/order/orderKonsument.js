@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$q', 'BestallningState', 'KonsumentbestallningState', 'ServiceContract', 'LogicalAddress', 'FormValidation', 'Bestallning',
-      function ($scope, $state, $q, BestallningState, KonsumentBestallningState, ServiceContract, LogicalAddress, FormValidation, Bestallning) {
+  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$q', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
+      function ($scope, $state, $q, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           console.warn('going to parent state');
@@ -46,7 +46,7 @@ angular.module('avApp')
           var newMatrix = {};
           var logiskaAdresser = [];
           var kontraktIValdTjanstedoman = [];
-          LogicalAddress.getKonsumentanslutningarForDoman(environmentId, serviceDomainId, serviceConsumerHsaId)
+          AnslutningStatus.getKonsumentanslutningar(serviceConsumerHsaId, environmentId, serviceDomainId)
             .then(function (matrix) {
               console.info(matrix);
               _.each(matrix, function (kaStatus) {
