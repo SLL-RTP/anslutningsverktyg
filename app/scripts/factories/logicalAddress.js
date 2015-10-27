@@ -67,7 +67,7 @@ angular.module('avApp')
       getKonsumentanslutningarForDoman: function(environmentId, serviceDomainId, serviceConsumerHsaId) {
         var deferred = $q.defer();
         if (environmentId && serviceDomainId && serviceConsumerHsaId) {
-          $http.get(configuration.basePath + '/api/logicalAddresses', {
+          $http.get(configuration.basePath + '/api/anslutningar/konsument', {
             params: {
               environmentId: environmentId,
               serviceDomainId: serviceDomainId,
