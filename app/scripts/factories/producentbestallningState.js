@@ -37,7 +37,7 @@ angular.module('avApp')
         if (!isAnslutningOnOrder(anslutning)) {
           var nyAnslutning = _.cloneDeep(anslutning);
           //TODO: how to handle logiska adresser already added to anslutningar when new anslutning is to be added?
-          if (nyAnslutning._anslutetForProducent) {
+          if (nyAnslutning.logiskAdressStatuses.length) {
             var serviceComponent = _order.tjanstekomponent;
             var environment = _order.driftmiljo;
             _populateAnslutningWithExistingLogiskaAdresser(nyAnslutning, serviceComponent.hsaId, environment.id);
@@ -176,29 +176,26 @@ angular.module('avApp')
         return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
       };
 
-      var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning, tjanstekomponentHsaId, driftmiljoId) {
-        LogicalAddress.getConnectedLogicalAddressesForContract(tjanstekomponentHsaId, driftmiljoId, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (anslutnaLogiskaAdresser) {
-          _.each(anslutnaLogiskaAdresser, function (logiskAdress) {
-            var where = {hsaId: logiskAdress.hsaId};
-            if (!_.find(anslutning.borttagnaLogiskaAdresser, where)) {
-              logiskAdress._existing = true;
-              addLogiskAdressToAnslutning(logiskAdress, anslutning);
+      var _populateAnslutningWithExistingLogiskaAdresser = function (anslutning) {
+        if (anslutning.logiskAdressStatuses && anslutning.logiskAdressStatuses.length) {
+          _.each(anslutning.logiskAdressStatuses, function(logiskAdressStatus) {
+            if (!_.find(anslutning.borttagnaLogiskaAdresser, _.pick(logiskAdressStatus, 'hsaId'))) {
+              logiskAdressStatus._existing = true;
+              addLogiskAdressToAnslutning(logiskAdressStatus, anslutning);
             }
           });
-        });
+        }
       };
 
       var _populateAnslutningWithRivtaProfilAndUrl = function (serviceComponent, anslutning, environment) {
-        Url.getUrlAndProfile(serviceComponent.hsaId, environment.id, anslutning.tjanstekontraktNamnrymd, anslutning.tjanstekontraktMajorVersion, anslutning.tjanstekontraktMinorVersion).then(function (urlAndProfile) {
-          if (urlAndProfile.rivProfil) {
-            anslutning.rivtaProfil = urlAndProfile.rivProfil;
-            anslutning.tidigareRivtaProfil = urlAndProfile.rivProfil;
-          }
-          if (urlAndProfile.url) {
-            anslutning.url = urlAndProfile.url;
-            anslutning.tidigareUrl = urlAndProfile.url;
-          }
-        });
+        if (anslutning.producentRivtaProfil) {
+          anslutning.rivtaProfil = anslutning.producentRivtaProfil;
+          anslutning.tidigareRivtaProfil = anslutning.producentRivtaProfil;
+        }
+        if (anslutning.producentUrl) {
+          anslutning.url = anslutning.producentUrl;
+          anslutning.tidigareUrl = anslutning.producentUrl;
+        }
       };
 
       return {

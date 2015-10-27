@@ -29,14 +29,14 @@
             </td>
           </tr>
           <tr ng-repeat="anslutning in anslutningarIValdTjanstedoman"
-              ng-class="{'success': anslutning._selected, 'contract-disabled': !anslutning._finnsIDriftmiljo}"
-              ng-click="anslutning._selected = !anslutning._selected && anslutning._finnsIDriftmiljo"
+              ng-class="{'success': anslutning._selected, 'contract-disabled': !anslutning.installeratIDriftmiljo}"
+              ng-click="anslutning._selected = !anslutning._selected && anslutning.installeratIDriftmiljo"
               class="contract-row">
             <td>
-              <span>{{anslutning._namn}}</span>
-              <span class="label label-default" ng-show="!anslutning._finnsIDriftmiljo" translate="order.producent.select_kontrakt_panel.anslutning.status.not_installed"></span>
-              <span class="label label-warning" ng-show="anslutning._finnsIDriftmiljo && !anslutning._anslutetForProducent" translate="order.producent.select_kontrakt_panel.anslutning.status.not_connected"></span>
-              <span class="label label-info" ng-show="anslutning._anslutetForProducent" translate="order.producent.select_kontrakt_panel.anslutning.status.connected"></span>
+              <span>{{anslutning.tjanstekontraktNamn}}</span>
+              <span class="label label-default" ng-show="!anslutning.installeratIDriftmiljo" translate="order.producent.select_kontrakt_panel.anslutning.status.not_installed"></span>
+              <span class="label label-warning" ng-show="anslutning.installeratIDriftmiljo && !anslutning.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.not_connected"></span>
+              <span class="label label-info" ng-show="anslutning.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.connected"></span>
               <span class="label label-success" ng-show="anslutning._paBestallning" translate="order.producent.select_kontrakt_panel.anslutning.status.on_order"></span>
             </td>
             <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
@@ -68,12 +68,12 @@
               <em translate="order.producent.select_kontrakt_panel.order.no_contracts"></em>
             </td>
           </tr>
-          <tr ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: '_namn'">
+          <tr ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
             <td class="contract-button" style="text-align: center" ng-click="removeAnslutningFromOrder(anslutning)">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </td>
             <td>
-              <p style="margin-bottom: -5px">{{anslutning._namn}}</p>
+              <p style="margin-bottom: -5px">{{anslutning.tjanstekontraktNamn}}</p>
                   <span>
                     <small>({{anslutning._tjanstedoman}})</small>
                   </span>
@@ -180,7 +180,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-5" ng-if="!producentbestallning.producentanslutningar[0]._anslutetForProducent">
+        <div class="form-group col-md-5" ng-if="!producentbestallning.producentanslutningar[0].logiskAdressStatuses.length">
           <label translate="order.producent.logiska_adresser_selections_panel.selection.current.label"></label>
           <logisk-adress-alert
             logisk-adress="logiskAdress"
@@ -192,7 +192,7 @@
             <em translate="order.producent.logiska_adresser_selections_panel.selection.current.none"></em>
           </p>
         </div>
-        <div class="form-group col-md-5" ng-if="producentbestallning.producentanslutningar[0]._anslutetForProducent">
+        <div class="form-group col-md-5" ng-if="producentbestallning.producentanslutningar[0].logiskAdressStatuses.length">
           <label translate="order.producent.logiska_adresser_selections_panel.selection.new.label"></label>
           <logisk-adress-alert
             logisk-adress="logiskAdress"
@@ -229,10 +229,10 @@
 <!-- enskilda tjänstekontrakt panel(er) -->
 <div class="panel panel-primary"
      ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length"
-     ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'_namn'">
+     ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'tjanstekontraktNamn'">
   <div class="panel-heading">
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">{{'order.producent.anslutning_config_panel.title.unified' | translate}} {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">{{'order.producent.anslutning_config_panel.title.individual' | translate}} {{anslutning._namn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">{{'order.producent.anslutning_config_panel.title.unified' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">{{'order.producent.anslutning_config_panel.title.individual' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
   </div>
   <div class="panel-body">
     <div class="row">
@@ -315,7 +315,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-5" ng-if="!anslutning._anslutetForProducent">
+        <div class="form-group col-md-5" ng-if="!anslutning.logiskAdressStatuses.length">
           <label translate="order.producent.logiska_adresser_selections_panel.selection.current.label"></label>
           <logisk-adress-alert
             logisk-adress="logiskAdress"
@@ -327,7 +327,7 @@
             <em translate="order.producent.logiska_adresser_selections_panel.selection.current.none"></em>
           </p>
         </div>
-        <div class="form-group col-md-5" ng-if="anslutning._anslutetForProducent">
+        <div class="form-group col-md-5" ng-if="anslutning.logiskAdressStatuses.length">
           <label translate="order.producent.logiska_adresser_selections_panel.selection.new.label"></label>
           <logisk-adress-alert
             logisk-adress="logiskAdress"

@@ -21,23 +21,6 @@ angular.module('avApp')
         }
         return deferred.promise;
       },
-      getLogicalAddressesForEnvironmentAndServiceDomain: function(environmentId, serviceDomainId) {
-        var deferred = $q.defer();
-        console.log('getLogicalAddressesForEnvironmentAndServiceDomain: environmentId[' + environmentId + '], serviceDomainId[' + serviceDomainId + ']');
-        if (environmentId && serviceDomainId) {
-          $http.get(configuration.basePath + '/api/serviceComponents/', {
-            params: {
-              environmentId: environmentId,
-              serviceDomainId: serviceDomainId
-            }
-          }).success(function (data) {
-            deferred.resolve(data);
-          }).error(function () { //TODO: error handling
-            deferred.reject();
-          });
-        }
-        return deferred.promise;
-      },
       getConnectedLogicalAddressesForContract: function(serviceComponentId, environmentId, serviceContractId, majorVersion, minorVersion) {
         console.log('getConnectedLogicalAddressesForContract: serviceComponentId[' + serviceComponentId + '], environmentId[' + environmentId + '], serviceContractId[' + serviceContractId + '], majorVersion[' + majorVersion + '], minorVersion[' + minorVersion + ']');
         var deferred = $q.defer();

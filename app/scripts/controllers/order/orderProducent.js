@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', 'ServiceContract', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
-      function ($scope, $state, $timeout, ServiceContract, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', 'AnslutningStatus', 'ServiceContract', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
+      function ($scope, $state, $timeout, AnslutningStatus, ServiceContract, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           console.warn('going to parent state');
@@ -15,13 +15,23 @@ angular.module('avApp')
             var tjanstekomponentId = $scope.producentbestallning.tjanstekomponent.hsaId;
             var driftmiljoId = $scope.producentbestallning.driftmiljo.id;
             var tjanstedomanId = $scope.selectedTjanstedoman.tjansteDomanId;
-            ServiceContract.listAnslutningar(tjanstekomponentId, driftmiljoId, tjanstedomanId).then(function (anslutningar) {
+            AnslutningStatus.getProducentanslutningar(tjanstekomponentId, driftmiljoId, tjanstedomanId).then(function(anslutningar) {
               $scope.anslutningarIValdTjanstedoman = _.map(anslutningar, function (anslutning) {
+                anslutning._tjanstedoman = tjanstedomanId; //TODO: handle in factory?
                 anslutning._paBestallning = ProducentbestallningState.isAnslutningOnOrder(anslutning);
                 return anslutning;
               });
             });
           }
+        };
+
+        var _recalculateAnslutningarIValdTjanstedoman = function () {
+          var tjanstedomanId = $scope.selectedTjanstedoman.tjansteDomanId;
+          $scope.anslutningarIValdTjanstedoman = _.map($scope.anslutningarIValdTjanstedoman, function (anslutning) {
+            anslutning._tjanstedoman = tjanstedomanId; //TODO: handle in factory?
+            anslutning._paBestallning = ProducentbestallningState.isAnslutningOnOrder(anslutning);
+            return anslutning;
+          });
         };
 
         $scope.updateLogiskAdressWithBackendData = function (logiskAdress) {
@@ -91,12 +101,12 @@ angular.module('avApp')
         }, 100));
 
         $scope.$on('anslutning-added', _.debounce(function () {
-          $scope.updateAnslutningarIValdTjanstedoman();
+          _recalculateAnslutningarIValdTjanstedoman();
           _recalculateLogiskaAdresserUnity();
         }, 100));
 
         $scope.$on('anslutning-removed', _.debounce(function () {
-          $scope.updateAnslutningarIValdTjanstedoman();
+          _recalculateAnslutningarIValdTjanstedoman();
           _recalculateLogiskaAdresserUnity();
         }, 100));
 
