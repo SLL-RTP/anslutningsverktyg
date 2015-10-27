@@ -8,7 +8,6 @@ angular.module('avApp')
         link: function($scope, $element, $attr) {
           var addStyle = $parse($attr.scrollbarPad)($scope);
           if (addStyle) {
-            console.log('current right padding', $element.css('padding-right'));
             if (!ScrollbarPadService.isZero()) {
               $element.css({'padding-right': ScrollbarPadService.getWidth() + 'px'});
             }

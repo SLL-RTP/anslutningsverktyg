@@ -43,13 +43,10 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <p translate="sidebar.producer.header"></p>
-            <li> <a ui-sref="connectServiceProducer" ui-sref-active="active" translate="sidebar.producer.admin_link"></a></li>
+            <p translate="sidebar.order.header"></p>
+            <li> <a ui-sref="order" ui-sref-active="active" translate="sidebar.order.admin_link"></a></li>
             <p translate="sidebar.system_information.header"></p>
             <li><a ui-sref="updateTjanstekomponent" ui-sref-active="active" translate="sidebar.system_information.admin_link"></a></li>
-            <p>Exempel</p>
-            <li><a ui-sref="exempelmatris" ui-sref-active="active">Exempelmatris</a></li>
-            <li><a ui-sref="order" ui-sref-active="active">Order</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -99,15 +96,12 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/constants.js"></script>
-        <script src="scripts/controllers/connectServiceProducer.js"></script>
         <script src="scripts/controllers/updateTjanstekomponent.js"></script>
-        <script src="scripts/controllers/exempelMatris.js"></script>
         <script src="scripts/controllers/order/orderMain.js"></script>
         <script src="scripts/controllers/order/orderProducent.js"></script>
         <script src="scripts/controllers/order/orderKonsument.js"></script>
         <script src="scripts/factories/logicalAddress.js"></script>
         <script src="scripts/factories/rivProfile.js"></script>
-        <script src="scripts/factories/url.js"></script>
         <script src="scripts/factories/tjanstekomponent.js"></script>
         <script src="scripts/factories/serviceContract.js"></script>
         <script src="scripts/factories/serviceDomain.js"></script>

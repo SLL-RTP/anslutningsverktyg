@@ -5,8 +5,8 @@
       "testenv": "TESTMILJÖ"
     },
     "sidebar": {
-      "producer": {
-        "header": "Tjänsteproducent",
+      "order": {
+        "header": "Beställning",
         "admin_link": "Administrera anslutning"
       },
       "system_information": {

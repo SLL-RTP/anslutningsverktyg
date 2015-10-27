@@ -46,31 +46,6 @@ angular
         url: '/tjanstekomponent/update/confirmation',
         templateUrl: 'views/tjanstekomponent/confirmation.html'
       })
-      .state('connectServiceProducer', {
-        url: '/connectServiceProducer',
-        templateUrl: 'views/serviceProducer/connect.html',
-        controller: 'ConnectServiceProducerCtrl',
-        resolve: {
-          environments: ['Environment',
-            function(EnvironmentFactory) {
-              return EnvironmentFactory.getAvailableEnvironments();
-            }],
-          rivProfiles: ['RivProfile',
-            function(RivProfileFactory) {
-              return RivProfileFactory.getAvailableProfiles();
-            }
-          ],
-          currentUser: ['User',
-            function(UserFactory) {
-              return UserFactory.getCurrentUser();
-            }
-          ]
-        }
-      })
-      .state('serviceProducerOrderConfirmed', {
-        url: '/connectServiceProducer/confirmed',
-        templateUrl: 'views/serviceProducer/confirmed.html'
-      })
       .state('order', {
         resolve: {
           environments: ['Environment',
@@ -123,11 +98,6 @@ angular
       .state('order-confirmation', {
         url: '/order/confirmation',
         templateUrl: 'views/order-confirmation/order-confirmation.html'
-      })
-      .state('exempelmatris', {
-        url: '/exempelmatris',
-        templateUrl: 'views/exempelmatris/exempelmatris.html',
-        controller: 'ExempelMatrisCtrl'
       });
 
     //add translations to $translateProvider

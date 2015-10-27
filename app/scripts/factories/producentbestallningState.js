@@ -1,7 +1,7 @@
 'use strict';
 angular.module('avApp')
-  .factory('ProducentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState', 'LogicalAddress', 'Url',
-    function ($rootScope, $q, User, BestallningState, LogicalAddress, Url) {
+  .factory('ProducentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState',
+    function ($rootScope, $q, User, BestallningState) {
       var _order;
 
       var init = function () {
@@ -187,7 +187,7 @@ angular.module('avApp')
         }
       };
 
-      var _populateAnslutningWithRivtaProfilAndUrl = function (serviceComponent, anslutning, environment) {
+      var _populateAnslutningWithRivtaProfilAndUrl = function (serviceComponent, anslutning) {
         if (anslutning.producentRivtaProfil) {
           anslutning.rivtaProfil = anslutning.producentRivtaProfil;
           anslutning.tidigareRivtaProfil = anslutning.producentRivtaProfil;

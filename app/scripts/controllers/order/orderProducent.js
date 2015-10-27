@@ -148,8 +148,7 @@ angular.module('avApp')
               console.log('Status: ' + status);
               if (status === 201) {
                 console.log('Going to state');
-                //reset();
-                $state.go('serviceProducerOrderConfirmed');
+                $state.go('order-confirmation');
               }
             });
           }
