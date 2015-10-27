@@ -29,6 +29,9 @@ module.exports = function (grunt) {
     development: (function() {
       return grunt.file.readJSON('./config/environments/development.json');
     })(),
+    acceptance: (function() {
+      return grunt.file.readJSON('./config/environments/acceptance.json');
+    })(),
     production: (function() {
       return grunt.file.readJSON('./config/environments/production.json');
     })()
@@ -59,7 +62,14 @@ module.exports = function (grunt) {
           configuration: runConfig.development
         }
       },
-      acceptance: {},
+      acceptance: {
+        options: {
+          dest: '.tmp/scripts/constants.js'
+        },
+        constants: {
+          configuration: runConfig.acceptance
+        }
+      },
       production: {
         options: {
           dest: '<%= yeoman.dist %>/scripts/constants.js'

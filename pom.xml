@@ -10,6 +10,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <grunt.target>${grunt.target.prod}</grunt.target>
+    <grunt.target.prod>build</grunt.target.prod>
+    <grunt.target.acceptance>build-acceptance</grunt.target.acceptance>
+    <grunt.target.development>build-development</grunt.target.development>
   </properties>
 
   <scm>
@@ -61,7 +65,7 @@
           <jsSourceDirectory>./</jsSourceDirectory>
           <sourceDirectory>${basedir}</sourceDirectory>
           <!-- grunt target to run -->
-          <target>build</target>
+          <target>${grunt.target}</target>
           <showColors>true</showColors>
           <gruntBuildDirectory>${basedir}/target/grunt-build</gruntBuildDirectory>
           <!-- example options usage to filter variables in given resource -->
@@ -123,6 +127,21 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>development</id>
+      <properties>
+        <grunt.target>${grunt.target.development}</grunt.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>acceptance</id>
+      <properties>
+        <grunt.target>${grunt.target.acceptance}</grunt.target>
+      </properties>
+    </profile>
+  </profiles>
 
 
 
