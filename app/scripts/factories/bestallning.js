@@ -1,23 +1,12 @@
 'use strict';
 angular.module('avApp')
-  .factory('Bestallning', ['configuration', '$q', '$http',
-    function (configuration, $q, $http) {
+  .factory('Bestallning', ['configuration', '$q', '$http', '$log',
+    function (configuration, $q, $http, $log) {
       var orderFactory = {
         createProducentbestallning: function (producentBestallning, mainOrder) { //FIXME: duplicated until old flow is removed
           var deferred = $q.defer();
           var bestallningDTO = prepareProducentbestallning(producentBestallning, mainOrder);
-          console.log(JSON.stringify(bestallningDTO, null, 2));
-          $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
-            deferred.resolve(status);
-          }).error(function () { //TODO: handle errors
-            deferred.reject();
-          });
-          return deferred.promise;
-        },
-        createServiceProducerConnectionOrder: function(order) {
-          var deferred = $q.defer();
-          var bestallningDTO = fixOrder(order);
-          console.log(JSON.stringify(bestallningDTO, null, 2));
+          $log.debug(JSON.stringify(bestallningDTO, null, 2));
           $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
             deferred.resolve(status);
           }).error(function () { //TODO: handle errors
@@ -28,7 +17,7 @@ angular.module('avApp')
         createKonsumentbestallning: function (konsumentBestallning, mainOrder) {
           var deferred = $q.defer();
           var bestallningDTO = prepareKonsumentbestallning(konsumentBestallning, mainOrder);
-          console.log(JSON.stringify(bestallningDTO, null, 2));
+          $log.debug(JSON.stringify(bestallningDTO, null, 2));
           $http.post(configuration.basePath + '/api/bestallning', bestallningDTO).success(function (data, status) {
             deferred.resolve(status);
           }).error(function () { //TODO: handle errors
@@ -65,78 +54,6 @@ angular.module('avApp')
           delete cleanAnslutning.logiskAdressStatuses;
           delete cleanAnslutning.producentRivtaProfil;
           delete cleanAnslutning.producentUrl;
-          if (isUppdateraProducentAnslutning(cleanAnslutning)) {
-            if (isUppdateraProducentAnslutningChanged(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
-
-              if (!_.isEmpty(cleanAnslutning.befintligaLogiskaAdresser)) {
-                cleanAnslutning.befintligaLogiskaAdresser = _.map(cleanAnslutning.befintligaLogiskaAdresser, function (logiskAdress) {
-                  return cleanObj(logiskAdress);
-                });
-              }
-              if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
-                cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function (logiskAdress) {
-                  return cleanObj(logiskAdress);
-                });
-              }
-              if (!_.isEmpty(cleanAnslutning.borttagnaLogiskaAdresser)) {
-                cleanAnslutning.borttagnaLogiskaAdresser = _.map(cleanAnslutning.borttagnaLogiskaAdresser, function (logiskAdress) {
-                  return cleanObj(logiskAdress);
-                });
-              }
-              uppdateradProducentanslutningar.push(cleanAnslutning);
-            }
-          } else {
-            if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
-              cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function(logiskAdress) {
-                return cleanObj(logiskAdress);
-              });
-            }
-            producentanslutningar.push(cleanAnslutning);
-          }
-        });
-        bestallningDTO.producentbestallning.producentanslutningar = producentanslutningar;
-        bestallningDTO.producentbestallning.uppdateradProducentanslutningar = uppdateradProducentanslutningar;
-        if (order.konsumentbestallningar && !_.isEmpty(order.konsumentbestallningar)) {
-          bestallningDTO.konsumentbestallningar = [];
-          _.each(order.konsumentbestallningar, function(konsumentbestallning) {
-            var fixedKonsumentbestallning = {
-              tjanstekomponent: cleanObj(konsumentbestallning.tjanstekomponent)
-            };
-            fixedKonsumentbestallning.konsumentanslutningar = [];
-            _.each(producentanslutningar, function(producentanslutning) {
-              fixedKonsumentbestallning.konsumentanslutningar.push(_.omit(producentanslutning, ['rivtaProfil', 'url']));
-            });
-            _.each(uppdateradProducentanslutningar, function(producentanslutning) {
-              fixedKonsumentbestallning.konsumentanslutningar.push(_.omit(producentanslutning, ['rivtaProfil', 'url', 'tidigareRivtaProfil', 'tidigareUrl']));
-            });
-            bestallningDTO.konsumentbestallningar.push(fixedKonsumentbestallning);
-          });
-        }
-        return bestallningDTO;
-      };
-
-      var fixOrder = function(order) {
-        var driftmiljo = cleanObj(order.driftmiljo);
-        var nat = _.map(order.nat, cleanObj);
-        var bestallare = cleanObj(order.bestallare);
-        var tjanstekomponent = cleanObj(order.producentbestallning.tjanstekomponent);
-        tjanstekomponent.huvudansvarigKontakt = cleanObj(tjanstekomponent.huvudansvarigKontakt);
-        tjanstekomponent.tekniskKontakt = cleanObj(tjanstekomponent.tekniskKontakt);
-        tjanstekomponent.tekniskSupportKontakt = cleanObj(tjanstekomponent.huvudansvarigKontakt);
-        var bestallningDTO = {
-          driftmiljo: driftmiljo,
-          bestallare: bestallare,
-          nat: nat,
-          bestallareRoll: order.bestallareRoll,
-          producentbestallning: {
-            tjanstekomponent: tjanstekomponent
-          },
-          otherInfo: order.otherInfo
-        };
-        var producentanslutningar = [];
-        var uppdateradProducentanslutningar = [];
-        _.each(order.producentbestallning.producentanslutningar, function(anslutning) {
-          var cleanAnslutning = cleanObj(anslutning);
           if (isUppdateraProducentAnslutning(cleanAnslutning)) {
             if (isUppdateraProducentAnslutningChanged(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
 

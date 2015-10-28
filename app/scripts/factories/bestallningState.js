@@ -1,12 +1,12 @@
 'use strict';
 angular.module('avApp')
-  .factory('BestallningState', ['$rootScope', '$q', '$timeout', '$interval', 'User',
-    function ($rootScope, $q, $timeout, $interval, User) {
+  .factory('BestallningState', ['$rootScope', '$q', '$log', 'User',
+    function ($rootScope, $q, $log, User) {
       var _order;
       var _specificOrderSatisfied = false, _specificOrderValid = false;
 
       var init = function () {
-        console.info('--- BestallningState.init() ---');
+        $log.debug('--- BestallningState.init() ---');
         var deferred = $q.defer();
         User.getCurrentUser().then(function(currentUser) {
           _order = {

@@ -1,11 +1,11 @@
 'use strict';
 angular.module('avApp')
-  .factory('ProducentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState',
-    function ($rootScope, $q, User, BestallningState) {
+  .factory('ProducentbestallningState', ['$rootScope', '$q', '$log', 'BestallningState',
+    function ($rootScope, $q, $log, BestallningState) {
       var _order;
 
       var init = function () {
-        console.info('--- Producentbestallning.init() ---');
+        $log.debug('--- Producentbestallning.init() ---');
         var deferred = $q.defer();
         _order = {
           producentanslutningar: []
@@ -33,7 +33,7 @@ angular.module('avApp')
       };
 
       var addAnslutningToOrder = function (anslutning) {
-        console.log('add: ' + anslutning.tjanstekontraktNamnrymd + ', _anslutetForProducent: ' + anslutning._anslutetForProducent);
+        $log.debug('add: ' + anslutning.tjanstekontraktNamnrymd, anslutning);
         if (!isAnslutningOnOrder(anslutning)) {
           var nyAnslutning = _.cloneDeep(anslutning);
           //TODO: how to handle logiska adresser already added to anslutningar when new anslutning is to be added?
@@ -147,7 +147,7 @@ angular.module('avApp')
             tjanstekomponent: _.cloneDeep(tjanstekomponent)
           });
         } else {
-          console.log('tjanstekomponent (konsument) already added');
+          $log.debug('tjanstekomponent (konsument) already added');
         }
       };
 

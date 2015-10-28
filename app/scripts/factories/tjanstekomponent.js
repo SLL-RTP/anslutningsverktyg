@@ -1,12 +1,12 @@
 'use strict';
 angular.module('avApp')
-  .factory('Tjanstekomponent', ['$q', '$http', 'configuration',
-    function ($q, $http, configuration) {
+  .factory('Tjanstekomponent', ['$q', '$http', '$log', 'configuration',
+    function ($q, $http, $log, configuration) {
 
       var tjanstekomponentFactory = {
         getFilteredTjanstekomponenter: function (query, driftmiljoId) {
           var deferred = $q.defer();
-          console.log('getFilteredTjanstekomponenter query[' + query + '], driftmiljoId[' + driftmiljoId + ']');
+          $log.debug('getFilteredTjanstekomponenter query[' + query + '], driftmiljoId[' + driftmiljoId + ']');
           if (query) {
             var lowerCaseQuery = query.toLowerCase();
             var params = {
@@ -29,7 +29,6 @@ angular.module('avApp')
         },
         getTjanstekomponent: function (serviceComponentId, driftmiljoId) {
           var deferred = $q.defer();
-          console.log('getTjanstekomponent: ' + serviceComponentId);
           var params = {};
           if (driftmiljoId) {
             params.takId = driftmiljoId;
@@ -44,13 +43,12 @@ angular.module('avApp')
           return deferred.promise;
         },
         updateTjanstekomponent: function (tjanstekomponent, isNew) {
-          console.log('isNew: ' + isNew);
           var cleanTjanstekomponent = cleanObj(tjanstekomponent);
           cleanTjanstekomponent.huvudansvarigKontakt = cleanObj(cleanTjanstekomponent.huvudansvarigKontakt);
           cleanTjanstekomponent.tekniskKontakt = cleanObj(cleanTjanstekomponent.tekniskKontakt);
           cleanTjanstekomponent.tekniskSupportKontakt = cleanObj(cleanTjanstekomponent.tekniskSupportKontakt);
           cleanTjanstekomponent.nat = _.map(cleanTjanstekomponent.nat, cleanObj);
-          console.log(JSON.stringify(cleanTjanstekomponent, null, 2));
+          $log.debug(JSON.stringify(cleanTjanstekomponent, null, 2));
           var deferred = $q.defer();
 
           var requestObj = {
@@ -64,17 +62,10 @@ angular.module('avApp')
             requestObj.url = configuration.basePath + '/api/serviceComponents/' + cleanTjanstekomponent.hsaId;
           }
           $http(requestObj).success(function(data, status) {
-            console.log(data);
-            console.log(status);
             deferred.resolve(status);
           }).error(function() { //TODO: handle errors
 
           });
-          //$http.put(configuration.basePath + '/api/serviceComponents/' + cleanTjanstekomponent.hsaId, cleanTjanstekomponent).success(function () {
-          //  deferred.resolve();
-          //}).error(function () { //TODO: handle errors
-          //
-          //});
           return deferred.promise;
         }
       };

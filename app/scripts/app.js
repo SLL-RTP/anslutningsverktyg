@@ -20,7 +20,8 @@ angular
     'ng.shims.placeholder',
     'pascalprecht.translate'
   ])
-  .config(['$stateProvider', '$urlRouterProvider', '$translateProvider', 'translations', function ($stateProvider, $urlRouterProvider, $translateProvider, translations) {
+  .config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'translations', 'configuration',
+    function ($stateProvider, $urlRouterProvider, $translateProvider, $logProvider, translations, configuration) {
 
     $urlRouterProvider.otherwise('/');
 
@@ -108,6 +109,8 @@ angular
     //set up $translateProvider
     $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
     $translateProvider.preferredLanguage('sv');
+
+    $logProvider.debugEnabled(configuration.debugLog);
 
   }])
   .config(['$httpProvider', function ($httpProvider) {

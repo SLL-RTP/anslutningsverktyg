@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$q', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
-      function ($scope, $state, $q, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
+  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
+      function ($scope, $state, $log, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
-          console.warn('going to parent state');
+          $log.warn('going to parent state');
           $state.go('order');
           return;
         }
@@ -48,7 +48,7 @@ angular.module('avApp')
           var kontraktIValdTjanstedoman = [];
           AnslutningStatus.getKonsumentanslutningar(serviceConsumerHsaId, environmentId, serviceDomainId)
             .then(function (matrix) {
-              console.info(matrix);
+              $log.debug(matrix);
               _.each(matrix, function (kaStatus) {
                 kontraktIValdTjanstedoman.push(_.pick(kaStatus, ['tjanstekontraktNamn', 'tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
                 var cc = contractKey(kaStatus);
@@ -142,14 +142,14 @@ angular.module('avApp')
         $scope.$on('send-order', function() {
           $scope.sendOrderClicked = true;
           if (!FormValidation.validateForms()) {
-            console.warn('--- order is not valid ---');
+            $log.warn('--- order is not valid ---');
             $scope.orderValid = false;
           } else {
-            console.info('--- order is valid ---');
+            $log.debug('--- order is valid ---');
             $scope.orderValid = true;
             Bestallning.createKonsumentbestallning(KonsumentBestallningState.current(), BestallningState.current()).then(function (status) {
               if (status === 201) {
-                console.log('Going to state');
+                $log.debug('Going to state');
                 $state.go('order-confirmation');
               }
             });
@@ -157,7 +157,7 @@ angular.module('avApp')
         });
 
         var _reset = function() {
-          console.info('--- reset ---');
+          $log.debug('--- reset ---');
           _.assign($scope, {
             orderValid: true,
             sendOrderClicked: false,

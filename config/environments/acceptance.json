@@ -1,7 +1,6 @@
 {
   "basePath" : "/anslutningsplattform",
   "apiToken": "secret-token",
-  "devMode": false,
-  "devDebug": "false",
-  "testBanner": "true"
+  "debugLog": true,
+  "testBanner": true
 }

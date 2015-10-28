@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderMainCtrl', ['$scope', '$rootScope', '$state', '$q', '$timeout', '$translate', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
-      function ($scope, $rootScope, $state, $q, $timeout, $translate, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
+  .controller('OrderMainCtrl', ['$scope', '$state', '$q', '$translate', '$log', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
+      function ($scope, $state, $q, $translate, $log, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -51,7 +51,7 @@ angular.module('avApp')
                   $scope.order.tjanstekomponent = result;
                 });
               } else {
-                console.log('detected producer from TAK');
+                $log.debug('detected producer from TAK');
                 $scope.order.tjanstekomponent = _.clone(newValue);
               }
               delete $scope.order.namnPaEtjanst;
@@ -72,7 +72,7 @@ angular.module('avApp')
         });
 
         var _reset = function () {
-          console.info('--- reset ---');
+          $log.debug('--- reset ---');
           _.assign($scope, {
             targetEnvironments: environments,
             serviceDomains: [],

@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', 'AnslutningStatus', 'ServiceContract', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
-      function ($scope, $state, $timeout, AnslutningStatus, ServiceContract, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
+      function ($scope, $state, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
-          console.warn('going to parent state');
+          $log.warn('going to parent state');
           $state.go('order');
           return;
         }
@@ -41,7 +41,7 @@ angular.module('avApp')
                 logiskAdress._backend = true;
                 _.assign(logiskAdress, backendLogiskAdress);
               }, function () {
-                console.warn('no logisk adress found for ' + logiskAdress.hsaId);
+                $log.warn('no logisk adress found for ' + logiskAdress.hsaId);
               });
           }
         };
@@ -139,15 +139,15 @@ angular.module('avApp')
         $scope.$on('send-order', function() {
           $scope.sendOrderClicked = true;
           if (!FormValidation.validateForms()) {
-            console.warn('--- order is not valid ---');
+            $log.warn('--- order is not valid ---');
             $scope.orderValid = false;
           } else {
-            console.info('--- order is valid ---');
+            $log.debug('--- order is valid ---');
             $scope.orderValid = true;
             Bestallning.createProducentbestallning(ProducentbestallningState.current(), BestallningState.current()).then(function (status) {
-              console.log('Status: ' + status);
+              $log.debug('Status: ' + status);
               if (status === 201) {
-                console.log('Going to state');
+                $log.debug('Going to state');
                 $state.go('order-confirmation');
               }
             });
@@ -168,7 +168,7 @@ angular.module('avApp')
         });
 
         var _reset = function () {
-          console.info('--- reset ---');
+          $log.debug('--- reset ---');
           _.assign($scope, {
             rivProfiles: rivProfiles,
             canHandleLogiskaAdresserInUnity: true,

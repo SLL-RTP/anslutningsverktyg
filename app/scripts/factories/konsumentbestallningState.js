@@ -1,11 +1,11 @@
 'use strict';
 angular.module('avApp')
-  .factory('KonsumentbestallningState', ['$rootScope', '$q', 'User', 'BestallningState', 'LogicalAddress',
-    function ($rootScope, $q, User, BestallningState, LogicalAddress) {
+  .factory('KonsumentbestallningState', ['$rootScope', '$q', '$log', 'BestallningState',
+    function ($rootScope, $q, $log, BestallningState) {
       var _order;
 
       var init = function () {
-        console.info('--- KonsumentbestallningState.init ---');
+        $log.debug('--- KonsumentbestallningState.init ---');
         var deferred = $q.defer();
         _order = {
           konsumentanslutningar: []
@@ -20,13 +20,13 @@ angular.module('avApp')
       };
 
       var setTjanstekomponent = function (tjk) {
-        console.info('setTjanstekomponent', tjk);
+        $log.debug('setTjanstekomponent', tjk);
         _order.tjanstekomponent = tjk;
         _order.konsumentanslutningar = []; //reset on new komponent
       };
 
       var setNat = function (natArr) {
-        console.info('setNat', natArr);
+        $log.debug('setNat', natArr);
         _order.nat = natArr;
       };
 
@@ -55,7 +55,8 @@ angular.module('avApp')
       };
 
       var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
-        var orderAnslutning = _.find(_order.konsumentanslutningar, _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']))
+        var orderAnslutning = _.find(_order.konsumentanslutningar,
+          _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
         if (orderAnslutning) {
           var logiskAdressId = _.pick(logiskAdress, 'hsaId');
           if (angular.isDefined(orderAnslutning.nyaLogiskaAdresser)) {
@@ -72,7 +73,8 @@ angular.module('avApp')
       };
 
       var addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
-        var orderAnslutning = _.find(_order.konsumentanslutningar, _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']))
+        var orderAnslutning = _.find(_order.konsumentanslutningar,
+          _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
         if (orderAnslutning) {
           var nyLogiskAdress = _.clone(logiskAdress);
           var logiskAdressId = _.pick(nyLogiskAdress, 'hsaId');
