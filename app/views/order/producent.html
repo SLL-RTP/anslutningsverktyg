@@ -39,7 +39,7 @@
               <span class="label label-info" ng-show="anslutning.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.connected"></span>
               <span class="label label-success" ng-show="anslutning._paBestallning" translate="order.producent.select_kontrakt_panel.anslutning.status.on_order"></span>
             </td>
-            <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
+            <td>{{anslutning.tjanstekontraktMajorVersion}}.x</td>
           </tr>
           </tbody>
         </table>
@@ -78,7 +78,7 @@
                     <small>({{anslutning._tjanstedoman}})</small>
                   </span>
             </td>
-            <td>{{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}}</td>
+            <td>{{anslutning.tjanstekontraktMajorVersion}}.x</td>
           </tr>
           </tbody>
         </table>
@@ -231,8 +231,8 @@
      ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length"
      ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'tjanstekontraktNamn'">
   <div class="panel-heading">
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">{{'order.producent.anslutning_config_panel.title.unified' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">{{'order.producent.anslutning_config_panel.title.individual' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.{{anslutning.tjanstekontraktMinorVersion}} ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">{{'order.producent.anslutning_config_panel.title.unified' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">{{'order.producent.anslutning_config_panel.title.individual' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
   </div>
   <div class="panel-body">
     <div class="row">
