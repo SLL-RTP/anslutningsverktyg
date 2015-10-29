@@ -365,7 +365,9 @@
 </div>
 <!-- / enskilda tjänstekontrakt panel(er) -->
 <!-- anropsbehörighet panel -->
-<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length">
+<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent
+  && producentbestallning.producentanslutningar.length
+  && (producentbestallning.producentanslutningar | flatten:'nyaLogiskaAdresser').length"> <!-- only disable panel, must also remove konsumentbestallningar upon submit if no nyaLogiskaAdresser-->
   <div class="panel-heading">
     <h3 class="panel-title" translate="order.producent.anropsbehorighet_panel.title"></h3>
   </div>
@@ -429,7 +431,29 @@
           <p ng-hide="konsumentbestallningar.length">
             <em translate="order.producent.anropsbehorighet_panel.selected_konsumenter.none"></em>
           </p>
-          <p class="top25" ng-show="konsumentbestallningar.length" translate="order.producent.anropsbehorighet_panel.selected_konsumenter.selected_info"></p>
+          <div ng-show="konsumentbestallningar.length">
+            <p class="top25" ng-show="konsumentbestallningar.length" translate="order.producent.anropsbehorighet_panel.selected_konsumenter.selected_info"></p>
+            <div ng-if="canHandleLogiskaAdresserInUnity">
+              <dl>
+                <dt>
+                  <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+                    <span>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span></span>
+                  </span>
+                </dt>
+                <dd ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+                  {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
+                </dd>
+              </dl>
+            </div>
+            <div ng-if="!canHandleLogiskaAdresserInUnity">
+              <dl ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+                <dt>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x</dt>
+                <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+                  {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
+                </dd>
+              </dl>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'rivProfiles',
-      function ($scope, $state, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
+      function ($scope, $state, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           $log.warn('going to parent state');
@@ -144,6 +144,16 @@ angular.module('avApp')
           } else {
             $log.debug('--- order is valid ---');
             $scope.orderValid = true;
+
+            //remove all tjanstekonsumenter/konsumentbestallningar if no nyaLogiskaAdresser are on the order
+            if (_.isEmpty(flattenFilter(ProducentbestallningState.current().producentanslutningar, 'nyaLogiskaAdresser'))) {
+              if (!_.isEmpty(ProducentbestallningState.current().konsumentbestallningar)) {
+                _.each(ProducentbestallningState.current().konsumentbestallningar, function(konsumentbestallning) {
+                  ProducentbestallningState.current().removeTjanstekonsument(konsumentbestallning.tjanstekomponent);
+                });
+              }
+            }
+
             Bestallning.createProducentbestallning(ProducentbestallningState.current(), BestallningState.current()).then(function (status) {
               $log.debug('Status: ' + status);
               if (status === 201) {
