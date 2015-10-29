@@ -69,7 +69,7 @@ angular.module('avApp')
          */
         var _recalculateLogiskaAdresserUnity = function () {
           var nyaLogiskaAdresserIntersection = intersectionFilter(ProducentbestallningState.current().producentanslutningar, 'nyaLogiskaAdresser');
-          var befintligaLogiskaAdresserIntersection = intersectionFilter(ProducentbestallningState.current(), 'befintligaLogiskaAdresser');
+          var befintligaLogiskaAdresserIntersection = intersectionFilter(ProducentbestallningState.current().producentanslutningar, 'befintligaLogiskaAdresser');
 
           var nyaLogiskaAdresserUnity = _.isUndefined(nyaLogiskaAdresserIntersection);
           if (!nyaLogiskaAdresserUnity) {
@@ -85,7 +85,13 @@ angular.module('avApp')
               return diff.length === 0;
             });
           }
-          var uniq = _.uniq(ProducentbestallningState.current().producentanslutningar, 'installedForProducerHsaId');
+          var uniq = _.uniq(ProducentbestallningState.current().producentanslutningar, function(anslutning) {
+            if (!anslutning.logiskAdressStatuses) {
+              return 0;
+            } else {
+              return anslutning.logiskAdressStatuses.length;
+            }
+          });
           var mid = (nyaLogiskaAdresserUnity && befintligaLogiskaAdresserUnity && uniq.length === 1);
           $timeout(function () {
             $scope.canHandleLogiskaAdresserInUnity = mid;
