@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
-      function ($scope, $state, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$q', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
+      function ($scope, $state, $q, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           $log.warn('going to parent state');
@@ -35,22 +35,31 @@ angular.module('avApp')
         };
 
         $scope.updateLogiskAdressWithBackendData = function (logiskAdress) {
+          var deferred = $q.defer();
           if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
             LogicalAddress.getLogicalAddressForHsaId($scope.producentbestallning.driftmiljo.id, logiskAdress.hsaId)
               .then(function (backendLogiskAdress) {
+                $log.debug('found logisk adress', backendLogiskAdress);
                 logiskAdress._backend = true;
                 _.assign(logiskAdress, backendLogiskAdress);
+                deferred.resolve(logiskAdress);
               }, function () {
                 $log.warn('no logisk adress found for ' + logiskAdress.hsaId);
+                deferred.reject();
               });
+          } else {
+            $log.warn('logisk adress does not contain hsa id', logiskAdress);
+            deferred.resolve(logiskAdress);
           }
+          return deferred.promise;
         };
 
         $scope.addNewLogiskAdressToAllAnslutningar = function (logiskAdress) {
           if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
             var nyLogiskAdress = _.clone(logiskAdress);
-            $scope.updateLogiskAdressWithBackendData(nyLogiskAdress);
-            ProducentbestallningState.addLogiskAdressToAllAnslutningar(nyLogiskAdress);
+            $scope.updateLogiskAdressWithBackendData(nyLogiskAdress).then(function(logiskAdress) {
+              ProducentbestallningState.addLogiskAdressToAllAnslutningar(logiskAdress);
+            });
           }
         };
 
@@ -58,7 +67,9 @@ angular.module('avApp')
           if (logiskAdress.hsaId && logiskAdress.hsaId.length) {
             var nyLogiskAdress = _.clone(logiskAdress);
             $scope.updateLogiskAdressWithBackendData(nyLogiskAdress);
-            ProducentbestallningState.addLogiskAdressToAnslutning(nyLogiskAdress, anslutning);
+            $scope.updateLogiskAdressWithBackendData(nyLogiskAdress).then(function(logiskAdress) {
+              ProducentbestallningState.addLogiskAdressToAnslutning(logiskAdress, anslutning);
+            });
           }
         };
 
