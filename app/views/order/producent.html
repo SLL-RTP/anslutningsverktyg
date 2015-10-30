@@ -446,7 +446,7 @@
               </dl>
             </div>
             <div ng-if="!canHandleLogiskaAdresserInUnity">
-              <dl ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+              <dl ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length" ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
                 <dt>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x</dt>
                 <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
                   {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
