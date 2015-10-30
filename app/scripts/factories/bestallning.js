@@ -92,11 +92,16 @@ angular.module('avApp')
               tjanstekomponent: cleanObj(konsumentbestallning.tjanstekomponent)
             };
             fixedKonsumentbestallning.konsumentanslutningar = [];
-            _.each(producentanslutningar, function(producentanslutning) {
+            var producentToKonsumentanslutningFilter = function(producentanslutning) {
+              return producentanslutning.nyaLogiskaAdresser && producentanslutning.nyaLogiskaAdresser.length
+            };
+            //only use producentanslutningar/uppdateradProducentanslutningar that contains nyaLogiskaAdresser
+            _.each(_.filter(producentanslutningar, producentToKonsumentanslutningFilter), function(producentanslutning) {
               fixedKonsumentbestallning.konsumentanslutningar.push(_.omit(producentanslutning, ['rivtaProfil', 'url']));
             });
-            _.each(uppdateradProducentanslutningar, function(producentanslutning) {
-              fixedKonsumentbestallning.konsumentanslutningar.push(_.omit(producentanslutning, ['rivtaProfil', 'url', 'tidigareRivtaProfil', 'tidigareUrl']));
+            _.each(_.filter(uppdateradProducentanslutningar, producentToKonsumentanslutningFilter), function(producentanslutning) {
+              //only use nyaLogiskaAdresser among the *LogiskaAdresser collections
+              fixedKonsumentbestallning.konsumentanslutningar.push(_.omit(producentanslutning, ['rivtaProfil', 'url', 'tidigareRivtaProfil', 'tidigareUrl', 'borttagnaLogiskaAdresser', 'befintligaLogiskaAdresser']));
             });
             bestallningDTO.konsumentbestallningar.push(fixedKonsumentbestallning);
           });
