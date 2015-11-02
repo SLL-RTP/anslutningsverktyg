@@ -77,7 +77,7 @@
               <h4 translate="order.main.komponent_panel.huvudansvarig_h"></h4>
             </div>
             <div class="row">
-              <personkontakt kontakt="tjanstekomponent.huvudansvarigKontakt"></personkontakt>
+              <personkontakt kontakt="order.tjanstekomponent.huvudansvarigKontakt"></personkontakt>
             </div>
           </div>
           <div class="col-md-3">
@@ -85,7 +85,7 @@
               <h4 translate="order.main.komponent_panel.teknisk_kontakt_h"></h4>
             </div>
             <div class="row">
-              <personkontakt kontakt="tjanstekomponent.tekniskKontakt"></personkontakt>
+              <personkontakt kontakt="order.tjanstekomponent.tekniskKontakt"></personkontakt>
             </div>
           </div>
           <div class="col-md-3">
@@ -93,7 +93,7 @@
               <h4 translate="order.main.komponent_panel.teknisk_support_h"></h4>
             </div>
             <div class="row">
-              <funktionkontakt kontakt="tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
+              <funktionkontakt kontakt="order.tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
             </div>
           </div>
           <div class="col-md-3">
@@ -103,16 +103,16 @@
             <div class="row">
               <dl>
                 <dt translate="order.main.komponent_panel.teknisk_info.ip"></dt>
-                <dd ng-show="tjanstekomponent.ipadress">{{tjanstekomponent.ipadress}}</dd>
-                <dd ng-hide="tjanstekomponent.ipadress">
+                <dd ng-show="order.tjanstekomponent.ipadress">{{order.tjanstekomponent.ipadress}}</dd>
+                <dd ng-hide="order.tjanstekomponent.ipadress">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt>
                   <span translate="order.main.komponent_panel.teknisk_info.pingForConfigurationURL"></span>
                   <i class="fa fa-info-circle" popover="{{'order.main.komponent_panel.teknisk_info.pingForConfigurationURL_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
                 </dt>
-                <dd ng-show="tjanstekomponent.pingForConfigurationURL">{{tjanstekomponent.pingForConfigurationURL}}</dd>
-                <dd ng-hide="tjanstekomponent.pingForConfigurationURL">
+                <dd ng-show="order.tjanstekomponent.pingForConfigurationURL">{{order.tjanstekomponent.pingForConfigurationURL}}</dd>
+                <dd ng-hide="order.tjanstekomponent.pingForConfigurationURL">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
               </dl>
