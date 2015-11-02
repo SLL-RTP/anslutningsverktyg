@@ -45,7 +45,7 @@ angular.module('avApp')
                 deferred.resolve(logiskAdress);
               }, function () {
                 $log.warn('no logisk adress found for ' + logiskAdress.hsaId);
-                deferred.reject();
+                deferred.resolve(logiskAdress); //resolve using incoming logiskAdress
               });
           } else {
             $log.warn('logisk adress does not contain hsa id', logiskAdress);
