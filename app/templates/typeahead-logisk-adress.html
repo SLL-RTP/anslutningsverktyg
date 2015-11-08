@@ -1,8 +1,8 @@
 <a>
-  <p bind-html-unsafe="match.model.namn | typeaheadHighlight:query" style="margin-bottom: 0"></p>
+  <p ng-bind-html="match.model.namn | uibTypeaheadHighlight:query | trusted" style="margin-bottom: 0"></p>
   <p style="margin-bottom: 0; margin-top: -2px">
     <small>
-      <span bind-html-unsafe="match.model.hsaId | typeaheadHighlight:query"></span>
+      <span ng-bind-html="match.model.hsaId | uibTypeaheadHighlight:query | trusted"></span>
     </small>
   </p>
 </a>

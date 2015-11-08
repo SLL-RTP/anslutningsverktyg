@@ -1,12 +1,12 @@
 <a>
   <p style="margin-bottom: 0">
-    <span ng-if="match.model.organisation" bind-html-unsafe="match.model.organisation | typeaheadHighlight:query"></span>
+    <span ng-if="match.model.organisation" ng-bind-html="match.model.organisation | uibTypeaheadHighlight:query | trusted"></span>
     <span ng-if="match.model.organisation">-</span>
-    <span bind-html-unsafe="match.model.beskrivning | typeaheadHighlight:query"></span>
+    <span ng-bind-html="match.model.beskrivning | uibTypeaheadHighlight:query | trusted"></span>
   </p>
   <p style="margin-bottom: 0; margin-top: -2px">
     <small>
-      <span bind-html-unsafe="match.model.hsaId | typeaheadHighlight:query"></span>
+      <span ng-bind-html="match.model.hsaId | uibTypeaheadHighlight:query | trusted"></span>
     </small>
   </p>
 </a>
