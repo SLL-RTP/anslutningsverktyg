@@ -132,7 +132,7 @@
               <input type="text" ng-model="selectedLogicalAddress.selected"
                      type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
                      typeahead-editable="false"
-                     typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
+                     uib-typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
                      typeahead-on-select="disableFirst = !canAddLogiskAdressToAllAnslutningar($item)"
                      class="form-control">
             </div>
@@ -404,7 +404,7 @@
                      ng-model="selectedTjanstekonsument.selected"
                      typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                      typeahead-editable="false"
-                     typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
+                     uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
                      class="form-control">
             </div>
           </div>

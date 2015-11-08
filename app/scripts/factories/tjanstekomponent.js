@@ -47,7 +47,7 @@ angular.module('avApp')
           cleanTjanstekomponent.huvudansvarigKontakt = cleanObj(cleanTjanstekomponent.huvudansvarigKontakt);
           cleanTjanstekomponent.tekniskKontakt = cleanObj(cleanTjanstekomponent.tekniskKontakt);
           cleanTjanstekomponent.tekniskSupportKontakt = cleanObj(cleanTjanstekomponent.tekniskSupportKontakt);
-          cleanTjanstekomponent.nat = _.map(cleanTjanstekomponent.nat, cleanObj);
+          cleanTjanstekomponent.nat = cleanObj(cleanTjanstekomponent.nat);
           $log.debug(JSON.stringify(cleanTjanstekomponent, null, 2));
           var deferred = $q.defer();
 

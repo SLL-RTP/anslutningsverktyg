@@ -33,7 +33,13 @@
               <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
               <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
             </td>
-            <td ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="la-checkbox-container" scrollbar-pad="$last">
+            <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
+                class="la-checkbox-container"
+                scrollbar-pad="$last"
+                ng-class="{'checkbox-disabled': logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length}"
+                uib-tooltip="{{'order.konsument.select_kontrakt_panel.check_all_disabled_info' | translate}}"
+                tooltip-enable="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length"
+                tooltip-append-to-body="true">
               <div>
                 <label for="checkAll" translate="order.konsument.select_kontrakt_panel.check_all_kontrakt_label"></label>
                 <div>

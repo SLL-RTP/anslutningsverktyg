@@ -12,9 +12,8 @@ angular.module('avApp')
         $scope.updateClicked = false;
         $scope.displayNatError = false;
         $scope.nat = _.cloneDeep(nat);
-        $scope.tjanstekomponent = {
-          nat: []
-        };
+        $scope.selectedNat = {};
+        $scope.tjanstekomponent = {};
         $scope.selectedTjanstekomponent = null;
       });
 
@@ -32,6 +31,7 @@ angular.module('avApp')
 
       $scope.$watch('selectedTjanstekomponent', function(newTjanstekomponent) {
         if (newTjanstekomponent && newTjanstekomponent.hsaId) {
+          $scope.selectedNat = {};
           Tjanstekomponent.getTjanstekomponent(newTjanstekomponent.hsaId).then(function (result) {
             $scope.tjanstekomponentValid = true;
             $scope.updateClicked = false;
@@ -40,34 +40,17 @@ angular.module('avApp')
               result.nat = [];
             }
             $scope.tjanstekomponent = result;
-            _.each($scope.tjanstekomponent.nat, function(nat) {
-              var natId = {id: nat.id};
-              var scopeNat = _.find($scope.nat, natId);
-              if (scopeNat) {
-                scopeNat._checked = true;
-              } else {
-                console.warn('tjanstekomponent specifies unknown nat', nat.id);
-              }
-            });
           });
         }
       });
 
-      $scope.$watch('nat', function () {
-        _.each($scope.nat, function (nat) {
-          var newNat = _.cloneDeep(nat);
-          var natId = {id: newNat.id};
-          if (nat._checked) {
-            if (!_.find($scope.tjanstekomponent.nat, natId)) {
-              $scope.tjanstekomponent.nat.push(newNat);
-            }
-          } else {
-            _.remove($scope.tjanstekomponent.nat, natId);
-          }
-        });
+      $scope.selectNat = function(nat) {
+        if (nat && nat.id) {
+          $scope.tjanstekomponent.nat = nat;
+        }
         _triggerNatError();
         _recheckOrderValidity();
-      }, true);
+      };
 
       $scope.updateTjanstekomponent = function () {
         $scope.updateClicked = true;
@@ -79,7 +62,6 @@ angular.module('avApp')
           console.log($scope.tjanstekomponent);
           var newForDb = $scope.createNew || _.isUndefined($scope.tjanstekomponent.id) || _.isNull($scope.tjanstekomponent.id);
           Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, newForDb).then(function(status) {
-            console.log('status: ' + status);
             if (Math.floor(status/100) === 2) { //some 200 status
               reset();
               $state.go('updateTjanstekomponentConfirmation');
@@ -131,7 +113,7 @@ angular.module('avApp')
       };
 
       var _checkNatValidation = function() {
-        return !!$scope.tjanstekomponent.nat.length;
+        return !!($scope.tjanstekomponent.nat && $scope.tjanstekomponent.nat.id);
       };
 
       var reset = function() {

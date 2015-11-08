@@ -28,23 +28,12 @@
           "label": "Miljö",
           "select_placeholder": "- Välj -"
         },
-        "order_type_panel": {
-          "title": "Välj typ av beställning",
-          "label": "Typ",
-          "select_placeholder": "- Välj -",
+        "komponent_panel": {
+          "title": "Välj om instans av system agerar tjänsteproducent/tjänstekonsument samt sök fram befintlig instans",
           "mode": {
             "order": {
-              "producent": "Producentbeställning",
-              "konsument": "Konsumentbeställning"
-            }
-          }
-        },
-        "komponent_panel": {
-          "title": "Välj instans av system som agerar som ",
-          "title_type": {
-            "order": {
-              "producent": "tjänsteproducent",
-              "konsument": "tjänstekonsument"
+              "producent": "Producent",
+              "konsument": "Konsument"
             }
           },
           "select_placeholder": "Sök befintlig tjänstekomponent",
@@ -209,7 +198,7 @@
           "selected_konsumenter": {
             "label": "Valda tjänstekonsumenter",
             "none": "inga tjänstekonsumenter valda",
-            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt."
+            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser."
           }
         }
       },
@@ -222,6 +211,7 @@
           },
           "logiska_adresser_filter_label": "Filtrera adresser:",
           "check_all_kontrakt_label": "Välj alla",
+          "check_all_disabled_info": "Val inaktiverat",
           "no_logiska_adresser_found": "inga logiska adresser hittades"
         }
       }

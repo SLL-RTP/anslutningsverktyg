@@ -3,6 +3,16 @@
 angular.module('avApp')
   .controller('OrderMainCtrl', ['$scope', '$state', '$q', '$translate', '$log', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
       function ($scope, $state, $q, $translate, $log, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
+        $scope.modes = [ //child states that define the two order modes
+          {
+            name: $translate.instant('order.main.komponent_panel.mode.order.producent'),
+            stateId: 'order.producent'
+          },
+          {
+            name: $translate.instant('order.main.komponent_panel.mode.order.konsument'),
+            stateId: 'order.konsument'
+          }
+        ];
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -11,16 +21,17 @@ angular.module('avApp')
           });
         };
 
-        $scope.selectMode = function (mode) { //trigger child state
+        $scope.$watch('selectedMode.stateId', function(newValue) { //trigger child state
+          if (!newValue) return;
           $scope.state = {
-            id: mode.stateId
+            id: newValue
           };
           _.assign($scope, {
             mep: {}
           });
           $scope.order.tjanstekomponent = {};
-          $state.go(mode.stateId);
-        };
+          $state.go(newValue);
+        });
 
         $scope.getFilteredTjanstekomponenter = function (query, removeFromResult) {
           var deferred = $q.defer();
@@ -72,28 +83,21 @@ angular.module('avApp')
         });
 
         var _reset = function () {
-          $log.debug('--- reset ---');
+          $log.debug('--- reset (main) ---');
+          if ($scope.modeForm) {
+            $scope.modeForm.$setPristine();
+          }
           _.assign($scope, {
             targetEnvironments: environments,
             serviceDomains: [],
             state: {},
             mep: {},
-            modes: [ //child states that define the two order modes
-              {
-                name: $translate.instant('order.main.order_type_panel.mode.order.producent'),
-                stateId: 'order.producent'
-              },
-              {
-                name: $translate.instant('order.main.order_type_panel.mode.order.konsument'),
-                stateId: 'order.konsument'
-              }
-            ],
             displayCommonEnding: false,
-            orderValid: false
+            orderValid: false,
+            selectedMode: {}
           });
           $scope.order.tjanstekomponent = {};
         };
-
         _reset();
       }
     ]

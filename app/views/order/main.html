@@ -20,52 +20,40 @@
     </div>
   </div>
   <!-- / välj driftmiljö panel -->
-  <!-- välj producent/konsument panel -->
-  <div class="panel panel-primary" ng-if="order.driftmiljo">
-    <div class="panel-heading">
-      <h3 class="panel-title" translate="order.main.order_type_panel.title"></h3>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-5 form-group">
-          <label for="mode" translate="order.main.order_type_panel.label"></label>
-          <select id="mode" class="form-control" ng-model="mode" ng-change="selectMode(mode)" ng-options="mode.name for mode in modes">
-            <option value="" translate="order.main.order_type_panel.select_placeholder"></option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- / välj producent/konsument panel -->
   <!-- välj tjänstekomponent panel -->
-  <div class="panel panel-primary" ng-if="state.id">
+  <div class="panel panel-primary" ng-show="order.driftmiljo">
     <div class="panel-heading">
-      <h3 class="panel-title">{{'order.main.komponent_panel.title' | translate}} {{'order.main.komponent_panel.title_type.' + state.id | translate}}</h3>
+      <h3 class="panel-title">{{'order.main.komponent_panel.title' | translate}}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-5">
-          <div class="row">
-            <div class="form-group">
-              <input type="text" placeholder="{{'order.main.komponent_panel.select_placeholder' | translate}}"
-                     ng-model="mep.selectedTjanstekomponent"
-                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
-                     typeahead-editable="false"
-                     typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
-                     class="form-control">
+        <div class="col-md-2 form-group">
+          <form name="modeForm" id="modeForm">
+            <div class="radio" ng-repeat="mode in modes">
+              <label>
+                <input type="radio" name="mepmode" ng-model="selectedMode.stateId" value="{{mode.stateId}}">
+                {{mode.name}}
+              </label>
             </div>
+          </form>
+        </div>
+        <div class="col-md-10" ng-if="state.id">
+          <div class="form-group">
+            <input type="text" placeholder="{{'order.main.komponent_panel.select_placeholder' | translate}}"
+                   ng-model="mep.selectedTjanstekomponent"
+                   typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                   typeahead-editable="false"
+                   uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                   class="form-control">
           </div>
+          <div class="form-group" ng-if="state.id == 'order.producent' && order.tjanstekomponent.hsaId">
+            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label"></label>
+            <input type="text" class="form-control" name="namnPaEtjanst" id="namnPaEtjanst" ng-model="order.namnPaEtjanst">
+          </div>
+
         </div>
       </div>
       <div ng-show="order.tjanstekomponent.hsaId">
-        <div class="row" ng-if="state.id == 'order.producent'">
-          <div class="col-md-5">
-            <div class="form-group">
-              <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label"></label>
-              <input type="text" class="form-control" name="namnPaEtjanst" id="namnPaEtjanst" ng-model="order.namnPaEtjanst">
-            </div>
-          </div>
-        </div>
         <div class="row">
           <div class="col-md-12">
             <p translate="order.main.komponent_panel.update_info_p"></p>

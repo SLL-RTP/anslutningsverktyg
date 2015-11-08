@@ -16,6 +16,7 @@ angular
     'ngSanitize',
     'ui.router',
     'ui.bootstrap',
+    'ui.bootstrap.tooltip',
     'ui.bootstrap.showErrors',
     'ng.shims.placeholder',
     'pascalprecht.translate'
