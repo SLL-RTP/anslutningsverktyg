@@ -269,3 +269,9 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
 .radio {
   margin-top: 0;
 }
+
+//disable clear button on input fields in ie10+
+//since we do not detect these events atm
+*::-ms-clear {
+  display: none;
+}
