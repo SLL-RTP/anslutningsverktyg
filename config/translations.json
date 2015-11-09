@@ -36,7 +36,7 @@
               "konsument": "Konsument"
             }
           },
-          "select_placeholder": "Sök befintlig tjänstekomponent",
+          "select_placeholder": "Sök befintlig instans",
           "update_info_p": "För uppdatering av uppgifter; välj \"Administrera systeminformation\" i menyn",
           "huvudansvarig_h": "Huvudansvarig",
           "teknisk_kontakt_h": "Teknisk kontaktperson",
