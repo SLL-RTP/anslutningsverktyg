@@ -81,10 +81,7 @@
             "label": "HSA-ID"
           },
           "roll": {
-            "label": "Roll",
-            "error": {
-              "required": "Roll måste vara ifyllt"
-            }
+            "label": "Roll"
           }
         },
         "submit": {
