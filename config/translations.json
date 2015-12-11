@@ -215,7 +215,7 @@
     },
     "komponent_admin": {
       "title": "Administrera systeminformation",
-      "p": "Här kan du uppdatera den kontaktinformation som gäller för vald tjänsteproducent/tjänstekonsument.",
+      "p": "Här registrerar du en ny instans av system/e-tjänst samt redigerar allmänna uppgifter för systemet/e-tjänsten. För att få anslutning att fungera behöver systemet ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppningar mellan systemet och Regional tjänsteplattform (RTP). RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP förvaltningen genomför åtkomsttester.",
       "panel": {
         "title": "Välj instans av system/e-tjänst som agerar i roll som tjänsteproducent och/eller tjänstekonsument",
         "mode": {
@@ -303,11 +303,20 @@
         },
         "teknisk_information": {
           "title": "Teknisk information",
-          "ip": {
-            "label": "* IP-adress",
-            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt anges här.",
+          "producent_ip": {
+            "label": "IP-adress vid anrop till systemet (systemet är producent)",
+            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom till angiven IP-adress. Den externa IP-adressen som syns utåt anges här.",
             "error": {
-              "required": "IP-adress måste vara ifylld",
+              "pattern": "IP-adress ej korrekt ifylld"
+            }
+          },
+          "producent_dns": {
+            "label": "DNS-namn (systemet är producent)"
+          },
+          "konsument_ip": {
+            "label": "IP-adress vid anrop från systemet (systemet är konsument)",
+            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt vid anrop anges här.",
+            "error": {
               "pattern": "IP-adress ej korrekt ifylld"
             }
           },
@@ -329,6 +338,14 @@
           "save": "Spara",
           "update": "Uppdatera"
         }
+      }
+    },
+    "komponent_admin_confirmation": {
+      "no_email": {
+        "p": "Tack för din uppdatering av uppgifterna. Uppdaterade uppgifter har nu sparats."
+      },
+      "email": {
+        "p": "Beställningen har skickats till SLL IT, Servicedesk för vidare hantering. Servicedesk återkopplar till dig via mail då de mottagit ärendet. Efter godkännande kommer tjänsteplattformsförvaltningen bearbeta din beställning och när den är klar får du återkoppling att ärendet är stängt. Du kan behöva öppna brandvägg för tjänsteplattformen och detta är bra att förbereda så snart som möjligt. På <a href=\"https://skl-tp.atlassian.net/wiki/pages/viewpage.action?pageId=14090494\" target=\"_blank\">FAQ</a>-sidorna hittar du bland annat: Information kring de olika miljöerna, ip-adresser, portar m.m, Information kring certifikat Information om loggning, Felkoder"
       }
     },
     "personkontakt": {

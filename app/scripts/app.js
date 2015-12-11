@@ -48,6 +48,10 @@ angular
         url: '/tjanstekomponent/update/confirmation',
         templateUrl: 'views/tjanstekomponent/confirmation.html'
       })
+      .state('updateTjanstekomponentConfirmationWithEmail', {
+        url: '/tjanstekomponent/update/emailconfirmation',
+        templateUrl: 'views/tjanstekomponent/confirmation-with-email.html'
+      })
       .state('order', {
         resolve: {
           environments: ['Environment',

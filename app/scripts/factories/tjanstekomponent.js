@@ -62,7 +62,7 @@ angular.module('avApp')
             requestObj.url = configuration.basePath + '/api/serviceComponents/' + cleanTjanstekomponent.hsaId;
           }
           $http(requestObj).success(function(data, status) {
-            deferred.resolve(status);
+            deferred.resolve({status: status, action: data.action});
           }).error(function() { //TODO: handle errors
 
           });

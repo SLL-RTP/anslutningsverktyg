@@ -61,10 +61,14 @@ angular.module('avApp')
           $scope.tjanstekomponentValid = true;
           console.log($scope.tjanstekomponent);
           var newForDb = $scope.createNew || _.isUndefined($scope.tjanstekomponent.id) || _.isNull($scope.tjanstekomponent.id);
-          Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, newForDb).then(function(status) {
-            if (Math.floor(status/100) === 2) { //some 200 status
+          Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, newForDb).then(function(statusObj) {
+            if (Math.floor(statusObj.status/100) === 2) { //some 200 status
               reset();
-              $state.go('updateTjanstekomponentConfirmation');
+              if (statusObj.action === 'none') { //regular confirm
+                $state.go('updateTjanstekomponentConfirmation');
+              } else { //'email' confirm
+                $state.go('updateTjanstekomponentConfirmationWithEmail');
+              }
             }
           });
         }
