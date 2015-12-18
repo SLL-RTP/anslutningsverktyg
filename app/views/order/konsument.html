@@ -48,6 +48,12 @@
               </div>
             </td>
           </tr>
+          <tr ng-if="removeWarning">
+            <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
+              <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
+              <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
+            </td>
+          </tr>
           </tbody>
         </table>
         <div class="selector">

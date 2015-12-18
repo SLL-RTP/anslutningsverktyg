@@ -76,6 +76,7 @@ angular.module('avApp')
         //update anslutningar on order based on status in matrix.
         //The matrix keeps the complete state since we can only work with one tjänstedomän at a time
         var updateAnslutningarOnOrder = function() {
+          var newRemoveWarning = false;
           if ($scope.matrix) {
             var anslutningar = [];
             _.each(_.pairs($scope.matrix), function(pair) {
@@ -104,6 +105,9 @@ angular.module('avApp')
               });
             });
             _.each(anslutningar, function(anslutning) {
+              if (anslutning.borttagnaLogiskaAdresser.length) { //we have at least one unchecked logisk adress
+                newRemoveWarning = true;
+              }
               if (anslutning.nyaLogiskaAdresser.length || anslutning.borttagnaLogiskaAdresser.length) {
                 KonsumentBestallningState.addAnslutning(anslutning);
                 _.each(anslutning.nyaLogiskaAdresser, function(nyLogiskAdress) {
@@ -116,6 +120,7 @@ angular.module('avApp')
                 KonsumentBestallningState.removeAnslutning(anslutning);
               }
             });
+            $scope.removeWarning = newRemoveWarning;
           }
         };
 
