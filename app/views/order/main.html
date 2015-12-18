@@ -46,8 +46,9 @@
                    uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                    class="form-control">
           </div>
-          <div class="form-group" ng-if="state.id == 'order.producent' && order.tjanstekomponent.hsaId">
-            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label"></label>
+          <div class="form-group" ng-if="order.tjanstekomponent.hsaId">
+            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label.producent" ng-if="state.id == 'order.producent'"></label>
+            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label.konsument" ng-if="state.id == 'order.konsument'"></label>
             <input type="text" class="form-control" name="namnPaEtjanst" id="namnPaEtjanst" ng-model="order.namnPaEtjanst">
           </div>
 
