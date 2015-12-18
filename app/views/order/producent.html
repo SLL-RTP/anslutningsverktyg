@@ -394,65 +394,72 @@
         </div>
       </div>
     </div>
-    <div class="row top25" ng-show="!callPermissionInSeparateOrder">
-      <div class="col-md-12">
-        <div class="col-md-4">
-          <div class="row">
-            <div class="form-group">
-              <label translate="order.producent.anropsbehorighet_panel.konsument_search.label"></label>
-              <input type="text" placeholder="{{'order.producent.anropsbehorighet_panel.konsument_search.placeholder' | translate}}" ng-init="selectedTjanstekonsument.selected = '';"
-                     ng-model="selectedTjanstekonsument.selected"
-                     typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
-                     typeahead-editable="false"
-                     uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
-                     class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 col-md-offset-1">
-          <div class="row">
-            <div class="form-group top25">
-              <div class="btn-group">
-                <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
-                  <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                </button>
+    <div ng-hide="callPermissionInSeparateOrder">
+      <div class="row top25">
+        <div class="col-md-12">
+          <div class="col-md-4">
+            <div class="row">
+              <div class="form-group">
+                <label translate="order.producent.anropsbehorighet_panel.konsument_search.label"></label>
+                <input type="text" placeholder="{{'order.producent.anropsbehorighet_panel.konsument_search.placeholder' | translate}}" ng-init="selectedTjanstekonsument.selected = '';"
+                       ng-model="selectedTjanstekonsument.selected"
+                       typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                       typeahead-editable="false"
+                       uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
+                       class="form-control">
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="form-group col-md-5">
-          <label translate="order.producent.anropsbehorighet_panel.selected_konsumenter.label"></label>
-          <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
-            <button type="button" class="close" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)">×</button>
-            <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
-            <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
+          <div class="col-md-2 col-md-offset-1">
+            <div class="row">
+              <div class="form-group top25">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
+                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <p ng-hide="konsumentbestallningar.length">
-            <em translate="order.producent.anropsbehorighet_panel.selected_konsumenter.none"></em>
-          </p>
-          <div ng-show="konsumentbestallningar.length">
-            <p class="top25" ng-show="konsumentbestallningar.length" translate="order.producent.anropsbehorighet_panel.selected_konsumenter.selected_info"></p>
-            <div ng-if="canHandleLogiskaAdresserInUnity">
-              <dl>
-                <dt>
-                  <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
-                    <span>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span></span>
-                  </span>
-                </dt>
-                <dd ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
-                  {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
-                </dd>
-              </dl>
+          <div class="form-group col-md-5">
+            <label translate="order.producent.anropsbehorighet_panel.selected_konsumenter.label"></label>
+            <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
+              <button type="button" class="close" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)">×</button>
+              <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
+              <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
             </div>
-            <div ng-if="!canHandleLogiskaAdresserInUnity">
-              <dl ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length" ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
-                <dt>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x</dt>
-                <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
-                  {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
-                </dd>
-              </dl>
-            </div>
+            <p ng-hide="konsumentbestallningar.length">
+              <em translate="order.producent.anropsbehorighet_panel.selected_konsumenter.none"></em>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row top25" ng-show="konsumentbestallningar.length">
+        <div class="col-md-12">
+          <p translate="order.producent.anropsbehorighet_panel.selected_konsumenter.selected_info"></p>
+        </div>
+      </div>
+      <div class="row top25" ng-show="konsumentbestallningar.length">
+        <div class="col-md-5 col-md-offset-7">
+          <div ng-if="canHandleLogiskaAdresserInUnity">
+            <dl>
+              <dt>
+                    <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+                      <span>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span></span>
+                    </span>
+              </dt>
+              <dd ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+                {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
+              </dd>
+            </dl>
+          </div>
+          <div ng-if="!canHandleLogiskaAdresserInUnity">
+            <dl ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length" ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+              <dt>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x</dt>
+              <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+                {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
+              </dd>
+            </dl>
           </div>
         </div>
       </div>

@@ -200,7 +200,7 @@
           "selected_konsumenter": {
             "label": "Valda tjänstekonsumenter",
             "none": "inga tjänstekonsumenter valda",
-            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser."
+            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument anropsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
           }
         }
       },
