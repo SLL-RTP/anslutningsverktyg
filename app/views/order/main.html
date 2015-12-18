@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="row">
               <h4 translate="order.main.komponent_panel.huvudansvarig_h"></h4>
             </div>
@@ -68,15 +68,13 @@
               <personkontakt kontakt="order.tjanstekomponent.huvudansvarigKontakt"></personkontakt>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="row">
               <h4 translate="order.main.komponent_panel.teknisk_kontakt_h"></h4>
             </div>
             <div class="row">
               <personkontakt kontakt="order.tjanstekomponent.tekniskKontakt"></personkontakt>
             </div>
-          </div>
-          <div class="col-md-3">
             <div class="row">
               <h4 translate="order.main.komponent_panel.teknisk_support_h"></h4>
             </div>
@@ -84,15 +82,25 @@
               <funktionkontakt kontakt="order.tjanstekomponent.tekniskSupportKontakt"></funktionkontakt>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="row">
               <h4 translate="order.main.komponent_panel.teknisk_info.header"></h4>
             </div>
             <div class="row">
               <dl>
-                <dt translate="order.main.komponent_panel.teknisk_info.ip"></dt>
-                <dd ng-show="order.tjanstekomponent.ipadress">{{order.tjanstekomponent.ipadress}}</dd>
-                <dd ng-hide="order.tjanstekomponent.ipadress">
+                <dt translate="order.main.komponent_panel.teknisk_info.producent_ip"></dt>
+                <dd ng-show="order.tjanstekomponent.producentIpadress">{{order.tjanstekomponent.producentIpadress}}</dd>
+                <dd ng-hide="order.tjanstekomponent.producentIpadress">
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
+                </dd>
+                <dt translate="order.main.komponent_panel.teknisk_info.producent_dns"></dt>
+                <dd ng-show="order.tjanstekomponent.producentDnsNamn">{{order.tjanstekomponent.producentDnsNamn}}</dd>
+                <dd ng-hide="order.tjanstekomponent.producentDnsNamn">
+                  <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
+                </dd>
+                <dt translate="order.main.komponent_panel.teknisk_info.konsument_ip"></dt>
+                <dd ng-show="order.tjanstekomponent.konsumentIpadress">{{order.tjanstekomponent.konsumentIpadress}}</dd>
+                <dd ng-hide="order.tjanstekomponent.konsumentIpadress">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt>
