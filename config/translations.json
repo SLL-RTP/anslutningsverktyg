@@ -22,7 +22,7 @@
     "order": {
       "main": {
         "title": "Administrera anslutning",
-        "p": "<p><strong style=\"color: red\">[CHANGEME]</strong> Här beställer du anslutning av en tjänsteproducent till, i plattformen, redan installerade tjänstekontrakt. För att få anslutning att fungera behöver tjänsteproducenten ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppning/ar hos producenten.</p><p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP-förvaltningen genomför åtkomsttester.</p>",
+        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adresser som ska tillgängliggöra information i systemet.",
         "env_panel": {
           "title": "Välj miljö",
           "label": "Miljö",
@@ -43,12 +43,17 @@
           "teknisk_support_h": "Teknisk support",
           "teknisk_info": {
             "header": "Teknisk information",
-            "ip": "IP-adress",
+            "producent_ip": "IP-adress vid anrop till systemet (systemet är producent)",
+            "producent_dns": "DNS-namn (systemet är producent)",
+            "konsument_ip": "IP-adress vid anrop från systemet (systemet är konsument)",
             "pingForConfigurationURL": "URL till övervakningstjänst",
             "pingForConfigurationURL_info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten.",
             "no_info": "ingen information"
           },
-          "etjanst_label": "Namn på E-tjänst som är tjänsteproducent"
+          "etjanst_label": {
+            "producent": "Namn på E-tjänst som är tjänsteproducent",
+            "konsument": "Namn på E-tjänst som är tjänstekonsument"
+          }
         },
         "other_panel": {
           "title": "Övrigt",
