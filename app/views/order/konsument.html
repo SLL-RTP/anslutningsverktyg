@@ -64,7 +64,12 @@
                 <p>{{la.namn}}</p>
                 <small>{{la.hsaId}}</small>
               </th>
-              <td ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="la-checkbox-container" ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}">
+              <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
+                  class="la-checkbox-container"
+                  ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}"
+                  uib-tooltip="{{'order.konsument.select_kontrakt_panel.single_disabled_info' | translate}}"
+                  tooltip-enable="!matrix[la.hsaId][contractKey(kontrakt)]"
+                  tooltip-append-to-body="true">
                 <div>
                   <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(kontrakt)].checked" ng-change="updateAnslutningarOnOrder();" ng-disabled="!matrix[la.hsaId][contractKey(kontrakt)]">
                 </div>

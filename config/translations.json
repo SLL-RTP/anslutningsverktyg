@@ -247,6 +247,7 @@
           "logiska_adresser_filter_label": "Filtrera adresser:",
           "check_all_kontrakt_label": "Välj alla",
           "check_all_disabled_info": "Val inaktiverat",
+          "single_disabled_info": "Val ej möjligt",
           "no_logiska_adresser_found": "inga logiska adresser hittades",
           "remove_warning_label": "OBS!",
           "remove_warning_info": "Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)"
