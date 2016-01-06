@@ -123,6 +123,9 @@ angular.module('avApp')
           konsumentbestallningar: [{tjanstekomponent: tjanstekomponent}],
           otherInfo: mainOrder.otherInfo
         };
+        if (!_.isUndefined(mainOrder.namnPaEtjanst)) {
+          bestallningDTO.konsumentbestallningar[0].namnPaEtjanst = mainOrder.namnPaEtjanst;
+        }
         var konsumentanslutningar = [];
         var uppdateradKonsumentanslutningar = [];
         _.each(order.konsumentanslutningar, function(anslutning) {
