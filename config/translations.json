@@ -270,7 +270,7 @@
     },
     "komponent_admin": {
       "title": "Administrera systeminformation",
-      "p": "Här registrerar du en ny instans av system/e-tjänst samt redigerar allmänna uppgifter för systemet/e-tjänsten. För att få anslutning att fungera behöver systemet ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppningar mellan systemet och Regional tjänsteplattform (RTP). RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP förvaltningen genomför åtkomsttester.",
+      "info": "<p>Här registrerar du en ny instans av system/e-tjänst samt redigerar allmänna uppgifter för systemet/e-tjänsten. För att få anslutning att fungera behöver systemet ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppningar mellan systemet och Regional tjänsteplattform (RTP).</p> <p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP förvaltningen genomför åtkomsttester.</p>",
       "panel": {
         "title": "Välj instans av system/e-tjänst som agerar i roll som tjänsteproducent och/eller tjänstekonsument",
         "mode": {
