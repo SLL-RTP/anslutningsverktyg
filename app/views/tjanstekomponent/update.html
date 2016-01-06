@@ -94,6 +94,11 @@
                      name="huvudansvarigTelefon" ng-model="tjanstekomponent.huvudansvarigKontakt.telefon">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigTelefon.$error.required" translate="komponent_admin.panel.huvudansvarig.phone.error.required"></span>
             </div>
+            <div class="form-group">
+              <label for="huvudansvarigOtherInfo" translate="komponent_admin.panel.huvudansvarig.other_info.label"></label>
+              <input type="text" class="form-control" id="huvudansvarigOtherInfo"
+                     name="huvudansvarigOtherInfo" ng-model="tjanstekomponent.huvudansvarigKontakt.otherInfo">
+            </div>
             <h4 translate="komponent_admin.panel.teknisk_support.title"></h4>
             <div class="form-group" show-errors global-validation>
               <label for="tekniskSupportEpost" translate="komponent_admin.panel.teknisk_support.email.label"></label>
@@ -167,6 +172,11 @@
               <input type="text" class="form-control" id="tekniskKontaktTelefon" required
                      name="tekniskKontaktTelefon" ng-model="tjanstekomponent.tekniskKontakt.telefon">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktTelefon.$error.required" translate="komponent_admin.panel.teknisk_kontaktperson.phone.error.required"></span>
+            </div>
+            <div class="form-group">
+              <label for="tekniskKontaktOtherInfo" translate="komponent_admin.panel.teknisk_kontaktperson.other_info.label"></label>
+              <input type="text" class="form-control" id="tekniskKontaktOtherInfo"
+                     name="tekniskKontaktOtherInfo" ng-model="tjanstekomponent.tekniskKontakt.otherInfo">
             </div>
           </div>
         </div>
