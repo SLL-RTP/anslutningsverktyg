@@ -5,7 +5,7 @@
     "angular": "1.4.7",
     "json3": "^3.3.0",
     "es5-shim": "^4.0.0",
-    "bootstrap-sass-official": "^3.2.0",
+    "bootstrap-sass-official": "^3.3.6",
     "angular-animate": "1.4.7",
     "angular-resource": "1.4.7",
     "angular-sanitize": "1.4.7",

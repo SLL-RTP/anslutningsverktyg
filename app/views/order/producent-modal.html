@@ -1,0 +1,137 @@
+<div class="confirmation-modal">
+  <div class="modal-header">
+    <h3 class="modal-title" translate="order.producent.modal.title"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h4 translate="order.producent.modal.allmant.title"></h4>
+        <div class="row">
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.producent.modal.allmant.selected"></dt>
+              <dd>{{bestallning.tjanstekomponent.beskrivning}} ({{bestallning.tjanstekomponent.hsaId}})</dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.namn_etjanst"></dt>
+              <dd>{{bestallning.namnPaEtjanst | dash}}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4 translate="order.main.modal.bestallare.title"></h4>
+        <div class="row">
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.bestallare.namn"></dt>
+              <dd>{{bestallning.bestallare.namn}}</dd>
+              <dt translate="order.main.modal.bestallare.epost"></dt>
+              <dd>{{bestallning.bestallare.epost}}</dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.bestallare.telefon"></dt>
+              <dd>{{bestallning.bestallare.telefon}}</dd>
+              <dt translate="order.main.modal.bestallare.roll"></dt>
+              <dd>{{bestallning.bestallareRoll | dash}}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      ng-init="anslutningar = (producentbestallning.producentanslutningar | filter:forandradAnslutning | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn')">
+      <h4 translate="order.producent.modal.anslutningar.title"></h4>
+      <div ng-repeat="foo in anslutningar" ng-init="outerIndex = $index" ng-if="$index % 3 == 0" class="row">
+        <div class="col-md-4" ng-repeat="bar in [0,1,2]" ng-init="innerIndex = $index"
+             ng-if="anslutningar[(outerIndex+$index)]">
+          <p><strong>{{anslutningar[(outerIndex+innerIndex)].tjanstekontraktNamn}}
+            {{anslutningar[(outerIndex+innerIndex)].tjanstekontraktMajorVersion}}.x</strong></p>
+          <dl class="la-status">
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser.length" translate="order.producent.modal.anslutningar.logiska_adresser.nya"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.producent.modal.anslutningar.logiska_adresser.borttagna"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+            <dt ng-if-start="!anslutningar[(outerIndex+innerIndex)].tidigareUrl
+              || (anslutningar[(outerIndex+innerIndex)].tidigareUrl
+                && anslutningar[(outerIndex+innerIndex)].url != anslutningar[(outerIndex+innerIndex)].tidigareUrl)" translate="order.producent.modal.anslutningar.ny_url"></dt>
+            <dd ng-if-end><p>{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
+            <dt ng-if-start="!anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil
+              || (anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil
+                && anslutningar[(outerIndex+innerIndex)].rivtaProfil != anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil)" translate="order.producent.modal.anslutningar.ny_rivta_profil"></dt>
+            <dd ng-if-end><p>{{anslutningar[(outerIndex+innerIndex)].rivtaProfil}}</p></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="producentbestallning.konsumentbestallningar">
+      <h4>
+        <span translate="order.producent.modal.konsumentbestallningar.title"></span>
+        <i class="fa fa-info-circle" popover="{{'order.producent.anropsbehorighet_panel.selected_konsumenter.selected_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
+      </h4>
+      <div class="row">
+        <div class="col-md-6">
+          <dl class="la-status">
+            <dt translate="order.producent.modal.konsumentbestallningar.konsumenter"></dt>
+            <dd ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
+              <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
+              <p>{{konsumentbestallning.tjanstekomponent.hsaId}}</p>
+            </dd>
+          </dl>
+        </div>
+        <div class="col-md-6">
+          <div ng-if="canHandleLogiskaAdresserInUnity">
+          <dl class="la-status">
+            <dt>
+              <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+                <span>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span></span>
+              </span>
+            </dt>
+            <dd ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
+              <p>{{logiskAdress.namn}}</p>
+              <p>{{logiskAdress.hsaId}}</p>
+            </dd>
+          </dl>
+        </div>
+        <div ng-if="!canHandleLogiskaAdresserInUnity">
+          <dl class="la-status">
+            <dt ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length"
+                ng-repeat-start="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+              {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x
+            </dt>
+            <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
+              <p>{{logiskAdress.namn}}</p>
+              <p>{{logiskAdress.hsaId}}</p>
+          </dd>
+            <dd ng-repeat-end></dd>
+          </dl>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4 translate="order.main.modal.other_info_title"></h4>
+        <span>{{bestallning.otherInfo | dash}}</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()" translate="order.main.modal.ok_btn"></button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()" translate="order.main.modal.cancel_btn"></button>
+  </div>
+</div>

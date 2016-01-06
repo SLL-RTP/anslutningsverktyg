@@ -91,7 +91,20 @@
         },
         "submit": {
           "order_error_msg": "Det finns fel i beställningen som behöver rättas till!",
-          "button": "Beställ"
+          "button": "Se sammanfattning och beställ"
+        },
+        "modal": {
+          "namn_etjanst": "Angivet namn på e-tjänst",
+          "bestallare": {
+            "title": "Beställare",
+            "namn": "Namn",
+            "epost": "E-post",
+            "telefon": "Telefon",
+            "roll": "Roll"
+          },
+          "other_info_title": "Övrig information och feedback",
+          "ok_btn": "Beställ",
+          "cancel_btn": "Avbryt"
         }
       },
       "producent": {
@@ -202,6 +215,26 @@
             "none": "inga tjänstekonsumenter valda",
             "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument anropsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
           }
+        },
+        "modal": {
+          "title": "Bekräfta ändringar för tjänsteproducent",
+          "allmant": {
+            "title": "Tjänsteproducent",
+            "selected": "Vald tjänsteproducent"
+          },
+          "anslutningar": {
+            "title": "Förändrade producentanslutningar",
+            "logiska_adresser": {
+              "nya": "Nya logiska adresser",
+              "borttagna": "Borttagna logiska adresser"
+            },
+            "ny_url": "Ny url",
+            "ny_rivta_profil": "Ny RIVTA-profil"
+          },
+          "konsumentbestallningar": {
+            "title": "Konsumentbeställningar",
+            "konsumenter": "Tjänstekonsumenter"
+          }
         }
       },
       "konsument": {
@@ -217,6 +250,20 @@
           "no_logiska_adresser_found": "inga logiska adresser hittades",
           "remove_warning_label": "OBS!",
           "remove_warning_info": "Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)"
+        },
+        "modal": {
+          "title": "Bekräfta ändringar för tjänstekonsument",
+          "allmant": {
+            "title": "Tjänstekonsument",
+            "selected": "Vald tjänstekonsument"
+          },
+          "anslutningar": {
+            "title": "Förändrade konsumentanslutningar",
+            "logiska_adresser": {
+              "nya": "Nya logiska adresser",
+              "borttagna": "Borttagna logiska adresser"
+            }
+          }
         }
       }
     },

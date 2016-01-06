@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
-      function ($scope, $state, $log, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
+  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', '$uibModal', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
+      function ($scope, $state, $log, $uibModal, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           $log.warn('going to parent state');
@@ -152,11 +152,24 @@ angular.module('avApp')
           } else {
             $log.debug('--- order is valid ---');
             $scope.orderValid = true;
-            Bestallning.createKonsumentbestallning(KonsumentBestallningState.current(), BestallningState.current()).then(function (status) {
-              if (status === 201) {
-                $log.debug('Going to state');
-                $state.go('order-confirmation');
-              }
+
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: 'views/order/konsument-modal.html',
+              controller: 'OrderKonsumentModalCtrl',
+              size: 'lg'
+            });
+
+            modalInstance.result.then(function () {
+              $log.debug('user clicked OK');
+              Bestallning.createKonsumentbestallning(KonsumentBestallningState.current(), BestallningState.current()).then(function (status) {
+                if (status === 201) {
+                  $log.debug('Going to \'order-confirmation\' state');
+                  $state.go('order-confirmation');
+                }
+              });
+            }, function () {
+              $log.debug('modal dismissed');
             });
           }
         });

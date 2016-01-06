@@ -1,0 +1,83 @@
+<div class="confirmation-modal">
+  <div class="modal-header">
+    <h3 class="modal-title" translate="order.konsument.modal.title"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h4 translate="order.konsument.modal.allmant.title"></h4>
+        <div class="row">
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.konsument.modal.allmant.selected"></dt>
+              <dd>{{bestallning.tjanstekomponent.beskrivning}} ({{bestallning.tjanstekomponent.hsaId}})</dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.namn_etjanst"></dt>
+              <dd>{{bestallning.namnPaEtjanst | dash}}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4 translate="order.main.modal.bestallare.title"></h4>
+        <div class="row">
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.bestallare.namn"></dt>
+              <dd>{{bestallning.bestallare.namn}}</dd>
+              <dt translate="order.main.modal.bestallare.epost"></dt>
+              <dd>{{bestallning.bestallare.epost}}</dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl>
+              <dt translate="order.main.modal.bestallare.telefon"></dt>
+              <dd>{{bestallning.bestallare.telefon}}</dd>
+              <dt translate="order.main.modal.bestallare.roll"></dt>
+              <dd>{{bestallning.bestallareRoll | dash}}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      ng-init="anslutningar = (konsumentbestallning.konsumentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn')">
+      <h4 translate="order.konsument.modal.anslutningar.title"></h4>
+      <div ng-repeat="foo in anslutningar" ng-init="outerIndex = $index" ng-if="$index % 3 == 0" class="row">
+        <div class="col-md-4" ng-repeat="bar in [0,1,2]" ng-init="innerIndex = $index"
+             ng-if="anslutningar[(outerIndex+$index)]">
+          <p><strong>{{anslutningar[(outerIndex+innerIndex)].tjanstekontraktNamn}}
+            {{anslutningar[(outerIndex+innerIndex)].tjanstekontraktMajorVersion}}.x</strong></p>
+          <dl class="la-status">
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.nya"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.borttagna"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4 translate="order.main.modal.other_info_title"></h4>
+        <span>{{bestallning.otherInfo | dash}}</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()" translate="order.main.modal.ok_btn"></button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()" translate="order.main.modal.cancel_btn"></button>
+  </div>
+</div>

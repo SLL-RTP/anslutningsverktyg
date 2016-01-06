@@ -275,3 +275,23 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
 *::-ms-clear {
   display: none;
 }
+
+.confirmation-modal {
+  dl {
+    dt {
+      font-size: 14px;
+    }
+    dd {
+      font-size: 13px;
+    }
+  }
+  .la-status dd {
+    margin-top: 3px;
+    margin-bottom: 5px;
+
+    p {
+      font-size: 12px;
+      margin-bottom: -3px;
+    }
+  }
+}

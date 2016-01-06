@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentCtrl', ['$scope', '$state', '$q', '$timeout', '$log', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
-      function ($scope, $state, $q, $timeout, $log, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
+  .controller('OrderProducentCtrl', ['$scope', '$state', '$q', '$timeout', '$log', '$uibModal', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
+      function ($scope, $state, $q, $timeout, $log, $uibModal, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           $log.warn('going to parent state');
@@ -166,17 +166,34 @@ angular.module('avApp')
             if (_.isEmpty(flattenFilter(ProducentbestallningState.current().producentanslutningar, 'nyaLogiskaAdresser'))) {
               if (!_.isEmpty(ProducentbestallningState.current().konsumentbestallningar)) {
                 _.each(ProducentbestallningState.current().konsumentbestallningar, function(konsumentbestallning) {
-                  ProducentbestallningState.current().removeTjanstekonsument(konsumentbestallning.tjanstekomponent);
+                  ProducentbestallningState.removeTjanstekonsument(konsumentbestallning.tjanstekomponent);
                 });
               }
             }
 
-            Bestallning.createProducentbestallning(ProducentbestallningState.current(), BestallningState.current()).then(function (status) {
-              $log.debug('Status: ' + status);
-              if (status === 201) {
-                $log.debug('Going to state');
-                $state.go('order-confirmation');
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: 'views/order/producent-modal.html',
+              controller: 'OrderProducentModalCtrl',
+              size: 'lg',
+              resolve: {
+                canHandleLogiskaAdresserInUnity: function () {
+                  return $scope.canHandleLogiskaAdresserInUnity;
+                }
               }
+            });
+
+            modalInstance.result.then(function () {
+              $log.debug('user clicked OK');
+              Bestallning.createProducentbestallning(ProducentbestallningState.current(), BestallningState.current()).then(function (status) {
+                $log.debug('Status: ' + status);
+                if (status === 201) {
+                  $log.debug('Going to \'order-confirmation\' state');
+                  $state.go('order-confirmation');
+                }
+              });
+            }, function () {
+              $log.debug('modal dismissed');
             });
           }
         });
@@ -214,6 +231,7 @@ angular.module('avApp')
 
         ProducentbestallningState.init().then(function () {
           $scope.producentbestallning = ProducentbestallningState.current();
+          $scope.bestallning = BestallningState.current();
         });
 
         $scope.$watch(function () { //watching for changed tjanstekomponent in 'main' Bestallning
