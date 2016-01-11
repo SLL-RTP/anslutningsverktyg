@@ -315,9 +315,6 @@
             "error": {
               "required": "Telefon måste vara ifylld"
             }
-          },
-          "other_info": {
-            "label": "Övrig information"
           }
         },
         "teknisk_kontaktperson": {
@@ -340,9 +337,6 @@
             "error": {
               "required": "Telefon måste vara ifylld"
             }
-          },
-          "other_info": {
-            "label": "Övrig information"
           }
         },
         "teknisk_support": {
@@ -391,6 +385,9 @@
           "error": {
             "empty": "Inga nät valda"
           }
+        },
+        "other_info": {
+          "label": "Övrig information till RTP-förvaltningen"
         }
       },
       "submit": {
