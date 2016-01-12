@@ -8,6 +8,14 @@ angular.module('avApp')
 
         $scope.konsumentbestallning = KonsumentbestallningState.current();
 
+        $scope.nyaKonsumentanslutningar = _.filter($scope.konsumentbestallning.konsumentanslutningar, function(anslutning) {
+          return !anslutning._existing;
+        });
+
+        $scope.uppdateradKonsumentanslutningar = _.filter($scope.konsumentbestallning.konsumentanslutningar, function(anslutning) {
+          return anslutning._existing;
+        });
+
         $scope.ok = function () {
           $uibModalInstance.close();
         };

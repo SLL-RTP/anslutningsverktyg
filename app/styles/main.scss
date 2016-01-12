@@ -284,6 +284,11 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
     dd {
       font-size: 13px;
     }
+    &.dl-horizontal {
+      dt {
+        width: inherit;
+      }
+    }
   }
   .la-status dd {
     margin-top: 3px;

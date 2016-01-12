@@ -6,48 +6,60 @@
     <div class="row">
       <div class="col-md-6">
         <h4 translate="order.producent.modal.allmant.title"></h4>
-        <div class="row">
-          <div class="col-md-6">
-            <dl>
-              <dt translate="order.producent.modal.allmant.selected"></dt>
-              <dd>{{bestallning.tjanstekomponent.beskrivning}} ({{bestallning.tjanstekomponent.hsaId}})</dd>
-            </dl>
-          </div>
-          <div class="col-md-6">
-            <dl>
-              <dt translate="order.main.modal.namn_etjanst"></dt>
-              <dd>{{bestallning.namnPaEtjanst | dash}}</dd>
-            </dl>
-          </div>
-        </div>
+        <dl class="dl-horizontal">
+          <dt translate="order.main.modal.allmant.hsaId"></dt>
+          <dd>{{bestallning.tjanstekomponent.hsaId}}</dd>
+          <dt translate="order.main.modal.allmant.namn"></dt>
+          <dd>{{bestallning.tjanstekomponent.beskrivning}}</dd>
+          <dt translate="order.main.modal.allmant.namn_etjanst"></dt>
+          <dd>{{bestallning.namnPaEtjanst | dash}}</dd>
+        </dl>
       </div>
       <div class="col-md-6">
         <h4 translate="order.main.modal.bestallare.title"></h4>
-        <div class="row">
-          <div class="col-md-6">
-            <dl>
-              <dt translate="order.main.modal.bestallare.namn"></dt>
-              <dd>{{bestallning.bestallare.namn}}</dd>
-              <dt translate="order.main.modal.bestallare.epost"></dt>
-              <dd>{{bestallning.bestallare.epost}}</dd>
-            </dl>
-          </div>
-          <div class="col-md-6">
-            <dl>
-              <dt translate="order.main.modal.bestallare.telefon"></dt>
-              <dd>{{bestallning.bestallare.telefon}}</dd>
-              <dt translate="order.main.modal.bestallare.roll"></dt>
-              <dd>{{bestallning.bestallareRoll | dash}}</dd>
-            </dl>
-          </div>
+        <dl class="dl-horizontal">
+          <dt translate="order.main.modal.bestallare.namn"></dt>
+          <dd>{{bestallning.bestallare.namn}}</dd>
+          <dt translate="order.main.modal.bestallare.telefon"></dt>
+          <dd>{{bestallning.bestallare.telefon}}</dd>
+          <dt translate="order.main.modal.bestallare.epost"></dt>
+          <dd>{{bestallning.bestallare.epost}}</dd>
+          <dt translate="order.main.modal.bestallare.roll"></dt>
+          <dd>{{bestallning.bestallareRoll | dash}}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div ng-if="nyaProducentanslutningar.length">
+      <h4 translate="order.producent.modal.anslutningar.nya_title">nya</h4>
+      <div ng-repeat="foo in anslutningar = (nyaProducentanslutningar | filter:forandradAnslutning | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn')" ng-init="outerIndex = $index" ng-if="$index % 3 == 0" class="row">
+        <div class="col-md-4" ng-repeat="bar in [0,1,2]" ng-init="innerIndex = $index"
+             ng-if="anslutningar[(outerIndex+$index)]">
+          <p><strong>{{anslutningar[(outerIndex+innerIndex)].tjanstekontraktNamn}}
+            {{anslutningar[(outerIndex+innerIndex)].tjanstekontraktMajorVersion}}.x</strong></p>
+          <dl class="la-status">
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser.length" translate="order.producent.modal.anslutningar.logiska_adresser.nya"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.producent.modal.anslutningar.logiska_adresser.borttagna"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
+              <p>{{la.namn}}</p>
+              <p>{{la.hsaId}}</p>
+            </dd>
+            <dt translate="order.producent.modal.anslutningar.url"></dt>
+            <dd><p>{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
+            <dt translate="order.producent.modal.anslutningar.rivta_profil"></dt>
+            <dd><p>{{anslutningar[(outerIndex+innerIndex)].rivtaProfil}}</p></dd>
+          </dl>
         </div>
       </div>
     </div>
 
-    <div
-      ng-init="anslutningar = (producentbestallning.producentanslutningar | filter:forandradAnslutning | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn')">
-      <h4 translate="order.producent.modal.anslutningar.title"></h4>
-      <div ng-repeat="foo in anslutningar" ng-init="outerIndex = $index" ng-if="$index % 3 == 0" class="row">
+    <div ng-if="uppdateradProducentanslutningar.length">
+      <h4 translate="order.producent.modal.anslutningar.uppdaterad_title"></h4>
+      <div ng-repeat="foo in anslutningar = (uppdateradProducentanslutningar | filter:forandradAnslutning | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn')" ng-init="outerIndex = $index" ng-if="$index % 3 == 0" class="row">
         <div class="col-md-4" ng-repeat="bar in [0,1,2]" ng-init="innerIndex = $index"
              ng-if="anslutningar[(outerIndex+$index)]">
           <p><strong>{{anslutningar[(outerIndex+innerIndex)].tjanstekontraktNamn}}
@@ -84,10 +96,10 @@
       <div class="row">
         <div class="col-md-6">
           <dl class="la-status">
-            <dt translate="order.producent.modal.konsumentbestallningar.konsumenter"></dt>
+            <dt translate="order.producent.modal.konsumentbestallningar.konsumenter.title"></dt>
             <dd ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
-              <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
-              <p>{{konsumentbestallning.tjanstekomponent.hsaId}}</p>
+              <p><strong translate="order.producent.modal.konsumentbestallningar.konsumenter.namn"></strong> {{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
+              <p><strong translate="order.producent.modal.konsumentbestallningar.konsumenter.hsaId"></strong> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
             </dd>
           </dl>
         </div>

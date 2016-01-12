@@ -7,7 +7,7 @@ angular.module('avApp')
         $scope.producentbestallning = ProducentbestallningState.current();
         $scope.canHandleLogiskaAdresserInUnity = canHandleLogiskaAdresserInUnity;
 
-        $scope.forandradAnslutning = function(anslutning) {
+        var isForandradAnslutning = function(anslutning) {
           if (anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length) {
             return true;
           } else if (anslutning.borttagnaLogiskaAdresser && anslutning.borttagnaLogiskaAdresser.length) {
@@ -19,6 +19,18 @@ angular.module('avApp')
           }
           return false;
         };
+
+        var isUppdateraProducentAnslutning = function(anslutning) {
+          return ((anslutning.befintligaLogiskaAdresser && anslutning.befintligaLogiskaAdresser.length > 0) || anslutning.tidigareRivtaProfil || anslutning.tidigareUrl);
+        };
+
+        $scope.nyaProducentanslutningar = _.filter($scope.producentbestallning.producentanslutningar, function(anslutning) {
+          return isForandradAnslutning(anslutning) && !isUppdateraProducentAnslutning(anslutning);
+        });
+
+        $scope.uppdateradProducentanslutningar = _.filter($scope.producentbestallning.producentanslutningar, function(anslutning) {
+          return isForandradAnslutning(anslutning) && isUppdateraProducentAnslutning(anslutning);
+        });
 
         $scope.ok = function () {
           $uibModalInstance.close();

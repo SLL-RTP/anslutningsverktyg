@@ -94,7 +94,11 @@
           "button": "Se sammanfattning och beställ"
         },
         "modal": {
-          "namn_etjanst": "Angivet namn på e-tjänst",
+          "allmant": {
+            "hsaId": "HSA-Id",
+            "namn": "Namn på system",
+            "namn_etjanst": "Namn på e-tjänst"
+          },
           "bestallare": {
             "title": "Beställare",
             "namn": "Namn",
@@ -223,17 +227,25 @@
             "selected": "Vald tjänsteproducent"
           },
           "anslutningar": {
-            "title": "Förändrade producentanslutningar",
+            "nya_title": "Nya producentanslutningar",
+            "uppdaterad_title": "Uppdaterade producentanslutningar",
             "logiska_adresser": {
               "nya": "Nya logiska adresser",
               "borttagna": "Borttagna logiska adresser"
             },
-            "ny_url": "Ny url",
+            "url": "URL",
+            "ny_url": "Ny URL",
+            "rivta_profil": "RIVTA-profil",
             "ny_rivta_profil": "Ny RIVTA-profil"
           },
           "konsumentbestallningar": {
-            "title": "Konsumentbeställningar",
-            "konsumenter": "Tjänstekonsumenter"
+            "title": "Beställningar av anropsbehörighet / etablering av samverkan",
+            "konsumenter": {
+              "title": "Tjänstekonsumenter",
+              "namn": "Namn på system:",
+              "hsaId": "HSA-Id:"
+            }
+
           }
         }
       },
@@ -255,10 +267,11 @@
         "modal": {
           "title": "Bekräfta ändringar för tjänstekonsument",
           "allmant": {
-            "title": "Tjänstekonsument",
-            "selected": "Vald tjänstekonsument"
+            "title": "Tjänstekonsument"
           },
           "anslutningar": {
+            "nya_title": "konsumenten ska ha behörighet på följande tjänstekontrakt för följande logiska adresser:",
+            "uppdaterad_title": "konsumenten ska ha UPPDATERAD behörighet på följande tjänstekontrakt för följande logiska adresser:",
             "title": "Förändrade konsumentanslutningar",
             "logiska_adresser": {
               "nya": "Nya logiska adresser",
