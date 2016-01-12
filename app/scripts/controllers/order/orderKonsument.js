@@ -102,6 +102,9 @@ angular.module('avApp')
                 if (contractLogiskAdressStatus.enabled && !contractLogiskAdressStatus.checked) {
                   anslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
                 }
+                if (contractLogiskAdressStatus.enabled && contractLogiskAdressStatus.checked) {
+                  anslutning._existing = true;
+                }
               });
             });
             _.each(anslutningar, function(anslutning) {

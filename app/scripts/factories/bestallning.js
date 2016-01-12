@@ -129,8 +129,8 @@ angular.module('avApp')
         var konsumentanslutningar = [];
         var uppdateradKonsumentanslutningar = [];
         _.each(order.konsumentanslutningar, function(anslutning) {
-          var cleanAnslutning = cleanObj(anslutning);
-          if (isUppdateraKonsumentanslutning(cleanAnslutning)) {
+          if (isUppdateraKonsumentanslutning(anslutning)) {
+            var cleanAnslutning = cleanObj(anslutning);
             if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
               cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function (logiskAdress) {
                 return cleanObj(logiskAdress);
@@ -143,6 +143,7 @@ angular.module('avApp')
             }
             uppdateradKonsumentanslutningar.push(cleanAnslutning);
           } else {
+            var cleanAnslutning = cleanObj(anslutning);
             if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
               cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function(logiskAdress) {
                 return cleanObj(logiskAdress);
@@ -162,7 +163,7 @@ angular.module('avApp')
       };
 
       var isUppdateraKonsumentanslutning = function(anslutning) {
-        return anslutning.borttagnaLogiskaAdresser && anslutning.borttagnaLogiskaAdresser.length > 0;
+        return anslutning._existing; //do not cleanObj before running isUppdateraKonsumentanslutning
       };
 
       var isUppdateraProducentAnslutningChanged = function(uppdateraProducentanslutning) {
