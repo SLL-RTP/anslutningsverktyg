@@ -72,10 +72,10 @@ module.exports = function (grunt) {
       },
       production: {
         options: {
-          dest: '<%= yeoman.dist %>/scripts/constants.js'
+          dest: '.tmp/scripts/constants.js'
         },
         constants: {
-          configuration: runConfig.development
+          configuration: runConfig.production
         }
       }
       //server: {
