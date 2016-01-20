@@ -50,7 +50,7 @@ angular.module('avApp')
             .then(function (matrix) {
               $log.debug(matrix);
               _.each(matrix, function (kaStatus) {
-                kontraktIValdTjanstedoman.push(_.pick(kaStatus, ['tjanstekontraktNamn', 'tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
+                var kontrakt = _.pick(kaStatus, ['tjanstekontraktNamn', 'tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']);
                 var cc = contractKey(kaStatus);
                 _.each(kaStatus.logiskAdressStatuses, function (laStatus) {
                   if (!_.find(logiskaAdresser, _.pick(laStatus, 'hsaId'))) {
@@ -64,7 +64,11 @@ angular.module('avApp')
                     checked: laStatus.enabled,
                     possible: laStatus.possible
                   };
+                  if (laStatus.enabled) { //start tracking _existing status here
+                    kontrakt._existing = true;
+                  }
                 });
+                kontraktIValdTjanstedoman.push(kontrakt);
               });
               $scope.matrix = newMatrix;
               $scope.logiskaAdresserIValdTjanstedoman = logiskaAdresser; //samtliga logiska adresser
@@ -94,7 +98,6 @@ angular.module('avApp')
                   anslutning = _.clone(kontrakt);
                   anslutning.nyaLogiskaAdresser = [];
                   anslutning.borttagnaLogiskaAdresser = [];
-                  anslutningar.push(anslutning);
                 }
                 if (!contractLogiskAdressStatus.enabled && contractLogiskAdressStatus.checked) {
                   anslutning.nyaLogiskaAdresser.push(_.clone(logiskAdress));
@@ -102,9 +105,7 @@ angular.module('avApp')
                 if (contractLogiskAdressStatus.enabled && !contractLogiskAdressStatus.checked) {
                   anslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
                 }
-                if (contractLogiskAdressStatus.enabled && contractLogiskAdressStatus.checked) {
-                  anslutning._existing = true;
-                }
+                anslutningar.push(anslutning);
               });
             });
             _.each(anslutningar, function(anslutning) {
