@@ -56,10 +56,7 @@
           }
         },
         "other_panel": {
-          "title": "Övrigt",
-          "ovrig_information": {
-            "label": "Övrig information om beställningen samt feedback om beställningsflödet"
-          }
+          "title": "Övrig information"
         },
         "bestallare_panel": {
           "title": "Beställare",
