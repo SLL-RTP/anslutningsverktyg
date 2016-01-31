@@ -259,10 +259,10 @@
           "logiska_adresser_filter_label": "Filtrera adresser:",
           "check_all_kontrakt_label": "Välj alla",
           "check_all_disabled_info": "Val inaktiverat",
-          "single_disabled_info": "Val ej möjligt",
+          "single_disabled_info": "logisk adress ej kopplad till tjänstekontrakt",
           "no_logiska_adresser_found": "inga logiska adresser hittades",
           "remove_warning_label": "OBS!",
-          "remove_warning_info": "Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)"
+          "remove_warning_info": "<span style=\"color: red\">Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)</span>"
         },
         "modal": {
           "title": "Bekräfta ändringar för tjänstekonsument",

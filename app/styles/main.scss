@@ -220,6 +220,13 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
 }
 
 .matrix {
+
+  height: 700px;
+
+  .matrix-container {
+    position: absolute;
+  }
+
   .contract-name-container {
     text-align: center;
   }
@@ -234,8 +241,11 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
   }
 
   .selector {
-    overflow-y: scroll;
     height: 400px; //TODO: find way to make it work with max-height
+  }
+
+  .y-scroll {
+    overflow-y: scroll;
   }
 
   .checkbox-disabled {

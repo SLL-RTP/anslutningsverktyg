@@ -5,13 +5,19 @@ angular.module('avApp')
     function($parse, ScrollbarPadService) {
       return {
         restrict: 'A',
+        scope: {
+          scrollbarPad: '='
+        },
         link: function($scope, $element, $attr) {
-          var addStyle = $parse($attr.scrollbarPad)($scope);
-          if (addStyle) {
-            if (!ScrollbarPadService.isZero()) {
-              $element.css({'padding-right': ScrollbarPadService.getWidth() + 'px'});
+          $scope.$watch('scrollbarPad', function(value) {
+            if (value) {
+              if (!ScrollbarPadService.isZero()) {
+                $element.css({'padding-right': ScrollbarPadService.getWidth() + 'px'});
+              }
+            } else {
+              $element.css({'padding-right': ''});
             }
-          }
+          });
         }
       };
   }])

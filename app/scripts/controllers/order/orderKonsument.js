@@ -24,7 +24,11 @@ angular.module('avApp')
             var cc = contractKey(kontrakt);
             _.each(_.keys($scope.matrix), function(key) {
               if ($scope.matrix[key][cc]) {
-                $scope.matrix[key][cc].checked = kontrakt._checkAll;
+                if (kontrakt._checkAll) {
+                  $scope.matrix[key][cc].checked = true;
+                } else {
+                  $scope.matrix[key][cc].checked = $scope.matrix[key][cc].enabled;
+                }
               }
             });
             updateAnslutningarOnOrder();
@@ -73,7 +77,7 @@ angular.module('avApp')
               $scope.matrix = newMatrix;
               $scope.logiskaAdresserIValdTjanstedoman = logiskaAdresser; //samtliga logiska adresser
               $scope.logiskaAdresser = logiskaAdresser; //logiska adresser som visas
-              $scope.kontraktIValdTjanstedoman = kontraktIValdTjanstedoman;
+              $scope.kontraktIValdTjanstedoman = _.sortBy(kontraktIValdTjanstedoman, 'tjanstekontraktNamnrymd'); //pre-sort since we iterate multiple times
             });
         };
 

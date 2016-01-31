@@ -14,74 +14,76 @@
     </div>
     <div class="row" ng-show="selectedTjanstedoman">
       <div class="col-md-12 matrix">
-        <table class="table table-condensed table-bordered detached-header">
-          <thead>
-          <tr>
-            <th class="la-name-container">&nbsp;</th>
-            <th ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="contract-name-container" scrollbar-pad="$last">
-              <div class="rotated-text">
-                <div class="rotated-text__inner">
-                  <span>{{kontrakt.tjanstekontraktNamn}} {{kontrakt.tjanstekontraktMajorVersion}}.x</span>
+        <div class="matrix-container">
+          <table class="table table-condensed table-bordered detached-header">
+            <thead>
+            <tr>
+              <th class="la-name-container">&nbsp;</th>
+              <th ng-repeat="kontrakt in kontraktIValdTjanstedoman" class="contract-name-container" scrollbar-pad="($last && logiskaAdresser.length > 3)">
+                <div class="rotated-text">
+                  <div class="rotated-text__inner">
+                    <span>{{kontrakt.tjanstekontraktNamn}} {{kontrakt.tjanstekontraktMajorVersion}}.x</span>
+                  </div>
                 </div>
-              </div>
-            </th>
-          </tr>
-          </thead>
-          <tbody ng-if="logiskaAdresserIValdTjanstedoman.length">
-          <tr>
-            <td>
-              <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
-              <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
-            </td>
-            <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
-                class="la-checkbox-container"
-                scrollbar-pad="$last"
-                ng-class="{'checkbox-disabled': logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length}"
-                uib-tooltip="{{'order.konsument.select_kontrakt_panel.check_all_disabled_info' | translate}}"
-                tooltip-enable="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length"
-                tooltip-append-to-body="true">
-              <div>
-                <label for="checkAll" translate="order.konsument.select_kontrakt_panel.check_all_kontrakt_label"></label>
-                <div>
-                  <input id="checkAll" type="checkbox" ng-model="kontrakt._checkAll" ng-change="selectAllLogiskaAdresser(kontrakt)" ng-disabled="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length">
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr ng-if="removeWarning">
-            <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
-              <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
-              <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="selector">
-          <table class="table table-condensed table-bordered">
-            <tbody>
-            <tr ng-repeat="la in logiskaAdresser">
-              <th class="la-name-container">
-                <p>{{la.namn}}</p>
-                <small>{{la.hsaId}}</small>
               </th>
+            </tr>
+            </thead>
+            <tbody ng-if="logiskaAdresserIValdTjanstedoman.length">
+            <tr>
+              <td>
+                <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
+                <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
+              </td>
               <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
                   class="la-checkbox-container"
-                  ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}"
-                  uib-tooltip="{{'order.konsument.select_kontrakt_panel.single_disabled_info' | translate}}"
-                  tooltip-enable="!matrix[la.hsaId][contractKey(kontrakt)]"
+                  scrollbar-pad="($last && logiskaAdresser.length > 3)"
+                  ng-class="{'checkbox-disabled': logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length}"
+                  uib-tooltip="{{'order.konsument.select_kontrakt_panel.check_all_disabled_info' | translate}}"
+                  tooltip-enable="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length"
                   tooltip-append-to-body="true">
                 <div>
-                  <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(kontrakt)].checked" ng-change="updateAnslutningarOnOrder();" ng-disabled="!matrix[la.hsaId][contractKey(kontrakt)]">
+                  <label for="checkAll" translate="order.konsument.select_kontrakt_panel.check_all_kontrakt_label"></label>
+                  <div>
+                    <input id="checkAll" type="checkbox" ng-model="kontrakt._checkAll" ng-change="selectAllLogiskaAdresser(kontrakt)" ng-disabled="logiskaAdresser.length !== logiskaAdresserIValdTjanstedoman.length">
+                  </div>
                 </div>
               </td>
             </tr>
-            <tr ng-if="!logiskaAdresser.length">
-              <td>
-                <em translate="order.konsument.select_kontrakt_panel.no_logiska_adresser_found"></em>
+            <tr ng-if="removeWarning">
+              <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
+                <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
+                <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
               </td>
             </tr>
             </tbody>
           </table>
+          <div class="selector" ng-class="{'y-scroll' : logiskaAdresser.length > 3}">
+            <table class="table table-condensed table-bordered">
+              <tbody>
+              <tr ng-repeat="la in logiskaAdresser">
+                <th class="la-name-container">
+                  <p>{{la.namn}}</p>
+                  <small>{{la.hsaId}}</small>
+                </th>
+                <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
+                    class="la-checkbox-container"
+                    ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}"
+                    uib-tooltip="{{'order.konsument.select_kontrakt_panel.single_disabled_info' | translate}}"
+                    tooltip-enable="!matrix[la.hsaId][contractKey(kontrakt)]"
+                    tooltip-append-to-body="true">
+                  <div>
+                    <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(kontrakt)].checked" ng-change="updateAnslutningarOnOrder();" ng-disabled="!matrix[la.hsaId][contractKey(kontrakt)]">
+                  </div>
+                </td>
+              </tr>
+              <tr ng-if="!logiskaAdresser.length">
+                <td>
+                  <em translate="order.konsument.select_kontrakt_panel.no_logiska_adresser_found"></em>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
