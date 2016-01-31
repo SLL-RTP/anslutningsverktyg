@@ -16,13 +16,13 @@
     },
     "landing": {
       "header": "Beställningsstöd för SLL:s regionala tjänsteplattform",
-      "p1": "I menyval Administrera anslutning beställer du anslutning av en tjänsteproducent till tjänstekontrakt som är installerat i regional tjänsteplattform, anger logisk/a adress/er samt har möjlighet att beställa anropsbehörighet (etablera samverkan) mellan producent och redan ansluten konsument.",
+      "p1": "I menyval Administrera anslutning beställer du: <p><ul><li>När system är tjänsteproducent, anslutning av producent till tjänstekontrakt som är installerat i plattformen samt anger logisk/a adress/er.</li><li>när systemet är tjänstekonsument, behörighet att adressera producenters befintliga logiska adresser (etablera samverkan).</li></ul></p>",
       "p2": "I menyval Administrera systeminformation registrerar du information om instans av system samt information om kontaktpersoner för instansen."
     },
     "order": {
       "main": {
         "title": "Administrera anslutning",
-        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adresser som ska tillgängliggöra information i systemet.",
+        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adresser samt anslutning till befintliga logiska adresser, som ska tillgängliggöra information.",
         "env_panel": {
           "title": "Välj miljö",
           "label": "Miljö",
@@ -199,7 +199,7 @@
           }
         },
         "anropsbehorighet_panel": {
-          "title": "Lägg till anropsbehörighet för tjänstekonsument",
+          "title": "Lägg till adresseringsbehörighet för tjänstekonsument",
           "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
           "choice": {
             "label": {
