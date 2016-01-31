@@ -270,12 +270,12 @@
             "title": "Tjänstekonsument"
           },
           "anslutningar": {
-            "nya_title": "konsumenten ska ha behörighet på följande tjänstekontrakt för följande logiska adresser:",
-            "uppdaterad_title": "konsumenten ska ha UPPDATERAD behörighet på följande tjänstekontrakt för följande logiska adresser:",
+            "nya_title": "konsumenten ska ha adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
+            "uppdaterad_title": "Konsumenten ska ha UPPDATERAD adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
             "title": "Förändrade konsumentanslutningar",
             "logiska_adresser": {
               "nya": "Nya logiska adresser",
-              "borttagna": "Borttagna logiska adresser"
+              "borttagna": "<span style=\"color: red\">Borttagna logiska adresser</span>"
             }
           }
         }

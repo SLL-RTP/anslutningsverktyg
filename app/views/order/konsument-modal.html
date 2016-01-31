@@ -43,11 +43,6 @@
               <p>{{la.namn}}</p>
               <p>{{la.hsaId}}</p>
             </dd>
-            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.borttagna"></dt>
-            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
-              <p>{{la.namn}}</p>
-              <p>{{la.hsaId}}</p>
-            </dd>
           </dl>
         </div>
       </div>
@@ -61,13 +56,13 @@
           <p><strong>{{anslutningar[(outerIndex+innerIndex)].tjanstekontraktNamn}}
             {{anslutningar[(outerIndex+innerIndex)].tjanstekontraktMajorVersion}}.x</strong></p>
           <dl class="la-status">
-            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.nya"></dt>
-            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser">
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.borttagna"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
               <p>{{la.namn}}</p>
               <p>{{la.hsaId}}</p>
             </dd>
-            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.borttagna"></dt>
-            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].borttagnaLogiskaAdresser">
+            <dt ng-if-start="anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser.length" translate="order.konsument.modal.anslutningar.logiska_adresser.nya"></dt>
+            <dd ng-if-end ng-repeat="la in anslutningar[(outerIndex+innerIndex)].nyaLogiskaAdresser">
               <p>{{la.namn}}</p>
               <p>{{la.hsaId}}</p>
             </dd>
