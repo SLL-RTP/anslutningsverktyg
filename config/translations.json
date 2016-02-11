@@ -200,11 +200,11 @@
         },
         "anropsbehorighet_panel": {
           "title": "Lägg till adresseringsbehörighet för tjänstekonsument",
-          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha anropsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära anropsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
+          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha adresseringsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära adresseringsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
           "choice": {
             "label": {
-              "call_permission_separate_order": "Anropsbehörighet kommer begäras via en separat beställning för konsument",
-              "call_permission_this_order": "Anropsbehörighet ska begäras i samband med denna beställning"
+              "call_permission_separate_order": "Adresseringsbehörighet kommer begäras via en separat beställning för konsument",
+              "call_permission_this_order": "Adresseringsbehörighet ska begäras i samband med denna beställning"
             }
           },
           "konsument_search": {
@@ -214,7 +214,7 @@
           "selected_konsumenter": {
             "label": "Valda tjänstekonsumenter",
             "none": "inga tjänstekonsumenter valda",
-            "selected_info": "Vald tjänstekonsumenter ska få anropsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument anropsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
+            "selected_info": "Vald tjänstekonsumenter ska få adresseringsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument adresseringsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
           }
         },
         "modal": {
@@ -236,7 +236,7 @@
             "ny_rivta_profil": "Ny RIVTA-profil"
           },
           "konsumentbestallningar": {
-            "title": "Beställningar av anropsbehörighet / etablering av samverkan",
+            "title": "Beställningar av adresseringsbehörighet / etablering av samverkan",
             "konsumenter": {
               "title": "Tjänstekonsumenter",
               "namn": "Namn på system:",
