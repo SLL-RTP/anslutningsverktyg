@@ -78,6 +78,7 @@ angular.module('avApp')
               $scope.logiskaAdresserIValdTjanstedoman = logiskaAdresser; //samtliga logiska adresser
               $scope.logiskaAdresser = logiskaAdresser; //logiska adresser som visas
               $scope.kontraktIValdTjanstedoman = _.sortBy(kontraktIValdTjanstedoman, 'tjanstekontraktNamnrymd'); //pre-sort since we iterate multiple times
+              $scope.removeWarning = false;
             });
         };
 
@@ -189,7 +190,8 @@ angular.module('avApp')
             sendOrderClicked: false,
             selectedTjanstedoman: undefined,
             logiskaAdresser: [],
-            logiskaAdresserIValdTjanstedoman: []
+            logiskaAdresserIValdTjanstedoman: [],
+            removeWarning: false
           });
           $scope.$broadcast('show-errors-reset');
         };

@@ -49,10 +49,13 @@
                 </div>
               </td>
             </tr>
-            <tr ng-if="removeWarning">
+            <tr>
               <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
-                <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
-                <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
+                <h4 translate="order.konsument.select_kontrakt_panel.table_info"></h4>
+                <div ng-if="removeWarning">
+                  <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
+                  <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
+                </div>
               </td>
             </tr>
             </tbody>

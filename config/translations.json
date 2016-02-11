@@ -258,6 +258,7 @@
           "check_all_disabled_info": "Val inaktiverat",
           "single_disabled_info": "logisk adress ej kopplad till tjänstekontrakt",
           "no_logiska_adresser_found": "inga logiska adresser hittades",
+          "table_info": "Behörighet till följande logisk/a adresser",
           "remove_warning_label": "OBS!",
           "remove_warning_info": "<span style=\"color: red\">Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)</span>"
         },
