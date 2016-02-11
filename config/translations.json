@@ -391,7 +391,7 @@
           }
         },
         "nat": {
-          "title": "Nät",
+          "title": "* Nät",
           "error": {
             "empty": "Inga nät valda"
           }
