@@ -369,8 +369,8 @@
         "teknisk_information": {
           "title": "Teknisk information",
           "producent_ip": {
-            "label": "IP-adress vid anrop till systemet (systemet är producent)",
-            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom till angiven IP-adress. Den externa IP-adressen som syns utåt anges här.",
+            "label": "IP-adress vid anrop till systemet",
+            "info": "IP-adress när systemet är producent. RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom till angiven IP-adress. Den externa IP-adressen som syns utåt anges här.",
             "error": {
               "pattern": "IP-adress ej korrekt ifylld"
             }
@@ -379,8 +379,8 @@
             "label": "DNS-namn (systemet är producent)"
           },
           "konsument_ip": {
-            "label": "IP-adress vid anrop från systemet (systemet är konsument)",
-            "info": "RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt vid anrop anges här.",
+            "label": "IP-adress vid anrop från systemet",
+            "info": "IP-adress när systemet är konsument. RTP-förvaltningen öppnar brandvägg så att kommunikation släpps igenom från angiven IP-adress. Den externa IP-adressen som syns utåt vid anrop anges här.",
             "error": {
               "pattern": "IP-adress ej korrekt ifylld"
             }
