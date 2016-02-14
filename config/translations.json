@@ -105,7 +105,8 @@
           },
           "other_info_title": "Övrig information och feedback",
           "ok_btn": "Beställ",
-          "cancel_btn": "Avbryt"
+          "cancel_btn": "Avbryt",
+          "print_btn": "Utskrift (nytt fönster)"
         }
       },
       "producent": {

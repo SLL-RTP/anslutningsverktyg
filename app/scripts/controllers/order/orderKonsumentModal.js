@@ -23,6 +23,14 @@ angular.module('avApp')
         $scope.cancel = function () {
           $uibModalInstance.dismiss('cancel');
         };
+
+        $scope.print = function() {
+          var printContents = document.getElementsByClassName('modal-body')[0].innerHTML;
+          var popupWin = window.open('', '_blank');
+          popupWin.document.open();
+          popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="styles/main.css" /></head><body>' + printContents + '<script type="text/javascript">window.print(); window.onfocus=function(){ window.close();} </script></body></html>');
+          popupWin.document.close();
+        }
       }
     ]
   );
