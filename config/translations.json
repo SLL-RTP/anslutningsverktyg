@@ -16,7 +16,7 @@
     },
     "landing": {
       "header": "Beställningsstöd för SLL:s regionala tjänsteplattform",
-      "p1": "I menyval Administrera anslutning beställer du: <p><ul><li>När system är tjänsteproducent, anslutning av producent till tjänstekontrakt som är installerat i plattformen samt anger logisk/a adress/er.</li><li>när systemet är tjänstekonsument, behörighet att adressera producenters befintliga logiska adresser (etablera samverkan).</li></ul></p>",
+      "p1": "I menyval Administrera anslutning beställer du: <p><ul><li>När system är tjänsteproducent, anslutning av producent till tjänstekontrakt som är installerat i plattformen samt anger logisk/a adress/er.</li><li>När systemet är tjänstekonsument, behörighet att adressera producenters befintliga logiska adresser (etablera samverkan).</li></ul></p>",
       "p2": "I menyval Administrera systeminformation registrerar du information om instans av system samt information om kontaktpersoner för instansen."
     },
     "order": {
@@ -103,7 +103,7 @@
             "telefon": "Telefon",
             "roll": "Roll"
           },
-          "other_info_title": "Övrig information och feedback",
+          "other_info_title": "Övrig information",
           "ok_btn": "Beställ",
           "cancel_btn": "Avbryt",
           "print_btn": "Utskrift (nytt fönster)"
@@ -269,7 +269,7 @@
             "title": "Tjänstekonsument"
           },
           "anslutningar": {
-            "nya_title": "konsumenten ska ha adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
+            "nya_title": "Konsumenten ska ha adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
             "uppdaterad_title": "Konsumenten ska ha UPPDATERAD adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
             "title": "Förändrade konsumentanslutningar",
             "logiska_adresser": {
@@ -399,7 +399,7 @@
           }
         },
         "other_info": {
-          "label": "Övrig information till RTP-förvaltningen"
+          "label": "Övrig information"
         }
       },
       "submit": {
