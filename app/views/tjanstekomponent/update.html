@@ -108,11 +108,11 @@
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.konsumentIpadress.$error.pattern"
                     translate="komponent_admin.panel.teknisk_information.konsument_ip.error.pattern"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" show-errors global-validation>
               <label for="pingForConfigurationURL" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.label"></label>
               <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.teknisk_information.pingForConfigurationURL.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="pingForConfigurationURL"
-                     ng-model="tjanstekomponent.pingForConfigurationURL">
+              <input type="url" class="form-control" name="pingForConfigurationURL" id="pingForConfigurationURL" ng-model="tjanstekomponent.pingForConfigurationURL">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.pingForConfigurationURL.$error.url" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.error.url"></span>
             </div>
           </div>
         </div>

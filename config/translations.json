@@ -213,9 +213,9 @@
             "placeholder": "Sök befintlig tjänstekonsument"
           },
           "selected_konsumenter": {
-            "label": "Valda tjänstekonsumenter",
+            "label": "Vald/a tjänstekonsument/er",
             "none": "inga tjänstekonsumenter valda",
-            "selected_info": "Vald tjänstekonsumenter ska få adresseringsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument adresseringsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
+            "selected_info": "Vald/a tjänstekonsument/er ska få adresseringsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument adresseringsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
           }
         },
         "modal": {
@@ -254,12 +254,14 @@
             "label": "Tjänstedomän",
             "select_placeholder": "- Välj -"
           },
+          "matrix_info": "Installerade tjänstekontrakt visas nedan",
           "logiska_adresser_filter_label": "Filtrera adresser:",
           "check_all_kontrakt_label": "Välj alla",
           "check_all_disabled_info": "Val inaktiverat",
           "single_disabled_info": "logisk adress ej kopplad till tjänstekontrakt",
           "no_logiska_adresser_found": "inga logiska adresser hittades",
           "table_info": "Behörighet till följande logisk/a adresser",
+          "table_info_info": "Listan på logiska adresser innehåller alla logiska adresser för alla producenter som idag är anslutna till plattformen.",
           "remove_warning_label": "OBS!",
           "remove_warning_info": "<span style=\"color: red\">Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)</span>"
         },
@@ -389,7 +391,10 @@
           },
           "pingForConfigurationURL": {
             "label": "URL till övervakningstjänst",
-            "info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten."
+            "info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten.",
+            "error": {
+              "url": "Url är ej korrekt"
+            }
           }
         },
         "nat": {

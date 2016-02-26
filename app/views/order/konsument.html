@@ -13,6 +13,11 @@
       </div>
     </div>
     <div class="row" ng-show="selectedTjanstedoman">
+      <div class="col-md-12">
+        <h5 translate="order.konsument.select_kontrakt_panel.matrix_info"></h5>
+      </div>
+    </div>
+    <div class="row" ng-show="selectedTjanstedoman">
       <div class="col-md-12 matrix">
         <div class="matrix-container">
           <table class="table table-condensed table-bordered detached-header">
@@ -51,7 +56,10 @@
             </tr>
             <tr>
               <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
-                <h4 translate="order.konsument.select_kontrakt_panel.table_info"></h4>
+                <h5>
+                  <span translate="order.konsument.select_kontrakt_panel.table_info"></span>
+                  <i class="fa fa-info-circle" popover="{{'order.konsument.select_kontrakt_panel.table_info_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
+                </h5>
                 <div ng-if="removeWarning">
                   <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
                   <span translate="order.konsument.select_kontrakt_panel.remove_warning_info"></span>
