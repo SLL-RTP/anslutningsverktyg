@@ -141,14 +141,14 @@
           "p": "Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.",
           "label": {
             "add": "Lägg till logisk/a adressat/er för de tjänstekontrakt du valt",
-            "remove": "Ta bort logiska adressat/er för de tjänstekontrakt du valt"
+            "remove": "Ta bort logiska adressater för alla tjänstekontrakt du valt"
           }
         },
         "logical_address_remove_panel": {
           "title": "Ta bort logiska adressat/er för de tjänstekontrakt du valt",
           "non_common": {
             "label": "OBS!",
-            "info_text_ending": "innehåller logiska adressater som ej är gemensamma för samtliga valda tjänstekontrakt. För att ta bort logiska adressater som inte är gemensamma behöver du lägga separat beställning för varje enskilt tjänstekontrakt."
+            "info_text_ending": "har även andra logiska adressater än de som visas i listan. För att ta bort logiska adressater som inte är anslutna till alla valda tjänstekontrakt, behöver du lägga separat beställning för varje enskilt tjänstekontrakt."
           },
           "current": {
             "label": "Redan anslutna logiska adresser",
