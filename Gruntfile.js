@@ -13,8 +13,10 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     cdnify: 'grunt-google-cdn',
-    ngconstant: 'grunt-ng-constant'
+    ngconstant: 'grunt-ng-constant',
+    configureProxies: 'grunt-connect-proxy'
   });
+
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
@@ -139,6 +141,44 @@ module.exports = function (grunt) {
         hostname: '0.0.0.0',
         livereload: 35729
       },
+      proxies: [
+        {
+          context: '/bs',
+          host: '52.58.67.214',
+          port: 80,
+          https: false,
+          changeOrigin: true,
+          headers: {
+            accept: 'application/json'
+          }
+        },
+        {
+          context: '/localbs',
+          host: 'localhost',
+          port: 8888,
+          https: false,
+          changeOrigin: true,
+          rewrite: {
+            '/localbs': '/bs'
+          },
+          headers: {
+            accept: 'application/json'
+          }
+        },
+        {
+          context: '/local',
+          host: 'localhost',
+          port: 8080,
+          https: false,
+          changeOrigin: true,
+          rewrite: {
+           '/local/api': '/anslutningsplattform/api'
+          },
+          headers: {
+            accept: 'application/json'
+          }
+        }
+      ],
       livereload: {
         options: {
           open: true,
@@ -149,6 +189,8 @@ module.exports = function (grunt) {
                 '/bower_components',
                 connect.static('./bower_components')
               ),
+              // Setup the proxy
+              require('grunt-connect-proxy/lib/utils').proxyRequest,
               connect.static(appConfig.app)
             ];
           }
@@ -482,6 +524,7 @@ module.exports = function (grunt) {
       'ngconstant:development',
       'concurrent:server',
       'autoprefixer',
+      'configureProxies:server',
       'connect:livereload',
       'watch'
     ]);

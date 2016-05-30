@@ -11,8 +11,6 @@
           <dd>{{bestallning.tjanstekomponent.hsaId}}</dd>
           <dt translate="order.main.modal.allmant.namn"></dt>
           <dd>{{bestallning.tjanstekomponent.beskrivning}}</dd>
-          <dt translate="order.main.modal.allmant.namn_etjanst"></dt>
-          <dd>{{bestallning.namnPaEtjanst | dash}}</dd>
         </dl>
       </div>
       <div class="col-md-6">
@@ -49,7 +47,7 @@
               <p>{{la.hsaId}}</p>
             </dd>
             <dt translate="order.producent.modal.anslutningar.url"></dt>
-            <dd><p>{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
+            <dd><p style="word-wrap: break-word">{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
             <dt translate="order.producent.modal.anslutningar.rivta_profil"></dt>
             <dd><p>{{anslutningar[(outerIndex+innerIndex)].rivtaProfil}}</p></dd>
           </dl>
@@ -78,7 +76,7 @@
             <dt ng-if-start="!anslutningar[(outerIndex+innerIndex)].tidigareUrl
               || (anslutningar[(outerIndex+innerIndex)].tidigareUrl
                 && anslutningar[(outerIndex+innerIndex)].url != anslutningar[(outerIndex+innerIndex)].tidigareUrl)" translate="order.producent.modal.anslutningar.ny_url"></dt>
-            <dd ng-if-end><p>{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
+            <dd ng-if-end><p style="word-wrap: break-word">{{anslutningar[(outerIndex+innerIndex)].url}}</p></dd>
             <dt ng-if-start="!anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil
               || (anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil
                 && anslutningar[(outerIndex+innerIndex)].rivtaProfil != anslutningar[(outerIndex+innerIndex)].tidigareRivtaProfil)" translate="order.producent.modal.anslutningar.ny_rivta_profil"></dt>
@@ -104,7 +102,6 @@
           </dl>
         </div>
         <div class="col-md-6">
-          <div ng-if="canHandleLogiskaAdresserInUnity">
           <dl class="la-status">
             <dt>
               <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
@@ -116,20 +113,6 @@
               <p>{{logiskAdress.hsaId}}</p>
             </dd>
           </dl>
-        </div>
-        <div ng-if="!canHandleLogiskaAdresserInUnity">
-          <dl class="la-status">
-            <dt ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length"
-                ng-repeat-start="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
-              {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x
-            </dt>
-            <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
-              <p>{{logiskAdress.namn}}</p>
-              <p>{{logiskAdress.hsaId}}</p>
-          </dd>
-            <dd ng-repeat-end></dd>
-          </dl>
-        </div>
         </div>
       </div>
     </div>

@@ -21,8 +21,10 @@ angular
     'ng.shims.placeholder',
     'pascalprecht.translate'
   ])
-  .config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'translations', 'configuration',
-    function ($stateProvider, $urlRouterProvider, $translateProvider, $logProvider, translations, configuration) {
+  .config(['$stateProvider', '$compileProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'translations', 'configuration',
+    function ($stateProvider, $compileProvider, $urlRouterProvider, $translateProvider, $logProvider, translations, configuration) {
+
+      $compileProvider.debugInfoEnabled(false);
 
     $urlRouterProvider.otherwise('/');
 

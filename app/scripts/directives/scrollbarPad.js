@@ -8,7 +8,7 @@ angular.module('avApp')
         scope: {
           scrollbarPad: '='
         },
-        link: function($scope, $element, $attr) {
+        link: function($scope, $element) {
           $scope.$watch('scrollbarPad', function(value) {
             if (value) {
               if (!ScrollbarPadService.isZero()) {

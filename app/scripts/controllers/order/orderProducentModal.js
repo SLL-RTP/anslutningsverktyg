@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderProducentModalCtrl', ['$scope', '$uibModalInstance', '$log', 'BestallningState', 'ProducentbestallningState', 'canHandleLogiskaAdresserInUnity',
-      function ($scope, $uibModalInstance, $log, BestallningState, ProducentbestallningState, canHandleLogiskaAdresserInUnity) {
+  .controller('OrderProducentModalCtrl', ['$scope', '$uibModalInstance', '$log', 'BestallningState', 'ProducentbestallningState',
+      function ($scope, $uibModalInstance, $log, BestallningState, ProducentbestallningState) {
         $scope.bestallning = BestallningState.current();
         $scope.producentbestallning = ProducentbestallningState.current();
-        $scope.canHandleLogiskaAdresserInUnity = canHandleLogiskaAdresserInUnity;
 
         var isForandradAnslutning = function(anslutning) {
           if (anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length) {

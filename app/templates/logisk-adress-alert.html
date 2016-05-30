@@ -1,11 +1,10 @@
-<div class="alert logical-address" ng-class="['alert-' + (type || 'success'), closeable ? 'alert-dismissable' : null]">
+<div class="alert logical-address alert-{{::(type || 'success')}} {{::(closeable ? 'alert-dismissable' : '')}}">
   <button
     type="button"
     class="close"
     ng-click="close()"
-    ng-show="closeable && !closeDisabled"
+    ng-if="::(closeable && !closeDisabled)"
     >×</button>
-  <p ng-hide="!logiskAdress.namn">{{logiskAdress.namn}}</p>
-  <p ng-hide="!logiskAdress.namn"><small>{{logiskAdress.hsaId}}</small></p>
-  <p ng-show="!logiskAdress.namn">{{logiskAdress.hsaId}}</p>
+  <p ng-if="::logiskAdressNamn">{{::logiskAdressNamn}} <small>{{::logiskAdressHsaId}}</small></p>
+  <p ng-if="::!logiskAdressNamn">{{::logiskAdressHsaId}}</p>
 </div>

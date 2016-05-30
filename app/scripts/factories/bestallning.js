@@ -43,9 +43,6 @@ angular.module('avApp')
           },
           otherInfo: mainOrder.otherInfo
         };
-        if (!_.isUndefined(mainOrder.namnPaEtjanst)) {
-          bestallningDTO.producentbestallning.namnPaEtjanst = mainOrder.namnPaEtjanst;
-        }
         var producentanslutningar = [];
         var uppdateradProducentanslutningar = [];
         _.each(order.producentanslutningar, function(anslutning) {
@@ -56,12 +53,7 @@ angular.module('avApp')
           delete cleanAnslutning.producentUrl;
           if (isUppdateraProducentAnslutning(cleanAnslutning)) {
             if (isUppdateraProducentAnslutningChanged(cleanAnslutning)) { //if nothing has changed, do not use it.   TODO: handle this in controller to provide feedback to user?
-
-              if (!_.isEmpty(cleanAnslutning.befintligaLogiskaAdresser)) {
-                cleanAnslutning.befintligaLogiskaAdresser = _.map(cleanAnslutning.befintligaLogiskaAdresser, function (logiskAdress) {
-                  return cleanObj(logiskAdress);
-                });
-              }
+              cleanAnslutning.befintligaLogiskaAdresser = [];
               if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
                 cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function (logiskAdress) {
                   return cleanObj(logiskAdress);
@@ -123,14 +115,12 @@ angular.module('avApp')
           konsumentbestallningar: [{tjanstekomponent: tjanstekomponent}],
           otherInfo: mainOrder.otherInfo
         };
-        if (!_.isUndefined(mainOrder.namnPaEtjanst)) {
-          bestallningDTO.konsumentbestallningar[0].namnPaEtjanst = mainOrder.namnPaEtjanst;
-        }
         var konsumentanslutningar = [];
         var uppdateradKonsumentanslutningar = [];
         _.each(order.konsumentanslutningar, function(anslutning) {
+          var cleanAnslutning;
           if (isUppdateraKonsumentanslutning(anslutning)) {
-            var cleanAnslutning = cleanObj(anslutning);
+            cleanAnslutning = cleanObj(anslutning);
             if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
               cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function (logiskAdress) {
                 return cleanObj(logiskAdress);
@@ -143,7 +133,7 @@ angular.module('avApp')
             }
             uppdateradKonsumentanslutningar.push(cleanAnslutning);
           } else {
-            var cleanAnslutning = cleanObj(anslutning);
+            cleanAnslutning = cleanObj(anslutning);
             if (!_.isEmpty(cleanAnslutning.nyaLogiskaAdresser)) {
               cleanAnslutning.nyaLogiskaAdresser = _.map(cleanAnslutning.nyaLogiskaAdresser, function(logiskAdress) {
                 return cleanObj(logiskAdress);

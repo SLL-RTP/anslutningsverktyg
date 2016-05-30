@@ -14,7 +14,8 @@ angular.module('avApp')
       controller: 'LogiskAdressAlertController',
       templateUrl: 'templates/logisk-adress-alert.html',
       scope: {
-        logiskAdress: '=',
+        logiskAdressNamn: '@',
+        logiskAdressHsaId: '@',
         close: '&',
         closeDisabled: '=',
         type: '@'

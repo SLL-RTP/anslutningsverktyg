@@ -46,12 +46,6 @@
                    uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                    class="form-control">
           </div>
-          <div class="form-group" ng-if="order.tjanstekomponent.hsaId">
-            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label.producent" ng-if="state.id == 'order.producent'"></label>
-            <label for="namnPaEtjanst" translate="order.main.komponent_panel.etjanst_label.konsument" ng-if="state.id == 'order.konsument'"></label>
-            <input type="text" class="form-control" name="namnPaEtjanst" id="namnPaEtjanst" ng-model="order.namnPaEtjanst">
-          </div>
-
         </div>
       </div>
       <div ng-show="order.tjanstekomponent.hsaId">
@@ -200,10 +194,7 @@
     <!-- / beställare panel -->
     <div class="row" ng-hide="orderValid">
       <div class="col-md-4 col-md-offset-8">
-        <div class="alert alert-dismissable alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          {{'order.main.submit.order_error_msg' | translate}}
-        </div>
+        <p class="pull-right" style="color: red" translate="order.main.submit.order_error_msg"></p>
       </div>
     </div>
     <div class="row">

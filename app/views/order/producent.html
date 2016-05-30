@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-md-5 form-group">
         <label for="service-domain" translate="order.producent.select_kontrakt_panel.tjanstedoman.label"></label>
-        <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateAnslutningarIValdTjanstedoman()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
+        <select class="form-control" ng-model="selectedTjanstedoman" ng-change="updateConnectionsInCurrentServiceDomain()" ng-options="serviceDomain as (serviceDomain.tjansteDomanId + (serviceDomain.svensktKortNamn && serviceDomain.svensktKortNamn !== '-' ? ' (' + serviceDomain.svensktKortNamn + ')' : '')) for serviceDomain in serviceDomains" id="service-domain">
           <option value="" translate="order.producent.select_kontrakt_panel.tjanstedoman.select_placeholder"></option>
         </select>
       </div>
@@ -23,23 +23,23 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-hide="anslutningarIValdTjanstedoman.length">
+          <tr ng-hide="connectionsInCurrentServiceDomain.length">
             <td colspan="2">
               <em translate="order.producent.select_kontrakt_panel.tjanstekontrakt.no_contracts"></em>
             </td>
           </tr>
-          <tr ng-repeat="anslutning in anslutningarIValdTjanstedoman"
-              ng-class="{'success': anslutning._selected, 'contract-disabled': !anslutning.installeratIDriftmiljo}"
-              ng-click="anslutning._selected = !anslutning._selected && anslutning.installeratIDriftmiljo"
+          <tr ng-repeat="connection in connectionsInCurrentServiceDomain"
+              ng-class="{'success': connection._selected, 'contract-disabled': !connection.installeratIDriftmiljo}"
+              ng-click="connection._selected = !connection._selected && connection.installeratIDriftmiljo"
               class="contract-row">
             <td>
-              <span>{{anslutning.tjanstekontraktNamn}}</span>
-              <span class="label label-default" ng-show="!anslutning.installeratIDriftmiljo" translate="order.producent.select_kontrakt_panel.anslutning.status.not_installed"></span>
-              <span class="label label-warning" ng-show="anslutning.installeratIDriftmiljo && !anslutning.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.not_connected"></span>
-              <span class="label label-info" ng-show="anslutning.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.connected"></span>
-              <span class="label label-success" ng-show="anslutning._paBestallning" translate="order.producent.select_kontrakt_panel.anslutning.status.on_order"></span>
+              <span>{{connection.tjanstekontraktNamn}}</span>
+              <span class="label label-default" ng-show="!connection.installeratIDriftmiljo" translate="order.producent.select_kontrakt_panel.anslutning.status.not_installed"></span>
+              <span class="label label-warning" ng-show="connection.installeratIDriftmiljo && !connection.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.not_connected"></span>
+              <span class="label label-info" ng-show="connection.logiskAdressStatuses.length" translate="order.producent.select_kontrakt_panel.anslutning.status.connected"></span>
+              <span class="label label-success" ng-show="connection._paBestallning" translate="order.producent.select_kontrakt_panel.anslutning.status.on_order"></span>
             </td>
-            <td>{{anslutning.tjanstekontraktMajorVersion}}.x</td>
+            <td>{{connection.tjanstekontraktMajorVersion}}.x</td>
           </tr>
           </tbody>
         </table>
@@ -47,7 +47,7 @@
       <div class="col-md-2">
         <label>&nbsp;</label>
         <div class="centered-content">
-          <button type="button" class="btn btn-primary" ng-show="anslutningarIValdTjanstedoman.length" ng-click="updateValdaAnslutningar()">
+          <button type="button" class="btn btn-primary" ng-show="connectionsInCurrentServiceDomain.length" ng-click="updateValdaAnslutningar()">
             <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
           </button>
         </div>
@@ -68,17 +68,17 @@
               <em translate="order.producent.select_kontrakt_panel.order.no_contracts"></em>
             </td>
           </tr>
-          <tr ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
-            <td class="contract-button" style="text-align: center" ng-click="removeAnslutningFromOrder(anslutning)">
+          <tr ng-repeat="connection in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
+            <td class="contract-button" style="text-align: center" ng-click="removeAnslutningFromOrder(connection)">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </td>
             <td>
-              <p style="margin-bottom: -5px">{{anslutning.tjanstekontraktNamn}}</p>
+              <p style="margin-bottom: -5px">{{connection.tjanstekontraktNamn}}</p>
                   <span>
-                    <small>({{anslutning._tjanstedoman}})</small>
+                    <small>({{connection._tjanstedoman}})</small>
                   </span>
             </td>
-            <td>{{anslutning.tjanstekontraktMajorVersion}}.x</td>
+            <td>{{connection.tjanstekontraktMajorVersion}}.x</td>
           </tr>
           </tbody>
         </table>
@@ -100,16 +100,16 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="radio" ng-class="{'disabled': !canHandleLogiskaAdresserInUnity}">
+        <div class="radio">
           <label>
-            <input ng-model="linkLogicalAddressChoice" value="sameForAllAnslutningar" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios1" ng-disabled="!canHandleLogiskaAdresserInUnity">
-            <span translate="order.producent.logiska_adresser_choices_panel.label.unified"></span>
+            <input ng-model="orderMode" ng-value="ORDER_MODE.ADD" type="radio" name="orderModeRadios" id="optionsRadios1">
+            <span translate="order.producent.logiska_adresser_choices_panel.label.add"></span>
           </label>
         </div>
         <div class="radio">
           <label>
-            <input ng-model="linkLogicalAddressChoice" value="individualPerAnslutning" type="radio" name="linkLogicalAddressChoiceRadios" id="optionsRadios2">
-            <span translate="order.producent.logiska_adresser_choices_panel.label.individual"></span>
+            <input ng-model="orderMode" ng-value="ORDER_MODE.REMOVE" type="radio" name="orderModeRadios" id="optionsRadios2">
+            <span translate="order.producent.logiska_adresser_choices_panel.label.remove"></span>
           </label>
         </div>
       </div>
@@ -117,257 +117,158 @@
   </div>
 </div>
 <!-- / konfigurera tjänstekontrakt panel -->
-<!-- samma logiska adresser panel -->
-<div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && linkLogicalAddressChoice === 'sameForAllAnslutningar'">
+<!-- lägg till logiska adresser panel -->
+<div class="panel panel-primary" ng-if="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && orderMode === ORDER_MODE.ADD">
   <div class="panel-heading">
-    <h3 class="panel-title" translate="order.producent.logiska_adresser_selections_panel.title"></h3>
+    <h3 class="panel-title" translate="order.producent.logical_address_add_panel.title"></h3>
   </div>
   <div class="panel-body">
     <div class="row">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label translate="order.producent.logical_address_add_panel.search.label"></label>
+          <input type="text" ng-model="selectedLogicalAddress.selected"
+                 type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
+                 typeahead-editable="false"
+                 uib-typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
+                 class="form-control">
+        </div>
+        <div class="form-group">
+          <label translate="order.producent.logical_address_add_panel.add.label"></label>
+          <input ng-model="newLogicalAddress.hsaId"
+                 type="text" class="form-control"
+                 id="newLogicalAddress_HSAID"
+                 ng-change="newLogicalAddress._backend = false; disableSecond = isLogicalAddressAmongNew(newLogicalAddress);"
+                 placeholder="{{'order.producent.logical_address_add_panel.add.placeholder.hsaId' | translate}}">
+        </div>
+        <div class="form-group">
+          <input ng-model="newLogicalAddress.namn"
+                 type="text" class="form-control"
+                 id="newLogicalAddress_Name"
+                 placeholder="{{'order.producent.logical_address_add_panel.add.placeholder.name' | translate}}"
+                 ng-disabled="!newLogicalAddress.hsaId || newLogicalAddress._backend"
+                 ng-focus="updateLogiskAdressWithBackendData(newLogicalAddress)">
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="top25 centered-content">
+          <button type="button" class="btn btn-primary" ng-click="addNewLogicalAddress(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
+            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="centered-content top45">
+          <button type="button" class="btn btn-primary" ng-disabled="!newLogicalAddress.hsaId || disableSecond" ng-click="addNewLogicalAddress(newLogicalAddress); newLogicalAddress = {};">
+            <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
+            <span ng-show="disableSecond" translate="order.producent.logical_address_add_panel.add.disabled_button"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label
+          translate="order.producent.logical_address_add_panel.selected.label"></label>
+        <logisk-adress-alert
+          logisk-adress-namn="{{::logiskAdress.namn}}"
+          logisk-adress-hsa-id="{{::logiskAdress.hsaId}}"
+          type="success"
+          close="removeNewLogicalAddress(logiskAdress)"
+          ng-repeat="logiskAdress in newLogicalAddresses | orderBy:'namn' track by logiskAdress.hsaId">
+        </logisk-adress-alert>
+        <p ng-hide="newLogicalAddresses.length">
+          <em translate="order.producent.logical_address_add_panel.selected.none"></em>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / lägg till logiska adresser panel -->
+<!-- ta bort logiska adresser panel -->
+<div class="panel panel-primary" ng-if="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && orderMode === ORDER_MODE.REMOVE">
+  <div class="panel-heading">
+    <h3 class="panel-title" translate="order.producent.logical_address_remove_panel.title"></h3>
+  </div>
+  <div class="panel-body">
+    <div class="row" ng-if="orderMode === ORDER_MODE.REMOVE && nonCommons.length">
       <div class="col-md-12">
-        <div class="col-md-4">
-          <div class="row">
-            <div class="form-group">
-              <label translate="order.producent.logiska_adresser_selections_panel.search.label"></label>
-              <input type="text" ng-model="selectedLogicalAddress.selected"
-                     type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
-                     typeahead-editable="false"
-                     uib-typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
-                     typeahead-on-select="disableFirst = !canAddLogiskAdressToAllAnslutningar($item)"
-                     class="form-control">
-            </div>
-          </div>
-
-          <div class="row">
-            <label translate="order.producent.logiska_adresser_selections_panel.add.label"></label>
-            <div class="form-group">
-              <input ng-model="newLogicalAddress.hsaId"
-                     type="text" class="form-control"
-                     id="newLogicalAddress_HSAID"
-                     ng-change="newLogicalAddress._backend = false; disableSecond = !canAddLogiskAdressToAllAnslutningar(newLogicalAddress);"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.hsaId' | translate}}">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="form-group">
-              <input ng-model="newLogicalAddress.namn"
-                     type="text" class="form-control"
-                     id="newLogicalAddress_Name"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}"
-                     ng-disabled="!newLogicalAddress.hsaId || newLogicalAddress._backend"
-                     ng-focus="updateLogiskAdressWithBackendData(newLogicalAddress)">
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="row">
-            <div class="centered-content top25">
-              <button type="button" class="btn btn-primary" ng-disabled="disableFirst" ng-click="addLogiskAdressToAllAnslutningar(selectedLogicalAddress.selected); selectedLogicalAddress.selected = '';">
-                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableFirst"></span>
-                <span ng-show="disableFirst" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="centered-content top45">
-              <button type="button" class="btn btn-primary" ng-disabled="disableSecond || !newLogicalAddress.hsaId" ng-click="addNewLogiskAdressToAllAnslutningar(newLogicalAddress); newLogicalAddress = {};">
-                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
-                <span ng-show="disableSecond" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group col-md-5" ng-if="!producentbestallning.producentanslutningar[0].logiskAdressStatuses.length">
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.current.label"></label>
+        <p>
+          <span class="label label-danger" translate="order.producent.logical_address_remove_panel.non_common.label"></span>
+          <span style="color: red" ng-repeat="nonCommon in nonCommons">{{nonCommon.serviceContractName}}<span ng-if="!$last">, </span></span>
+          <span style="color: red" translate="order.producent.logical_address_remove_panel.non_common.info_text_ending"></span>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label translate="order.producent.logical_address_remove_panel.current.label"></label>
+      </div>
+      <div class="col-md-6">
+        <label ng-show="commonRemovedLogicalAddresses.length" translate="order.producent.logical_address_remove_panel.deselected_current.label"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div ng-if="commonLogicalAddresses.length" class="logical-address-alerts">
           <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="success"
-            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
-            ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
-          </logisk-adress-alert>
-          <p ng-hide="nyaLogiskaAdresser.length">
-            <em translate="order.producent.logiska_adresser_selections_panel.selection.current.none"></em>
-          </p>
-        </div>
-        <div class="form-group col-md-5" ng-if="producentbestallning.producentanslutningar[0].logiskAdressStatuses.length">
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.new.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="success"
-            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
-            ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
-          </logisk-adress-alert>
-          <p ng-hide="nyaLogiskaAdresser.length">
-            <em translate="order.producent.logiska_adresser_selections_panel.selection.new.none"></em>
-          </p>
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.previous.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
+            logisk-adress-namn="{{::logiskAdress.namn}}"
+            logisk-adress-hsa-id="{{::logiskAdress.hsaId}}"
             type="info"
-            close="removeLogiskAdressFromAllAnslutningar(logiskAdress)"
-            ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = ((producentbestallning.producentanslutningar | intersection:'befintligaLogiskaAdresser') | notIn:(producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser'):'hsaId')">
+            close="removeCurrentLogicalAddress(logiskAdress)"
+            ng-repeat="logiskAdress in commonLogicalAddresses | orderBy:'namn' track by logiskAdress.hsaId">
           </logisk-adress-alert>
-          <p ng-hide="befintligaLogiskaAdresserAfterFilter.length">
-            <em translate="order.producent.logiska_adresser_selections_panel.selection.previous.all_removed"></em>
-          </p>
-          <label ng-show="(producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser').length" translate="order.producent.logiska_adresser_selections_panel.selection.deselected_previous.label"></label>
+        </div>
+        <p ng-hide="commonLogicalAddresses.length">
+          <em translate="order.producent.logical_address_remove_panel.current.none"></em>
+        </p>
+      </div>
+      <div class="col-md-6">
+        <div ng-if="commonRemovedLogicalAddresses.length" class="logical-address-alerts">
           <logisk-adress-alert
-            logisk-adress="logiskAdress"
+            logisk-adress-namn="{{::logiskAdress.namn}}"
+            logisk-adress-hsa-id="{{::logiskAdress.hsaId}}"
             type="danger"
-            close="addLogiskAdressToAllAnslutningar(logiskAdress)"
-            ng-repeat="logiskAdress in borttagnaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'borttagnaLogiskaAdresser')">
+            close="reAddCurrentLogicalAddress(logiskAdress)"
+            ng-repeat="logiskAdress in commonRemovedLogicalAddresses.slice().reverse() track by logiskAdress.hsaId">
           </logisk-adress-alert>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- / samma logiska adresser panel -->
-<!-- enskilda tjänstekontrakt panel(er) -->
+<!-- / ta bort logiska adresser panel -->
+<!-- RIV-profil samt URL panels -->
 <div class="panel panel-primary"
-     ng-show="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length"
+     ng-if="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && orderMode === ORDER_MODE.ADD"
      ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'tjanstekontraktNamn'">
   <div class="panel-heading">
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'sameForAllAnslutningar'">{{'order.producent.anslutning_config_panel.title.unified' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
-    <h3 class="panel-title" ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'">{{'order.producent.anslutning_config_panel.title.individual' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title">{{'order.producent.connection_config_panel.title' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
   </div>
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-12">
-        <form name="serviceContractForm">
-          <div class="col-md-3">
-            <label for="rivtaVersion" translate="order.producent.anslutning_config_panel.rivta_version.label"></label>
-            <i class="fa fa-info-circle" popover="{{'order.producent.anslutning_config_panel.rivta_version.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
-            <select id="rivtaVersion" class="form-control" ng-model="anslutning.rivtaProfil"
-                    ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
-                    ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
-          </div>
-          <div class="form-group" show-errors global-validation>
-            <div class="col-md-9">
-              <label class="control-label" for="urlInput" translate="order.producent.anslutning_config_panel.url.label"></label>
-              <i class="fa fa-info-circle" popover="{{'order.producent.anslutning_config_panel.url.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" validity-bind-fix required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
-              <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.required" translate="order.producent.anslutning_config_panel.url.error.required"></span>
-              <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.url" translate="order.producent.anslutning_config_panel.url.error.url"></span>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div ng-show="linkLogicalAddressChoice === 'individualPerAnslutning'" class="row top25">
-      <div class="col-md-12">
-        <div class="col-md-4">
-          <div class="row">
-            <div class="form-group">
-              <label translate="order.producent.logiska_adresser_selections_panel.search.label"></label>
-              <input type="text" ng-model="this.selectedLogicalAddress" ng-init="this.selectedLogicalAddress = ''"
-                     type-wait-ms="200" typeahead-template-url="templates/typeahead-logisk-adress.html"
-                     typeahead-editable="false"
-                     typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
-                     typeahead-on-select="this.disableFirst = !canAddLogiskAdressToAnslutning($item, anslutning)"
-                     class="form-control">
-            </div>
-          </div>
-
-          <div class="row">
-            <label translate="order.producent.logiska_adresser_selections_panel.add.label"></label>
-            <div class="form-group">
-              <input ng-model="this.newLogicalAddress.hsaId"
-                     type="text" class="form-control"
-                     id="newLogicalAddress_HSAID_{{$index}}"
-                     ng-change="this.newLogicalAddress._backend = false; this.disableSecond = !canAddLogiskAdressToAnslutning(this.newLogicalAddress, anslutning)"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.hsaId' | translate}}">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="form-group">
-              <input ng-model="this.newLogicalAddress.namn"
-                     type="text" class="form-control"
-                     id="newLogicalAddress_Name_{{$index}}"
-                     placeholder="{{'order.producent.logiska_adresser_selections_panel.add.placeholder.namn' | translate}}"
-                     ng-disabled="!this.newLogicalAddress.hsaId || this.newLogicalAddress._backend"
-                     ng-focus="updateLogiskAdressWithBackendData(this.newLogicalAddress)">
-            </div>
-          </div>
-        </div>
-
+      <form name="serviceContractForm">
         <div class="col-md-3">
-          <div class="row">
-            <div class="centered-content top25">
-              <button type="button" class="btn btn-primary" ng-disabled="this.disableFirst" ng-click="addLogiskAdressToAnslutning(this.selectedLogicalAddress, anslutning); this.selectedLogicalAddress = '';">
-                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableFirst"></span>
-                <span ng-show="this.disableFirst" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
-              </button>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="centered-content top45">
-              <button type="button" class="btn btn-primary" ng-disabled="this.disableSecond || !this.newLogicalAddress.hsaId" ng-click="addNewLogiskAdressToAnslutning(this.newLogicalAddress, anslutning); this.newLogicalAddress = {};">
-                <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!this.disableSecond"></span>
-                <span ng-show="this.disableSecond" translate="order.producent.logiska_adresser_selections_panel.add.disabled_button"></span>
-              </button>
-            </div>
+          <label for="rivtaVersion" translate="order.producent.connection_config_panel.rivta_version.label"></label>
+          <i class="fa fa-info-circle" popover="{{'order.producent.connection_config_panel.rivta_version.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
+          <select id="rivtaVersion" class="form-control" ng-model="anslutning.rivtaProfil"
+                  ng-options="rivProfile as rivProfile for rivProfile in rivProfiles | orderBy:'toString()':true"
+                  ng-init="anslutning.rivtaProfil = (anslutning.rivtaProfil ? anslutning.rivtaProfil : (rivProfiles | orderBy:'toString()':true)[0])"></select>
+        </div>
+        <div class="col-md-9">
+          <div class="form-group" show-errors global-validation>
+            <label class="control-label" for="urlInput" translate="order.producent.connection_config_panel.url.label"></label>
+            <i class="fa fa-info-circle" popover="{{'order.producent.connection_config_panel.url.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
+            <input type="url" class="form-control" id="urlInput" name="url" ng-model="anslutning.url" placeholder="skriv in url" validity-bind-fix required ng-init="anslutning.url = !anslutning.url ? 'https://' : anslutning.url">
+            <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.required" translate="order.producent.connection_config_panel.url.error.required"></span>
+            <span class="help-block hide-no-error" ng-if="serviceContractForm.url.$error.url" translate="order.producent.connection_config_panel.url.error.url"></span>
           </div>
         </div>
-
-        <div class="form-group col-md-5" ng-if="!anslutning.logiskAdressStatuses.length">
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.current.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="success"
-            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
-            ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
-          </logisk-adress-alert>
-          <p ng-hide="anslutning.nyaLogiskaAdresser.length">
-            <em translate="order.producent.logiska_adresser_selections_panel.selection.current.none"></em>
-          </p>
-        </div>
-        <div class="form-group col-md-5" ng-if="anslutning.logiskAdressStatuses.length">
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.new.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="success"
-            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
-            ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
-          </logisk-adress-alert>
-          <p ng-hide="anslutning.nyaLogiskaAdresser.length">
-            <em translate="order.producent.logiska_adresser_selections_panel.selection.new.none"></em>
-          </p>
-          <label translate="order.producent.logiska_adresser_selections_panel.selection.previous.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="info"
-            close="removeLogiskAdressFromAnslutning(logiskAdress, anslutning)"
-            ng-repeat="logiskAdress in befintligaLogiskaAdresserAfterFilter = (anslutning.befintligaLogiskaAdresser | notIn:anslutning.borttagnaLogiskaAdresser:'hsaId')">
-          </logisk-adress-alert>
-          <p ng-show="!befintligaLogiskaAdresserAfterFilter.length">
-            <em ng-hide="!anslutning.borttagnaLogiskaAdresser.length" translate="order.producent.logiska_adresser_selections_panel.selection.previous.all_removed"></em>
-            <em ng-show="!anslutning.borttagnaLogiskaAdresser.length" translate="order.producent.logiska_adresser_selections_panel.selection.previous.none"></em>
-          </p>
-          <label ng-show="anslutning.borttagnaLogiskaAdresser.length" translate="order.producent.logiska_adresser_selections_panel.selection.deselected_previous.label"></label>
-          <logisk-adress-alert
-            logisk-adress="logiskAdress"
-            type="danger"
-            close="addLogiskAdressToAnslutning(logiskAdress, anslutning);"
-            ng-repeat="logiskAdress in anslutning.borttagnaLogiskaAdresser">
-          </logisk-adress-alert>
-        </div>
-
-      </div>
-
+      </form>
     </div>
   </div>
 </div>
+<!-- / RIV-profil samt URL panels -->
 <!-- / enskilda tjänstekontrakt panel(er) -->
 <!-- anropsbehörighet panel -->
 <div class="panel panel-primary" ng-show="producentbestallning.tjanstekomponent
-  && producentbestallning.producentanslutningar.length
-  && (producentbestallning.producentanslutningar | flatten:'nyaLogiskaAdresser').length"> <!-- only disable panel, must also remove konsumentbestallningar upon submit if no nyaLogiskaAdresser-->
+  && newLogicalAddresses.length"> <!-- only disable panel, must also remove konsumentbestallningar upon submit if no nyaLogiskaAdresser-->
   <div class="panel-heading">
     <h3 class="panel-title" translate="order.producent.anropsbehorighet_panel.title"></h3>
   </div>
@@ -396,42 +297,36 @@
     </div>
     <div ng-hide="callPermissionInSeparateOrder">
       <div class="row top25">
-        <div class="col-md-12">
-          <div class="col-md-4">
-            <div class="row">
-              <div class="form-group">
-                <label translate="order.producent.anropsbehorighet_panel.konsument_search.label"></label>
-                <input type="text" placeholder="{{'order.producent.anropsbehorighet_panel.konsument_search.placeholder' | translate}}" ng-init="selectedTjanstekonsument.selected = '';"
-                       ng-model="selectedTjanstekonsument.selected"
-                       typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
-                       typeahead-editable="false"
-                       uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
-                       class="form-control">
-              </div>
-            </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label translate="order.producent.anropsbehorighet_panel.konsument_search.label"></label>
+            <input type="text" placeholder="{{'order.producent.anropsbehorighet_panel.konsument_search.placeholder' | translate}}" ng-init="selectedTjanstekonsument.selected = '';"
+                   ng-model="selectedTjanstekonsument.selected"
+                   typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                   typeahead-editable="false"
+                   uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
+                   class="form-control">
           </div>
-          <div class="col-md-2 col-md-offset-1">
-            <div class="row">
-              <div class="form-group top25">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-                  </button>
-                </div>
-              </div>
-            </div>
+        </div>
+        <div class="col-md-1">
+          <div class="top25 centered-content">
+            <button type="button" class="btn btn-primary" ng-click="addTjanstekonsumentToOrder(selectedTjanstekonsument.selected); selectedTjanstekonsument.selected = '';">
+              <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+            </button>
           </div>
-          <div class="form-group col-md-5">
-            <label translate="order.producent.anropsbehorighet_panel.selected_konsumenter.label"></label>
-            <div class="alert alert-dismissable alert-success logical-address new-logical-address" ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
-              <button type="button" class="close" ng-click="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)">×</button>
-              <p>{{konsumentbestallning.tjanstekomponent.beskrivning}}</p>
-              <p> {{konsumentbestallning.tjanstekomponent.hsaId}}</p>
-            </div>
-            <p ng-hide="konsumentbestallningar.length">
-              <em translate="order.producent.anropsbehorighet_panel.selected_konsumenter.none"></em>
-            </p>
-          </div>
+        </div>
+        <div class="col-md-6">
+          <label translate="order.producent.anropsbehorighet_panel.selected_konsumenter.label"></label>
+          <logisk-adress-alert
+            logisk-adress-namn="{{::konsumentbestallning.tjanstekomponent.beskrivning}}"
+            logisk-adress-hsa-id="{{::konsumentbestallning.tjanstekomponent.hsaId}}"
+            type="success"
+            close="removeTjanstekonsumentFromOrder(konsumentbestallning.tjanstekomponent)"
+            ng-repeat="konsumentbestallning in konsumentbestallningar = producentbestallning.konsumentbestallningar">
+          </logisk-adress-alert>
+          <p ng-hide="konsumentbestallningar.length">
+            <em translate="order.producent.anropsbehorighet_panel.selected_konsumenter.none"></em>
+          </p>
         </div>
       </div>
       <div class="row top25" ng-show="konsumentbestallningar.length">
@@ -440,27 +335,17 @@
         </div>
       </div>
       <div class="row top25" ng-show="konsumentbestallningar.length">
-        <div class="col-md-5 col-md-offset-7">
-          <div ng-if="canHandleLogiskaAdresserInUnity">
-            <dl>
-              <dt>
+        <div class="col-md-6 col-md-offset-6">
+          <dl>
+            <dt>
                     <span ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
                       <span>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span></span>
                     </span>
-              </dt>
-              <dd ng-repeat="logiskAdress in nyaLogiskaAdresser = (producentbestallning.producentanslutningar | intersection:'nyaLogiskaAdresser')">
-                {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
-              </dd>
-            </dl>
-          </div>
-          <div ng-if="!canHandleLogiskaAdresserInUnity">
-            <dl ng-if="anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length" ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy: 'tjanstekontraktNamn'">
-              <dt>{{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x</dt>
-              <dd ng-repeat="logiskAdress in anslutning.nyaLogiskaAdresser">
-                {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
-              </dd>
-            </dl>
-          </div>
+            </dt>
+            <dd ng-repeat="logiskAdress in newLogicalAddresses | orderBy:'namn' track by logiskAdress.hsaId">
+              {{logiskAdress.namn}} ({{logiskAdress.hsaId}})
+            </dd>
+          </dl>
         </div>
       </div>
     </div>

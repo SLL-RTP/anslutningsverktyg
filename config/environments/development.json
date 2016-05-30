@@ -1,5 +1,5 @@
 {
-  "basePath": "http://192.168.35.1:8080/anslutningsplattform",
+  "basePath": "/local",
   "apiToken": "secret-token",
   "debugLog": true,
   "testBanner": true

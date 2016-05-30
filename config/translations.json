@@ -49,10 +49,6 @@
             "pingForConfigurationURL": "URL till övervakningstjänst",
             "pingForConfigurationURL_info": "Varje publicerad RIVTA-tjänst skall ha en övervakningstjänst exponerad. Referera till tjänstekontraktbeskrivningen för itintegration:monitoring för mera information om hur detta kontrakt skall realiseras i tjänsteproducenten.",
             "no_info": "ingen information"
-          },
-          "etjanst_label": {
-            "producent": "Namn på E-tjänst som är tjänsteproducent",
-            "konsument": "Namn på E-tjänst som är tjänstekonsument"
           }
         },
         "other_panel": {
@@ -93,8 +89,7 @@
         "modal": {
           "allmant": {
             "hsaId": "HSA-Id",
-            "namn": "Namn på system",
-            "namn_etjanst": "Namn på e-tjänst"
+            "namn": "Namn på system"
           },
           "bestallare": {
             "title": "Beställare",
@@ -145,47 +140,44 @@
           "title": "Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information",
           "p": "Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.",
           "label": {
-            "unified": "Administrera samma logiska adresser för valda tjänstekontrakt",
-            "individual": "Administrera logiska adresser individuellt för valda tjänstekontrakt"
+            "add": "Lägg till logisk/a adressat/er för de tjänstekontrakt du valt",
+            "remove": "Ta bort logiska adressat/er för de tjänstekontrakt du valt"
           }
         },
-        "logiska_adresser_selections_panel": {
-          "title": "Följande logisk/a adress/er ska behöriga konsumenter kunna använda, alternativt tas bort från användning",
+        "logical_address_remove_panel": {
+          "title": "Ta bort logiska adressat/er för de tjänstekontrakt du valt",
+          "non_common": {
+            "label": "OBS!",
+            "info_text_ending": "innehåller logiska adressater som ej är gemensamma för samtliga valda tjänstekontrakt. För att ta bort logiska adressater som inte är gemensamma behöver du lägga separat beställning för varje enskilt tjänstekontrakt."
+          },
+          "current": {
+            "label": "Redan anslutna logiska adresser",
+            "none": "inga gemensamma logiska adresser finns bland valda tjänstekontrakt."
+          },
+          "deselected_current": {
+            "label": "Logiska adresser för borttagande"
+          }
+        },
+        "logical_address_add_panel": {
+          "title": "Lägg till logisk/a adressat/er för de tjänstekontrakt du valt",
           "search": {
             "label": "Sök efter logisk adress"
           },
           "add": {
-            "label": "Lägg till ny logisk address",
+            "label": "Lägg till ny logisk adress",
             "placeholder": {
               "hsaId": "Adressidentitet",
-              "namn": "Namn"
+              "name": "Namn"
             },
-            "disabled_button": "redan vald"
+            "disabled_button": "redan<br>vald"
           },
-          "selection": {
-            "current": {
-              "label": "Valda logiska adresser",
-              "none": "inga logiska adresser valda"
-            },
-            "new": {
-              "label": "Nyvalda logiska adresser",
-              "none": "inga nya logiska adresser valda"
-            },
-            "previous": {
-              "label": "Redan anslutna logiska adresser",
-              "all_removed": "samtliga redan anslutna logiska adresser kommer tas bort",
-              "none": "inga logiska adresser anslutna"
-            },
-            "deselected_previous": {
-              "label": "Bortvalda redan anslutna logiska adresser"
-            }
+          "selected": {
+            "label": "Nyvalda logiska adresser",
+            "none": "inga nya logiska adresser valda"
           }
         },
-        "anslutning_config_panel": {
-          "title": {
-            "unified": "Välj version av RIVTA-profil och URL för",
-            "individual": "Välj version av RIVTA-profil, URL och administrera logisk/a adress/er för"
-          },
+        "connection_config_panel": {
+          "title": "Välj version av RIVTA-profil och URL för",
           "rivta_version": {
             "label": "Version av RIVTA-profil",
             "info": "Välj den version av RIV TA Basic Profile som kontraktet implementerar."

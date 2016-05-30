@@ -24,10 +24,6 @@ angular.module('avApp')
         _order.producentanslutningar = []; //reset when komponent changes
       };
 
-      var setNamnPaEtjanst = function(namnPaEtjanst) {
-        _order.namnPaEtjanst = namnPaEtjanst;
-      };
-
       var setNat = function (natArr) {
         _order.nat = natArr;
       };
@@ -35,13 +31,19 @@ angular.module('avApp')
       var addAnslutningToOrder = function (anslutning) {
         $log.debug('add: ' + anslutning.tjanstekontraktNamnrymd, anslutning);
         if (!isAnslutningOnOrder(anslutning)) {
+          var start = Date.now();
           var nyAnslutning = _.cloneDeep(anslutning);
+          $log.debug('cloneDeep took ' + ((Date.now()) - start) + ' ms');
           //TODO: how to handle logiska adresser already added to anslutningar when new anslutning is to be added?
-          if (nyAnslutning.logiskAdressStatuses.length) {
+          if (nyAnslutning.logiskAdressStatuses && nyAnslutning.logiskAdressStatuses.length) {
             var serviceComponent = _order.tjanstekomponent;
             var environment = _order.driftmiljo;
+            start = Date.now();
             _populateAnslutningWithExistingLogiskaAdresser(nyAnslutning, serviceComponent.hsaId, environment.id);
+            $log.debug('_populateAnslutningWithExistingLogiskaAdresser took ' + ((Date.now()) - start) + ' ms');
+            start = Date.now();
             _populateAnslutningWithRivtaProfilAndUrl(serviceComponent, nyAnslutning, environment);
+            $log.debug('_populateAnslutningWithRivtaProfilAndUrl took ' + ((Date.now()) - start) + ' ms');
           }
           _order.producentanslutningar.push(nyAnslutning);
           $rootScope.$broadcast('anslutning-added');
@@ -133,21 +135,23 @@ angular.module('avApp')
       };
 
       var addTjanstekonsument = function (tjanstekomponent) {
-        if (!_order.konsumentbestallningar) {
-          _order.konsumentbestallningar = [];
-        }
-        var konsumentbestallningId = {
-          tjanstekomponent: {
-            hsaId: tjanstekomponent.hsaId
+        if (tjanstekomponent && tjanstekomponent.hsaId && tjanstekomponent.hsaId.length) {
+          if (!_order.konsumentbestallningar) {
+            _order.konsumentbestallningar = [];
           }
-        };
+          var konsumentbestallningId = {
+            tjanstekomponent: {
+              hsaId: tjanstekomponent.hsaId
+            }
+          };
 
-        if (!_.find(_order.konsumentbestallningar, konsumentbestallningId)) {
-          _order.konsumentbestallningar.push({
-            tjanstekomponent: _.cloneDeep(tjanstekomponent)
-          });
-        } else {
-          $log.debug('tjanstekomponent (konsument) already added');
+          if (!_.find(_order.konsumentbestallningar, konsumentbestallningId)) {
+            _order.konsumentbestallningar.push({
+              tjanstekomponent: _.cloneDeep(tjanstekomponent)
+            });
+          } else {
+            $log.debug('tjanstekomponent (konsument) already added');
+          }
         }
       };
 
@@ -158,6 +162,13 @@ angular.module('avApp')
           }
         };
         _.remove(_order.konsumentbestallningar, konsumentbestallningId);
+      };
+
+      var resetLogicalAddresses = function () {
+        _.each(_order.producentanslutningar, function(connection) {
+          // we do not touch 'befintliga'
+          _.assign(connection, {nyaLogiskaAdresser:[], borttagnaLogiskaAdresser: []});
+        });
       };
 
       var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
@@ -202,7 +213,6 @@ angular.module('avApp')
         init: init,
         current: order,
         setTjanstekomponent: setTjanstekomponent,
-        setNamnPaEtjanst: setNamnPaEtjanst,
         setNat: setNat,
         addAnslutning: addAnslutningToOrder,
         removeAnslutning: removeAnslutningFromOrder,
@@ -213,6 +223,7 @@ angular.module('avApp')
         canAddLogiskAdressToAnslutning: canAddLogiskAdressToAnslutning,
         removeLogiskAdressFromAllAnslutningar: removeLogiskAdressFromAllAnslutningar,
         removeLogiskAdressFromAnslutning: removeLogiskAdressFromAnslutning,
+        resetLogicalAddresses: resetLogicalAddresses,
         addTjanstekonsument: addTjanstekonsument,
         removeTjanstekonsument: removeTjanstekonsument
 
