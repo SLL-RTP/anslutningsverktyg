@@ -108,12 +108,11 @@ angular
         templateUrl: 'views/order-confirmation/order-confirmation.html'
       });
 
-    //add translations to $translateProvider
-    _.forOwn(translations, function (translationMap, languageKey) {
-      $translateProvider.translations(languageKey, translationMap);
-    });
-
     //set up $translateProvider
+    $translateProvider.useStaticFilesLoader({
+      prefix: configuration.translationsPath + '/translations-',
+      suffix: '.json'
+    });
     $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
     $translateProvider.preferredLanguage('sv');
 

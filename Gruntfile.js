@@ -143,6 +143,15 @@ module.exports = function (grunt) {
       },
       proxies: [
         {
+          context: '/external-translations',
+          host: 'localhost',
+          port: '8999',
+          changeOrigin: true,
+          rewrite: {
+            '/external-translations' : '/'
+          }
+        },
+        {
           context: '/bs',
           host: '52.58.67.214',
           port: 80,
@@ -181,9 +190,10 @@ module.exports = function (grunt) {
       ],
       livereload: {
         options: {
-          open: true,
+          open: false,
           middleware: function (connect) {
             return [
+              connect().use('/bs-gui-translations', connect.static('./config/')),
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',

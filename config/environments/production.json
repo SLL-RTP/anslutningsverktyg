@@ -2,5 +2,6 @@
   "basePath" : "/anslutningsplattform",
   "apiToken": "secret-token",
   "debugLog": false,
-  "testBanner": false
+  "testBanner": false,
+  "translationsPath": "/bs-gui-translations"
 }
