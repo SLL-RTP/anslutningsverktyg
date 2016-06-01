@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  id="nbs-gui"
+  version="2.5">
+
+  <!--
+  works only on tomcat (uses a provided filter)
+  Controls the Expires header and the max-age directive of the Cache-Control header
+  see:
+  https://tomcat.apache.org/tomcat-7.0-doc/config/filter.html#Expires_Filter
+  https://httpd.apache.org/docs/2.2/mod/mod_expires.html
+   -->
+
+  <filter>
+    <filter-name>ExpiresFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+    <init-param>
+      <param-name>ExpiresByType text/html</param-name>
+      <param-value>access plus 10 minutes</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ExpiresByType text/css</param-name>
+      <param-value>access plus 10 minutes</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ExpiresByType application/javascript</param-name>
+      <param-value>access plus 10 minutes</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ExpiresByType image</param-name>
+      <param-value>access plus 10 minutes</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ExpiresFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+</web-app>

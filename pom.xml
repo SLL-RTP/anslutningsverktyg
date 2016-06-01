@@ -99,6 +99,9 @@
             <resource>
               <directory>target/grunt-build/dist</directory>
             </resource>
+            <resource>
+              <directory>config/war</directory>
+            </resource>
           </webResources>
           <archive>
             <manifest>
