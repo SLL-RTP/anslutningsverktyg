@@ -21,8 +21,8 @@ angular
     'ng.shims.placeholder',
     'pascalprecht.translate'
   ])
-  .config(['$stateProvider', '$compileProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'translations', 'configuration',
-    function ($stateProvider, $compileProvider, $urlRouterProvider, $translateProvider, $logProvider, translations, configuration) {
+  .config(['$stateProvider', '$compileProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'configuration',
+    function ($stateProvider, $compileProvider, $urlRouterProvider, $translateProvider, $logProvider, configuration) {
 
       $compileProvider.debugInfoEnabled(false);
 

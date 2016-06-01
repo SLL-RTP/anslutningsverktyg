@@ -3,5 +3,5 @@
   "apiToken": "secret-token",
   "debugLog": true,
   "testBanner": true,
-  "translationsPath": "/external-translations"
+  "translationsPath": "/bs-gui-translations"
 }

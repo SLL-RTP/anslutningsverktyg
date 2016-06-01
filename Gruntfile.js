@@ -39,10 +39,6 @@ module.exports = function (grunt) {
     })()
   };
 
-  var translations = (function() {
-    return grunt.file.readJSON('./config/translations.json');
-  })();
-
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -51,10 +47,7 @@ module.exports = function (grunt) {
 
     ngconstant: {
       options: {
-        name: 'avApp.constants',
-        constants: {
-          translations: translations
-        }
+        name: 'avApp.constants'
       },
       development: {
         options: {
