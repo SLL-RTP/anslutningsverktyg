@@ -22,7 +22,7 @@
     "order": {
       "main": {
         "title": "Administrera anslutning",
-        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adresser samt anslutning till befintliga logiska adresser, som ska tillgängliggöra information.",
+        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adressater samt anslutning till befintliga logiska adressater, som ska tillgängliggöra information.",
         "env_panel": {
           "title": "Välj miljö",
           "label": "Miljö",
@@ -137,10 +137,10 @@
           }
         },
         "logiska_adresser_choices_panel": {
-          "title": "Lägg till/ta bort logiska adresser för hämtning och/eller uppdatering av information",
-          "p": "Lägg till de logiska adresser som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adress beror på vilken tjänstedomän beställningen gäller.",
+          "title": "Lägg till/ta bort logiska adressater för hämtning och/eller uppdatering av information",
+          "p": "Lägg till de logiska adressater som en behörig konsument ska kunna använda, alternativt inte ska kunna använda. Vad som används som logisk adressat beror på vilken tjänstedomän beställningen gäller.",
           "label": {
-            "add": "Lägg till logiska adressater för de tjänstekontrakt du valt",
+            "add": "Lägg till logiska adressater för alla tjänstekontrakt du valt",
             "remove": "Ta bort logiska adressater för alla tjänstekontrakt du valt"
           }
         },
@@ -151,15 +151,15 @@
             "info_text_ending": "har även andra logiska adressater än de som visas i listan. För att ta bort logiska adressater som inte är anslutna till alla valda tjänstekontrakt, behöver du lägga separat beställning för varje enskilt tjänstekontrakt."
           },
           "current": {
-            "label": "Redan anslutna logiska adresser",
-            "none": "inga gemensamma logiska adresser finns bland valda tjänstekontrakt."
+            "label": "Redan anslutna logiska adressater",
+            "none": "inga gemensamma logiska adressater finns bland valda tjänstekontrakt."
           },
           "deselected_current": {
-            "label": "Logiska adresser för borttagande"
+            "label": "Logiska adressater för borttagande"
           }
         },
         "logical_address_add_panel": {
-          "title": "Lägg till logiska adressater för de tjänstekontrakt du valt",
+          "title": "Lägg till logiska adressater för alla tjänstekontrakt du valt",
           "search": {
             "label": "Sök efter logisk adress"
           },
@@ -172,8 +172,8 @@
             "disabled_button": "redan<br>vald"
           },
           "selected": {
-            "label": "Nyvalda logiska adresser",
-            "none": "inga nya logiska adresser valda"
+            "label": "Nyvalda logiska adressater",
+            "none": "inga nya logiska adressater valda"
           }
         },
         "connection_config_panel": {
@@ -193,7 +193,7 @@
         },
         "anropsbehorighet_panel": {
           "title": "Lägg till adresseringsbehörighet för tjänstekonsument",
-          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha adresseringsbehörighet till de logiska adresserna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära adresseringsbehörighet för tjänstekonsumenten till de logiska adresserna du angivit för respektive tjänstekontrakt.",
+          "p": "För att anslutningen ska fungera mellan tjänstekonsument och tjänsteproducent måste även tjänstekonsumenten vara ansluten till tjänstekontrakten, samt ha adresseringsbehörighet till de logiska adressaterna. Om tjänstekonsumenten redan är ansluten till kontrakten kan du i detta flöde även begära adresseringsbehörighet för tjänstekonsumenten till de logiska adressaterna du angivit för respektive tjänstekontrakt.",
           "choice": {
             "label": {
               "call_permission_separate_order": "Adresseringsbehörighet kommer begäras via en separat beställning för konsument",
@@ -207,7 +207,7 @@
           "selected_konsumenter": {
             "label": "Vald/a tjänstekonsument/er",
             "none": "inga tjänstekonsumenter valda",
-            "selected_info": "Vald/a tjänstekonsument/er ska få adresseringsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adresser. OBS! Enbart logiska adresser som valts i denna beställning ges konsument adresseringsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adresser, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adresser."
+            "selected_info": "Vald/a tjänstekonsument/er ska få adresseringsbehörighet för valda tjänstekontrakt på följande nyvalda logiska adressater. OBS! Enbart logiska adressater som valts i denna beställning ges konsument adresseringsbehörighet till. Ska konsument ha behörighet till producentens sedan tidigare befintliga logiska adressater, beställs detta genom att, efter val av miljö ovan, välja systemet som konsument och därefter koppla konsumenten till befintliga logiska adressater."
           }
         },
         "modal": {
@@ -220,8 +220,8 @@
             "nya_title": "Nya producentanslutningar",
             "uppdaterad_title": "Uppdaterade producentanslutningar",
             "logiska_adresser": {
-              "nya": "Nya logiska adresser",
-              "borttagna": "Borttagna logiska adresser"
+              "nya": "Nya logiska adressater",
+              "borttagna": "Borttagna logiska adressater"
             },
             "url": "URL",
             "ny_url": "Ny URL",
@@ -247,15 +247,15 @@
             "select_placeholder": "- Välj -"
           },
           "matrix_info": "Installerade tjänstekontrakt visas nedan",
-          "logiska_adresser_filter_label": "Filtrera adresser:",
+          "logiska_adresser_filter_label": "Filtrera adressater:",
           "check_all_kontrakt_label": "Välj alla",
           "check_all_disabled_info": "Val inaktiverat",
-          "single_disabled_info": "logisk adress ej kopplad till tjänstekontrakt",
-          "no_logiska_adresser_found": "inga logiska adresser hittades",
-          "table_info": "Behörighet till följande logisk/a adresser",
-          "table_info_info": "Listan på logiska adresser innehåller alla logiska adresser för alla producenter som idag är anslutna till plattformen.",
+          "single_disabled_info": "logisk adressat ej kopplad till tjänstekontrakt",
+          "no_logiska_adresser_found": "inga logiska adressater hittades",
+          "table_info": "Behörighet till följande logisk/a adressater",
+          "table_info_info": "Listan på logiska adressater innehåller alla logiska adressater för alla producenter som idag är anslutna till plattformen.",
           "remove_warning_label": "OBS!",
-          "remove_warning_info": "<span style=\"color: red\">Notera att behörighet till Logisk adress ligger för borttagande (rödmarkerade cell/er)</span>"
+          "remove_warning_info": "<span style=\"color: red\">Notera att behörighet till Logisk adressat ligger för borttagande (rödmarkerade cell/er)</span>"
         },
         "modal": {
           "title": "Bekräfta ändringar för tjänstekonsument",
@@ -263,12 +263,12 @@
             "title": "Tjänstekonsument"
           },
           "anslutningar": {
-            "nya_title": "Konsumenten ska ha adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
-            "uppdaterad_title": "Konsumenten ska ha UPPDATERAD adresseringsbehörighet på följande tjänstekontrakt för följande logiska adresser:",
+            "nya_title": "Konsumenten ska ha adresseringsbehörighet på följande tjänstekontrakt för följande logiska adressater:",
+            "uppdaterad_title": "Konsumenten ska ha UPPDATERAD adresseringsbehörighet på följande tjänstekontrakt för följande logiska adressater:",
             "title": "Förändrade konsumentanslutningar",
             "logiska_adresser": {
-              "nya": "Nya logiska adresser",
-              "borttagna": "<span style=\"color: red\">Borttagna logiska adresser</span>"
+              "nya": "Nya logiska adressater",
+              "borttagna": "<span style=\"color: red\">Borttagna logiska adressater</span>"
             }
           }
         }
