@@ -218,6 +218,17 @@ angular.module('avApp')
           BestallningState.setSpecificOrderSatisfied(newVal);
         });
 
+        /**
+         * Calculated watch that updates order environment when updated in main
+         */
+        $scope.$watch(function () {
+          return BestallningState.current().driftmiljo;
+        }, function (newVal) {
+          if (newVal) {
+            $scope.konsumentbestallning.driftmiljo = newVal;
+          }
+        }, true);
+
         $scope.$watch(function () {
           return $scope.orderValid;
         }, function (newVal) {

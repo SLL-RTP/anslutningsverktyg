@@ -518,6 +518,17 @@ angular.module('avApp')
         }, true);
 
         /**
+         * Calculated watch that updates order environment when updated in main
+         */
+        $scope.$watch(function () {
+          return BestallningState.current().driftmiljo;
+        }, function (newVal) {
+          if (newVal) {
+            $scope.producentbestallning.driftmiljo = newVal;
+          }
+        }, true);
+
+        /**
          * Calculated watch that determines when specificOrderSatisfied
          * changes value. This triggers the display of common order ending (otherInfo/orderer)
          * in orderMain
