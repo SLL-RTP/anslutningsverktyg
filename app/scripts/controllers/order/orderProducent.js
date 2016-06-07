@@ -84,6 +84,9 @@ angular.module('avApp')
          * Called from UI when user has entered a new logical address hsaId and moves
          * to the name field. Will try to lookup the logical address and if found, set
          * name and the _backend property.
+         *
+         * Will also determine the connection status of the la to the current connections on order
+         * and update $scope.secondLogicalAddressStatuses
          * @param logiskAdress
          */
         $scope.updateLogiskAdressWithBackendData = function (logiskAdress) {
@@ -93,8 +96,16 @@ angular.module('avApp')
                 $log.debug('found logisk adress', backendLogiskAdress);
                 logiskAdress._backend = true;
                 _.assign(logiskAdress, backendLogiskAdress);
+                $timeout(function() {
+                  $scope.secondLogicalAddressStatuses = _calculateConnectionStatusForLogicalAddress(logiskAdress);
+                  console.log('$scope.secondLogicalAddressStatuses', $scope.secondLogicalAddressStatuses);
+                });
               }, function () {
                 $log.warn('no logisk adress found for ' + logiskAdress.hsaId);
+                $timeout(function() {
+                  $scope.secondLogicalAddressStatuses = _calculateConnectionStatusForLogicalAddress(logiskAdress);
+                  console.log('$scope.secondLogicalAddressStatuses', $scope.secondLogicalAddressStatuses);
+                });
               });
           } else {
             $log.warn('logisk adress does not contain hsa id', logiskAdress);
@@ -269,6 +280,26 @@ angular.module('avApp')
           } else {
             console.warn('hsaId of logical address not provided, doing nothing');
           }
+        };
+
+        /**
+         * Common function to filter out the connections that has the la among befintligaLogiskaAdresser
+         *
+         * @param la
+         * @returns {Array}
+         * @private
+         */
+        var _calculateConnectionStatusForLogicalAddress = function(la) {
+          var alreadyConnectedConnections = [];
+          if (la && la.hsaId && la.hsaId.length) {
+            var producentanslutningar = ProducentbestallningState.current().producentanslutningar;
+            _.forEach(producentanslutningar, function(conn) {
+              if (_.find(conn.befintligaLogiskaAdresser, _.pick(la, 'hsaId'))) {
+                alreadyConnectedConnections.push(conn);
+              }
+            });
+          }
+          return alreadyConnectedConnections;
         };
 
         /**
@@ -550,6 +581,15 @@ angular.module('avApp')
         }, function (newVal) {
           BestallningState.setSpecificOrderValid(newVal);
         });
+
+        /**
+         * Watch that triggers when the currently selected logical address (from typeahead in add panel) changes
+         * and triggers recalculation of connection status for the current connections and set result in
+         * $scope.firstLogicalAddressStatuses
+         */
+        $scope.$watch('selectedLogicalAddress.selected', function (la) {
+          $scope.firstLogicalAddressStatuses = _calculateConnectionStatusForLogicalAddress(la);
+        })
       }
     ]
   );

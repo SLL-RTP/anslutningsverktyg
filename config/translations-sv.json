@@ -160,15 +160,20 @@
       "logical_address_add_panel": {
         "title": "Lägg till logiska adressater för alla tjänstekontrakt du valt",
         "search": {
-          "label": "Sök efter logisk adress"
+          "label": "Sök efter logisk adressat"
         },
         "add": {
-          "label": "Lägg till ny logisk adress",
+          "label": "Lägg till ny logisk adressat",
           "placeholder": {
             "hsaId": "Adressidentitet",
             "name": "Namn"
           },
-          "disabled_button": "redan<br>vald"
+          "disabled_button": "redan<br>vald",
+          "already_connected": {
+            "warning_label": "OBS!",
+            "pre_text": "Logisk adressat är redan ansluten till producenten för",
+            "post_text": "Lägger du till den kommer den ej beställas för detta eller dessa kontrakt."
+          }
         },
         "selected": {
           "label": "Nyvalda logiska adressater",

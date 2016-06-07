@@ -132,13 +132,20 @@
                  typeahead-editable="false"
                  uib-typeahead="logiskAdress as (logiskAdress.namn + ' - ' + logiskAdress.hsaId) for logiskAdress in getFilteredLogiskaAdresser($viewValue, producentbestallning.driftmiljo.id)"
                  class="form-control">
+          <p style="color: red" ng-if="firstLogicalAddressStatuses.length">
+            <span class="label label-danger" translate="order.producent.logical_address_add_panel.add.already_connected.warning_label"></span>
+            <span translate="order.producent.logical_address_add_panel.add.already_connected.pre_text"></span>
+            <span ng-repeat="connection in firstLogicalAddressStatuses">{{connection.tjanstekontraktNamn}} {{connection.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span><span ng-if="$last">.</span></span>
+            <span translate="order.producent.logical_address_add_panel.add.already_connected.post_text"></span>
+          </p>
         </div>
         <div class="form-group">
           <label translate="order.producent.logical_address_add_panel.add.label"></label>
           <input ng-model="newLogicalAddress.hsaId"
                  type="text" class="form-control"
                  id="newLogicalAddress_HSAID"
-                 ng-change="newLogicalAddress._backend = false; disableSecond = isLogicalAddressAmongNew(newLogicalAddress);"
+                 ng-change="newLogicalAddress._backend = false; newLogicalAddress.namn = ''; disableSecond = isLogicalAddressAmongNew(newLogicalAddress);"
+                 ng-focus="newLogicalAddress._backend = null;"
                  placeholder="{{'order.producent.logical_address_add_panel.add.placeholder.hsaId' | translate}}">
         </div>
         <div class="form-group">
@@ -148,6 +155,12 @@
                  placeholder="{{'order.producent.logical_address_add_panel.add.placeholder.name' | translate}}"
                  ng-disabled="!newLogicalAddress.hsaId || newLogicalAddress._backend"
                  ng-focus="updateLogiskAdressWithBackendData(newLogicalAddress)">
+          <p style="color: red" ng-if="newLogicalAddress.hsaId && (newLogicalAddress._backend && newLogicalAddress._backend != null) && secondLogicalAddressStatuses.length">
+            <span class="label label-danger" translate="order.producent.logical_address_add_panel.add.already_connected.warning_label"></span>
+            <span translate="order.producent.logical_address_add_panel.add.already_connected.pre_text"></span>
+            <span ng-repeat="connection in secondLogicalAddressStatuses">{{connection.tjanstekontraktNamn}} {{connection.tjanstekontraktMajorVersion}}.x<span ng-if="!$last">,</span><span ng-if="$last">.</span></span>
+            <span translate="order.producent.logical_address_add_panel.add.already_connected.post_text"></span>
+          </p>
         </div>
       </div>
       <div class="col-md-1">
@@ -157,7 +170,7 @@
           </button>
         </div>
         <div class="centered-content top45">
-          <button type="button" class="btn btn-primary" ng-disabled="!newLogicalAddress.hsaId || disableSecond" ng-click="addNewLogicalAddress(newLogicalAddress); newLogicalAddress = {};">
+          <button type="button" class="btn btn-primary" ng-disabled="!newLogicalAddress.hsaId || !newLogicalAddress.namn || disableSecond" ng-click="addNewLogicalAddress(newLogicalAddress); newLogicalAddress = {};">
             <span class="glyphicon glyphicon-forward" aria-hidden="true" ng-show="!disableSecond"></span>
             <span ng-show="disableSecond" translate="order.producent.logical_address_add_panel.add.disabled_button"></span>
           </button>
