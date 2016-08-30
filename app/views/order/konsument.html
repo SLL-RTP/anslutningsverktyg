@@ -17,7 +17,12 @@
         <h5 translate="order.konsument.select_kontrakt_panel.matrix_info"></h5>
       </div>
     </div>
-    <div class="row" ng-show="selectedTjanstedoman">
+    <div class="row" ng-show="reloadingMatrix">
+      <div class="col-md-12">
+        <img src="img/ajax-loader.gif">
+      </div>
+    </div>
+    <div class="row" ng-show="selectedTjanstedoman && !reloadingMatrix">
       <div class="col-md-12 matrix">
         <div class="matrix-container">
           <table class="table table-condensed table-bordered detached-header">
@@ -37,7 +42,7 @@
             <tr>
               <td>
                 <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
-                <input id="laFilter" ng-model="laFilter" type="text" ng-change="filterLogiskaAdresser(laFilter)">
+                <input id="laFilter" ng-model="laFilter" type="text" ng-model-options='{ debounce: 500 }' ng-change="filterLogiskaAdresser(laFilter)">
               </td>
               <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
                   class="la-checkbox-container"
@@ -55,10 +60,10 @@
               </td>
             </tr>
             <tr>
-              <td colspan="{{logiskaAdresserIValdTjanstedoman.length + 1}}">
+              <td colspan="{{kontraktIValdTjanstedoman.length + 1}}">
                 <h5>
                   <span translate="order.konsument.select_kontrakt_panel.table_info"></span>
-                  <i class="fa fa-info-circle" popover="{{'order.konsument.select_kontrakt_panel.table_info_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
+                  <i class="fa fa-info-circle" popover="{{::'order.konsument.select_kontrakt_panel.table_info_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
                 </h5>
                 <div ng-if="removeWarning">
                   <span class="label label-danger" translate="order.konsument.select_kontrakt_panel.remove_warning_label"></span>
@@ -73,17 +78,21 @@
               <tbody vs-repeat vs-scroll-parent=".selector">
               <tr ng-repeat="la in logiskaAdresser track by la.hsaId">
                 <th class="la-name-container">
-                  <p>{{la.namn}}</p>
-                  <small>{{la.hsaId}}</small>
+                  <p>{{::la.namn}}</p>
+                  <small>{{::la.hsaId}}</small>
                 </th>
-                <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
+                <td ng-repeat="kontrakt in kontraktIValdTjanstedoman track by (la.hsaId + kontrakt._key)"
                     class="la-checkbox-container"
-                    ng-class="{'checkbox-disabled': !matrix[la.hsaId][contractKey(kontrakt)], 'removed': matrix[la.hsaId][contractKey(kontrakt)].enabled && !matrix[la.hsaId][contractKey(kontrakt)].checked, 'added': !matrix[la.hsaId][contractKey(kontrakt)].enabled && matrix[la.hsaId][contractKey(kontrakt)].checked}"
-                    uib-tooltip="{{'order.konsument.select_kontrakt_panel.single_disabled_info' | translate}}"
-                    tooltip-enable="!matrix[la.hsaId][contractKey(kontrakt)]"
-                    tooltip-append-to-body="true">
+                    ng-class="{
+                      'checkbox-disabled': !matrix[la.hsaId][kontrakt._key],
+                      'removed': matrix[la.hsaId][kontrakt._key].enabled && !matrix[la.hsaId][kontrakt._key].checked,
+                      'added': !matrix[la.hsaId][kontrakt._key].enabled && matrix[la.hsaId][kontrakt._key].checked
+                      }"
+                    uib-tooltip="{{::'order.konsument.select_kontrakt_panel.single_disabled_info' | translate}}"
+                    tooltip-enable="::!matrix[la.hsaId][kontrakt._key]"
+                    tooltip-append-to-body="::true">
                   <div>
-                    <input type="checkbox" ng-model="matrix[la.hsaId][contractKey(kontrakt)].checked" ng-change="updateAnslutningarOnOrder();" ng-disabled="!matrix[la.hsaId][contractKey(kontrakt)]">
+                    <input type="checkbox" ng-model="matrix[la.hsaId][kontrakt._key].checked" ng-change="updateLogiskAdressOnAnslutning(la.hsaId, kontrakt._key)" ng-disabled="::!matrix[la.hsaId][kontrakt._key]">
                   </div>
                 </td>
               </tr>

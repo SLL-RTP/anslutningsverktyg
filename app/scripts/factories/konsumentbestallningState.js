@@ -20,7 +20,6 @@ angular.module('avApp')
       };
 
       var setTjanstekomponent = function (tjk) {
-        $log.debug('setTjanstekomponent', tjk);
         _order.tjanstekomponent = tjk;
         _order.konsumentanslutningar = []; //reset on new komponent
       };
@@ -54,42 +53,70 @@ angular.module('avApp')
         }
       };
 
-      var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning) {
-        var orderAnslutning = _.find(_order.konsumentanslutningar,
-          _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
+      var removeLogiskAdressFromAnslutning = function (logiskAdress, anslutning, orderRemoval) {
+        var orderAnslutning = _findAnslutning(anslutning);
         if (orderAnslutning) {
           var logiskAdressId = _.pick(logiskAdress, 'hsaId');
           if (angular.isDefined(orderAnslutning.nyaLogiskaAdresser)) {
             _.remove(orderAnslutning.nyaLogiskaAdresser, logiskAdressId);
           }
-          if (!orderAnslutning.borttagnaLogiskaAdresser) {
-            orderAnslutning.borttagnaLogiskaAdresser = [];
-          }
-          if (!_.find(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId)) {
-            orderAnslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
+          if (orderRemoval) {
+            if (!orderAnslutning.borttagnaLogiskaAdresser) {
+              orderAnslutning.borttagnaLogiskaAdresser = [];
+            }
+            if (!_.find(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId)) {
+              orderAnslutning.borttagnaLogiskaAdresser.push(_.clone(logiskAdress));
+            }
           }
           $rootScope.$broadcast('logisk-adress-removed');
+          _removeAnslutningIfEmpty(orderAnslutning);
         }
       };
 
-      var addLogiskAdressToAnslutning = function (logiskAdress, anslutning) {
-        var orderAnslutning = _.find(_order.konsumentanslutningar,
-          _.pick(anslutning, ['tjanstekontraktNamnrymd', 'tjanstekontraktMajorVersion', 'tjanstekontraktMinorVersion']));
+      var addLogiskAdressToAnslutning = function (logiskAdress, anslutning, orderAdd) {
+        var orderAnslutning = _findAnslutning(anslutning);
         if (orderAnslutning) {
-          var nyLogiskAdress = _.clone(logiskAdress);
-          var logiskAdressId = _.pick(nyLogiskAdress, 'hsaId');
-          if (_.isUndefined(orderAnslutning.nyaLogiskaAdresser)) {
-            orderAnslutning.nyaLogiskaAdresser = [];
-          }
-          if (!_isLogiskAdressOnAnslutning(nyLogiskAdress, orderAnslutning)) {
-            if (_isLogiskAdressInBorttagnaLogiskaAdresser(nyLogiskAdress, orderAnslutning)) {
-              _.remove(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId);
-            } else {
-              orderAnslutning.nyaLogiskaAdresser.push(nyLogiskAdress);
+          var logiskAdressId = _.pick(logiskAdress, 'hsaId');
+          _.remove(orderAnslutning.borttagnaLogiskaAdresser, logiskAdressId);
+          if (orderAdd) {
+            if (_.isUndefined(orderAnslutning.nyaLogiskaAdresser)) {
+              orderAnslutning.nyaLogiskaAdresser = [];
             }
+            //TODO: do we need to check if it already exists?
+            orderAnslutning.nyaLogiskaAdresser.push(_.clone(logiskAdress));
           }
           $rootScope.$broadcast('logisk-adress-added');
+          _removeAnslutningIfEmpty(orderAnslutning);
         }
+      };
+
+      var _findAnslutning = function(ans) {
+        return _.find(_order.konsumentanslutningar,
+          _.pick(ans,
+            ['tjanstekontraktNamnrymd',
+              'tjanstekontraktMajorVersion',
+              'tjanstekontraktMinorVersion']
+          )
+        );
+      };
+
+      var _removeAnslutningIfEmpty = function(anslutning) {
+        var empty = true;
+        if (anslutning.nyaLogiskaAdresser && anslutning.nyaLogiskaAdresser.length > 0) {
+          empty = false;
+        } else if (anslutning.borttagnaLogiskaAdresser && anslutning.borttagnaLogiskaAdresser.length > 0) {
+          empty = false;
+        }
+        if (empty) {
+          console.log('anslutning is now empty, removing from order');
+          removeAnslutningFromOrder(anslutning);
+
+        }
+        return empty;
+      };
+
+      var getAnslutning = function(key) {
+        return _.find(_order.konsumentanslutningar, {_key: key});
       };
 
       var _isAnslutningOnOrder = function (anslutning) {
@@ -101,22 +128,6 @@ angular.module('avApp')
         return !!_.find(_order.konsumentanslutningar, anslutningId);
       };
 
-      var _isLogiskAdressOnAnslutning = function (logiskAdress, anslutning) {
-        var logiskAdressId = _.pick(logiskAdress, 'hsaId');
-        if (anslutning.nyaLogiskaAdresser && _.find(anslutning.nyaLogiskaAdresser, logiskAdressId)) {
-          return true;
-        }
-        if (anslutning.befintligaLogiskaAdresser && _.find(anslutning.befintligaLogiskaAdresser, logiskAdressId)) {
-          return !_isLogiskAdressInBorttagnaLogiskaAdresser(logiskAdress, anslutning);
-
-        }
-        return false;
-      };
-
-      var _isLogiskAdressInBorttagnaLogiskaAdresser = function (logiskAdress, anslutning) {
-        return (anslutning.borttagnaLogiskaAdresser && _.find(anslutning.borttagnaLogiskaAdresser, {hsaId: logiskAdress.hsaId}));
-      };
-
       return {
         init: init,
         current: order,
@@ -124,6 +135,7 @@ angular.module('avApp')
         setNat: setNat,
         addAnslutning: addAnslutningToOrder,
         removeAnslutning: removeAnslutningFromOrder,
+        getAnslutning: getAnslutning,
         addLogiskAdressToAnslutning: addLogiskAdressToAnslutning,
         removeLogiskAdressFromAnslutning: removeLogiskAdressFromAnslutning
       };
