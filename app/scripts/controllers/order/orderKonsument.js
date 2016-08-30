@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', '$uibModal', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
-      function ($scope, $state, $log, $uibModal, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
+  .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', '$timeout', '$uibModal', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
+      function ($scope, $state, $log, $timeout, $uibModal, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
 
         if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
           $log.warn('going to parent state');
@@ -134,7 +134,9 @@ angular.module('avApp')
               return ans.borttagnaLogiskaAdresser && ans.borttagnaLogiskaAdresser.length > 0;
             });
           }
-          $scope.removeWarning = removeWarning;
+          $timeout(function() {
+            $scope.removeWarning = removeWarning;
+          });
         }, 50);
 
         var contractKey = function(anslutning) {
