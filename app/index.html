@@ -16,6 +16,11 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <style type="text/css">
+      .translate-cloak {
+        visibility: hidden;
+      }
+    </style>
 
     <!--[if lte IE 8]>
     <script>
@@ -26,7 +31,7 @@
     </script>
     <![endif]-->
   </head>
-  <body id="ng-app" ng-app="avApp">
+  <body id="ng-app" ng-app="avApp" class="translate-cloak" translate-cloak>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
