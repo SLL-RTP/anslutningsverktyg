@@ -19,7 +19,8 @@ angular
     'ui.bootstrap.tooltip',
     'ui.bootstrap.showErrors',
     'ng.shims.placeholder',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'vs-repeat'
   ])
   .config(['$stateProvider', '$compileProvider', '$urlRouterProvider', '$translateProvider', '$logProvider', 'configuration',
     function ($stateProvider, $compileProvider, $urlRouterProvider, $translateProvider, $logProvider, configuration) {

@@ -70,8 +70,8 @@
           </table>
           <div class="selector" ng-class="{'y-scroll' : logiskaAdresser.length > 3}">
             <table class="table table-condensed table-bordered">
-              <tbody>
-              <tr ng-repeat="la in logiskaAdresser">
+              <tbody vs-repeat vs-scroll-parent=".selector">
+              <tr ng-repeat="la in logiskaAdresser track by la.hsaId">
                 <th class="la-name-container">
                   <p>{{la.namn}}</p>
                   <small>{{la.hsaId}}</small>

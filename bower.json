@@ -12,6 +12,7 @@
     "angular-translate": "~2.11.0",
     "angular-translate-loader-static-files": "~2.11.0",
     "angular-ui-router": "~0.2.11",
+    "angular-vs-repeat": "~1.1.7",
     "bootstrap-sass-official": "^3.3.6",
     "components-font-awesome": "4.2.0",
     "console-polyfill": "~0.2.1",
