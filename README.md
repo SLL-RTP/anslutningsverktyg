@@ -76,7 +76,17 @@ Således in din service kan du göra följande:
 
 bygga projektet (war)
 
+prod:
+
     mvn clean install
+
+acc:
+
+    mvn clean install -Pacceptance
+
+development (incl amazon)
+
+    mvn clean install -Pdevelopment
 
 release (bygga, tagga, pusha, uppdatera version)
 
