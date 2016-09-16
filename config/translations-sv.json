@@ -406,6 +406,15 @@
         "label": "Övrig information"
       }
     },
+    "add_environment_panel": {
+      "title": "Lägg till driftmiljö",
+      "environment": {
+        "label": "Miljö",
+        "select_placeholder": "- Välj -",
+        "error": "Minst en driftmiljö måste läggas till",
+        "add_btn": "Lägg till"
+      }
+    },
     "environment_panel": {
       "remove_btn": {
         "info": "ta bort driftmiljö"

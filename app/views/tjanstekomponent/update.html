@@ -29,7 +29,7 @@
             <input type="text" placeholder="{{'komponent_admin.panel.tjanstekomponent_select_placeholder' | translate}}"
                    ng-model="selectedTjanstekomponent"
                    typeahead-wait-ms="200"
-                   typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                   typeahead-template-url="templates/typeahead-tjanstekomponent-extended.html"
                    typeahead-editable="false"
                    typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                    class="form-control">
@@ -181,7 +181,7 @@
             </div>
             <div class="form-group">
               <label translate="komponent_admin.panel.nat.title"></label>
-              <div class="form-group">
+              <div class="form-group" ng-class="{'has-error': natError[environment.driftmiljo.id]}">
                 <label ng-repeat="nat in natForEnvironment[environment.driftmiljo.id]" class="radio-inline">
                   <input type="radio" name="nat" ng-model="environment.nat" ng-value="nat" ng-change="selectNatForEnvironment(nat, environment.driftmiljo.id)"> <!-- ng-checked="environment.nat && environment.nat.id == nat.id" -->
                   {{nat.namn}}
@@ -218,21 +218,22 @@
   <!-- add environment -->
   <div class="panel panel-primary" ng-show="(tjanstekomponent.hsaId || createNew) && selectableEnvironments.length">
     <div class="panel-heading">
-      <h3 class="panel-title">Lägg till driftmiljö</h3>
+      <h3 class="panel-title" translate="komponent_admin.add_environment_panel.title"></h3>
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-5 form-group">
+        <div class="col-md-5 form-group" ng-class="{'has-error': driftmiljoError}">
           <label for="environment" translate="order.main.env_panel.label"></label>
           <select id="environment" class="form-control" ng-model="selectedEnvironment" ng-options="environment.driftmiljo.namn for environment in selectableEnvironments | filter:activeEnvironmentFilter()">
-            <option value="" translate="order.main.env_panel.select_placeholder"></option>
+            <option value="" translate="komponent_admin.add_environment_panel.environment.select_placeholder"></option>
           </select>
+          <span class="help-block manual-error" ng-if="driftmiljoError" translate="komponent_admin.add_environment_panel.environment.error.empty"></span>
         </div>
         <div class="col-md-2">
           <label>&nbsp;</label>
           <div>
           <button type="button" class="btn btn-primary" ng-click="addEnvironment(selectedEnvironment)">
-            <span>Lägg till</span>
+            <span translate="komponent_admin.add_environment_panel.environment.add_btn"></span>
           </button>
         </div>
         </div>

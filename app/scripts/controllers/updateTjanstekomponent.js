@@ -39,14 +39,22 @@ angular.module('avApp')
 
       $scope.$watch('selectedTjanstekomponent', function(newTjanstekomponent) {
         if (newTjanstekomponent && newTjanstekomponent.hsaId) {
+          console.debug('select', newTjanstekomponent);
           $scope.selectedNat = {};
           $scope.activeEnvironments = [];
           $scope.natError = {};
+          var desc = newTjanstekomponent.beskrivning;
+          var org = newTjanstekomponent.organisation;
+          var other = newTjanstekomponent.other;
           Tjanstekomponent.getTjanstekomponent(newTjanstekomponent.hsaId).then(function (result) {
             $scope.tjanstekomponentValid = true;
             $scope.updateClicked = false;
             $scope.displayNatError = false;
             $scope.tjanstekomponent = result;
+            //move values from search result to result
+            $scope.tjanstekomponent.beskrivning = desc;
+            $scope.tjanstekomponent.organisation = org;
+            $scope.tjanstekomponent.other = other;
             console.log(result);
             if (_.isArray(result.serviceComponentDriftmiljos)) {
               _.each(result.serviceComponentDriftmiljos, function(env) {
@@ -73,7 +81,8 @@ angular.module('avApp')
       $scope.updateTjanstekomponent = function () {
         $scope.updateClicked = true;
         _natValidation();
-        if (!_validateForms() || !_checkNatValidation()) {
+        _driftmiljoValidation();
+        if (!_validateForms() || !_checkNatValidation() || !_checkDriftmiljos()) {
           $scope.tjanstekomponentValid = false;
         } else {
           $scope.tjanstekomponentValid = true;
@@ -112,12 +121,13 @@ angular.module('avApp')
         if (env && env.driftmiljo) {
           $scope.activeEnvironments.push(env);
           $scope.selectedEnvironment = {};
-          if (env.nat && env.nat.id) { 
+          if (env.nat && env.nat.id) {
             //set 'same' nat but other object to make ng-model work with an existing nat
             //so that it is checked in UI
             env.nat = _.find($scope.natForEnvironment[env.driftmiljo.id], {id: env.nat.id});
           }
         }
+        _driftmiljoValidation();
       }
 
       $scope.removeEnvironment = function(envId) {
@@ -126,6 +136,7 @@ angular.module('avApp')
             return envId === env.driftmiljo.id;
           });
         }
+        _driftmiljoValidation();
       };
 
       $scope.addSelectedEnvironment = function() {
@@ -161,13 +172,9 @@ angular.module('avApp')
         _recheckOrderValidity();
       };
 
-      var _triggerNatError = function() {
-        _natValidation();
-      };
-
       function _recheckOrderValidity() {
         if ($scope.updateClicked) {
-          $scope.tjanstekomponentValid = _checkGlobalValidation() && _checkNatValidation();
+          $scope.tjanstekomponentValid = _checkGlobalValidation() && _checkNatValidation() && _checkDriftmiljos();
         }
       }
 
@@ -207,6 +214,16 @@ angular.module('avApp')
           }
         });
       };
+
+      var _checkDriftmiljos = function() {
+        var error = $scope.activeEnvironments.length === 0;
+        console.log('_checkDriftmiljos error', error);
+        return !error;
+      };
+
+      var _driftmiljoValidation = function() {
+        $scope.driftmiljoError = !_checkDriftmiljos();
+      }
 
       var reset = function() {
         $scope.tjanstekomponentValid = true;
