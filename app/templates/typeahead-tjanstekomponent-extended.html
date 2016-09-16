@@ -1,0 +1,17 @@
+<a>
+  <p style="margin-bottom: 0">
+    <span ng-if="match.model.organisation" ng-bind-html="match.model.organisation | uibTypeaheadHighlight:query | trusted"></span>
+    <span ng-if="match.model.organisation">-</span>
+    <span ng-bind-html="match.model.beskrivning | uibTypeaheadHighlight:query | trusted"></span>
+  </p>
+  <p style="margin-bottom: 0; margin-top: -2px">
+    <small>
+      <span ng-bind-html="match.model.hsaId | uibTypeaheadHighlight:query | trusted"></span>
+    </small>
+  </p>
+  <p style="margin-bottom: 0; margin-top: -2px">
+    <small>
+      [<span ng-repeat="dm in match.model.driftmiljos">{{::dm.namn}}<span ng-if="!$last">, </span></span>]
+    </small>
+  </p>
+</a>

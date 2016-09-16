@@ -29,7 +29,7 @@
             <input type="text" placeholder="{{'komponent_admin.panel.tjanstekomponent_select_placeholder' | translate}}"
                    ng-model="selectedTjanstekomponent"
                    typeahead-wait-ms="200"
-                   typeahead-template-url="templates/typeahead-tjanstekomponent.html"
+                   typeahead-template-url="templates/typeahead-tjanstekomponent-extended.html"
                    typeahead-editable="false"
                    typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                    class="form-control">
@@ -51,6 +51,11 @@
                      name="beskrivning" ng-model="tjanstekomponent.beskrivning">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.beskrivning.$error.required" translate="komponent_admin.panel.namn.error.required"></span>
             </div>
+            <div class="form-group">
+              <label for="other" translate="komponent_admin.panel.other.label"></label>
+              <input type="text" class="form-control" id="other" required
+                     name="other" ng-model="tjanstekomponent.other">
+            </div>
             <div ng-if="createNew"><div class="form-group" show-errors="{ trigger: 'keypress' }" global-validation>
               <label for="hsaIdCreateNew" translate="komponent_admin.panel.hsaId.label"></label>
               <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.hsaId.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
@@ -64,55 +69,6 @@
               <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.hsaId.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
               <input type="text" class="form-control" id="hsaIdNowCreateNew"
                      name="hsaId" ng-value="tjanstekomponent.hsaId" readonly>
-            </div>
-            <div class="form-group">
-              <label translate="komponent_admin.panel.nat.title"></label>
-              <div class="form-group">
-                <label ng-repeat="nat in nat" class="checkbox-inline">
-                  <input type="radio" name="nat" ng-model="selectedNat.selected" ng-value="nat" ng-change="selectNat(nat)" ng-checked="tjanstekomponent.nat && tjanstekomponent.nat.id == nat.id">
-                  {{nat.namn}}
-                </label>
-                <span class="help-block manual-error" ng-if="displayNatError" translate="komponent_admin.panel.nat.error.empty"></span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5 col-md-offset-2">
-            <h4 translate="komponent_admin.panel.teknisk_information.title"></h4>
-            <div class="form-group" show-errors global-validation>
-              <label for="producentIpadress"
-                     translate="komponent_admin.panel.teknisk_information.producent_ip.label"></label>
-              <i class="fa fa-info-circle"
-                 popover="{{'komponent_admin.panel.teknisk_information.producent_ip.info' | translate}}"
-                 popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="producentIpadress"
-                     name="producentIpadress" ng-model="tjanstekomponent.producentIpadress"
-                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
-              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.producentIpadress.$error.pattern"
-                    translate="komponent_admin.panel.teknisk_information.producent_ip.error.pattern"></span>
-            </div>
-            <div class="form-group" show-errors global-validation>
-              <label for="producentDnsNamn"
-                     translate="komponent_admin.panel.teknisk_information.producent_dns.label"></label>
-              <input type="text" class="form-control" id="producentDnsNamn"
-                     name="producentDnsNamn" ng-model="tjanstekomponent.producentDnsNamn">
-            </div>
-            <div class="form-group" show-errors global-validation>
-              <label for="konsumentIpadress"
-                     translate="komponent_admin.panel.teknisk_information.konsument_ip.label"></label>
-              <i class="fa fa-info-circle"
-                 popover="{{'komponent_admin.panel.teknisk_information.konsument_ip.info' | translate}}"
-                 popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="konsumentIpadress"
-                     name="konsumentIpadress" ng-model="tjanstekomponent.konsumentIpadress"
-                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
-              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.konsumentIpadress.$error.pattern"
-                    translate="komponent_admin.panel.teknisk_information.konsument_ip.error.pattern"></span>
-            </div>
-            <div class="form-group" show-errors global-validation>
-              <label for="pingForConfigurationURL" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.label"></label>
-              <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.teknisk_information.pingForConfigurationURL.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="url" class="form-control" name="pingForConfigurationURL" id="pingForConfigurationURL" ng-model="tjanstekomponent.pingForConfigurationURL">
-              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.pingForConfigurationURL.$error.url" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.error.url"></span>
             </div>
           </div>
         </div>
@@ -192,8 +148,101 @@
     </div>
   </div>
   <!-- / välj tjänstekomponent panel -->
+  <!-- per environment info -->
+  <div class="panel panel-primary" ng-repeat="environment in activeEnvironments">
+    <div class="panel-heading closable">
+      <h3 class="panel-title pull-left">{{environment.driftmiljo.namn}}</h3>
+      <button class="btn btn-danger btn-sm pull-right" uib-tooltip="{{'komponent_admin.environment_panel.remove_btn.info' | translate}}" ng-click="removeEnvironment(environment.driftmiljo.id)">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </button>
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+      <ng-form name="tiform">
+        <div class="col-md-5">
+            <h4 translate="komponent_admin.panel.teknisk_information.title"></h4>
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-producentIpadress"
+                     translate="komponent_admin.panel.teknisk_information.producent_ip.label"></label>
+              <i class="fa fa-info-circle"
+                 popover="{{'komponent_admin.panel.teknisk_information.producent_ip.info' | translate}}"
+                 popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentIpadress"
+                     name="producentIpadress" ng-model="environment.producentIpadress"
+                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
+              <span class="help-block hide-no-error" ng-if="tiform.producentIpadress.$error.pattern"
+                    translate="komponent_admin.panel.teknisk_information.producent_ip.error.pattern"></span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-producentDnsNamn"
+                     translate="komponent_admin.panel.teknisk_information.producent_dns.label"></label>
+              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentDnsNamn"
+                     name="producentDnsNamn" ng-model="environment.producentDnsNamn">
+            </div>
+            <div class="form-group">
+              <label translate="komponent_admin.panel.nat.title"></label>
+              <div class="form-group" ng-class="{'has-error': natError[environment.driftmiljo.id]}">
+                <label ng-repeat="nat in natForEnvironment[environment.driftmiljo.id]" class="radio-inline">
+                  <input type="radio" name="nat" ng-model="environment.nat" ng-value="nat" ng-change="selectNatForEnvironment(nat, environment.driftmiljo.id)"> <!-- ng-checked="environment.nat && environment.nat.id == nat.id" -->
+                  {{nat.namn}}
+                </label>
+                <span class="help-block manual-error" ng-if="natError[environment.driftmiljo.id]" translate="komponent_admin.panel.nat.error.empty"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-md-offset-2">
+            <h4>&nbsp;</h4> <!-- to align with left column -->
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-konsumentIpadress"
+                     translate="komponent_admin.panel.teknisk_information.konsument_ip.label"></label>
+              <i class="fa fa-info-circle"
+                 popover="{{'komponent_admin.panel.teknisk_information.konsument_ip.info' | translate}}"
+                 popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-konsumentIpadress"
+                     name="konsumentIpadress" ng-model="environment.konsumentIpadress"
+                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
+              <span class="help-block hide-no-error" ng-if="tiform.konsumentIpadress.$error.pattern"
+                    translate="komponent_admin.panel.teknisk_information.konsument_ip.error.pattern"></span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-pingForConfigurationURL" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.label"></label>
+              <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.teknisk_information.pingForConfigurationURL.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="url" class="form-control" name="pingForConfigurationURL" id="{{environment.driftmiljo.id}}-pingForConfigurationURL" ng-model="environment.pingForConfigurationURL">
+              <span class="help-block hide-no-error" ng-if="tiform.pingForConfigurationURL.$error.url" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.error.url"></span>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  <!-- / per environment info -->
+  <!-- add environment -->
+  <div class="panel panel-primary" ng-show="(tjanstekomponent.hsaId || createNew) && selectableEnvironments.length">
+    <div class="panel-heading">
+      <h3 class="panel-title" translate="komponent_admin.add_environment_panel.title"></h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-5 form-group" ng-class="{'has-error': driftmiljoError}">
+          <label for="environment" translate="order.main.env_panel.label"></label>
+          <select id="environment" class="form-control" ng-model="selectedEnvironment" ng-options="environment.driftmiljo.namn for environment in selectableEnvironments | filter:activeEnvironmentFilter()">
+            <option value="" translate="komponent_admin.add_environment_panel.environment.select_placeholder"></option>
+          </select>
+          <span class="help-block manual-error" ng-if="driftmiljoError" translate="komponent_admin.add_environment_panel.environment.error.empty"></span>
+        </div>
+        <div class="col-md-2">
+          <label>&nbsp;</label>
+          <div>
+          <button type="button" class="btn btn-primary" ng-click="addEnvironment(selectedEnvironment)">
+            <span translate="komponent_admin.add_environment_panel.environment.add_btn"></span>
+          </button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / add environment -->
   <!-- övrigt panel -->
-  <div class="panel panel-primary">
+  <div class="panel panel-primary" ng-show="tjanstekomponent.hsaId || createNew">
     <div class="panel-heading">
       <h3 class="panel-title" translate="komponent_admin.panel.other_info.label"></h3>
     </div>

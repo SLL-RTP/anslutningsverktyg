@@ -3,15 +3,24 @@
 angular.module('avApp')
   .factory('Environment', ['$q', '$http', 'configuration',
     function ($q, $http, configuration) {
-    return {
-      getAvailableEnvironments: function() {
-        var deferred = $q.defer(); //forcing the use of a promise to set the interface for later
-        $http.get(configuration.basePath + '/api/driftmiljos').success(function(data) {
-          deferred.resolve(data);
-        }).error(function () { //TODO: error handling
-          deferred.reject();
-        });
-        return deferred.promise;
-      }
-    };
+      var _environments = null;
+
+      var getEnvironments = function() {
+          var deferred = $q.defer();
+          if (!_environments) {
+            $http.get(configuration.basePath + '/api/driftmiljos').success(function(data) {
+              _environments = data;
+              deferred.resolve(_environments);
+            }).error(function () {
+              deferred.reject();
+            });
+          } else {
+            deferred.resolve(_environments);
+          }
+          return deferred.promise;
+        }; 
+
+      return {
+        getAvailableEnvironments: _.once(getEnvironments)
+      };
   }]);

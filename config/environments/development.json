@@ -1,7 +1,7 @@
 {
-  "basePath": "/bs",
+  "basePath": "/bsbeta",
   "apiToken": "secret-token",
   "debugLog": true,
   "testBanner": true,
-  "translationsPath": "/bs-gui-translations"
+  "translationsPath": "/external-translations"
 }

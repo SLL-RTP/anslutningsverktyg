@@ -40,9 +40,14 @@ angular
         templateUrl: 'views/tjanstekomponent/update.html',
         controller: 'UpdateTjanstekomponentCtrl',
         resolve: {
-          nat: ['Nat',
-            function(NatFactory) {
-              return NatFactory.getNat();
+          environments: ['Environment',
+            function(EnvironmentFactory) {
+              return EnvironmentFactory.getAvailableEnvironments();
+            }
+          ],
+          nets: ['Nat', 
+            function(Nat) {
+              return Nat.getNetsForAllEnvironments();
             }
           ]
         }
@@ -64,11 +69,6 @@ angular
           currentUser: ['User',
             function(UserFactory) {
               return UserFactory.getCurrentUser();
-            }
-          ],
-          nat: ['Nat',
-            function(NatFactory) {
-              return NatFactory.getNat();
             }
           ],
           mainOrder: ['BestallningState', '$q',
