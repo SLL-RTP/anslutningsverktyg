@@ -155,6 +155,16 @@ module.exports = function (grunt) {
           }
         },
         {
+          context: '/bsbeta',
+          host: '52.58.67.214',
+          port: 80,
+          https: false,
+          changeOrigin: true,
+          headers: {
+            accept: 'application/json'
+          }
+        },
+        {
           context: '/localbs',
           host: 'localhost',
           port: 8888,

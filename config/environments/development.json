@@ -1,5 +1,5 @@
 {
-  "basePath": "/bs",
+  "basePath": "/bsbeta",
   "apiToken": "secret-token",
   "debugLog": true,
   "testBanner": true,

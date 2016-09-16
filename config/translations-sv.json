@@ -297,6 +297,9 @@
           "required": "Namn måste vara ifyllt"
         }
       },
+      "other": {
+        "label": "Övrigt"
+      },
       "hsaId": {
         "label": "* HSA ID",
         "info": "HSA-id skall vara identiskt med det funktions-HSA-id som står i komponentens SITHS-certifikat.",
@@ -401,6 +404,11 @@
       },
       "other_info": {
         "label": "Övrig information"
+      }
+    },
+    "environment_panel": {
+      "remove_btn": {
+        "info": "ta bort driftmiljö"
       }
     },
     "submit": {

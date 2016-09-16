@@ -1,17 +1,25 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('UpdateTjanstekomponentCtrl', ['$scope', '$q', '$state', 'Tjanstekomponent', 'nat',
-    function ($scope, $q, $state, Tjanstekomponent, nat) {
+  .controller('UpdateTjanstekomponentCtrl', ['$scope', '$q', '$state', 'Tjanstekomponent', 'environments', 'nets',
+    function ($scope, $q, $state, Tjanstekomponent, environments, nets) {
       $scope.$watch('createNew', function(newTjanstekomponent) {
         console.log('newTjanstekomponent: ' + newTjanstekomponent);
         $scope.tjanstekomponentForm.$setPristine();
         $scope.tjanstekomponentForm.$setValidity();
         $scope.$broadcast('show-errors-reset');
+        $scope.selectedEnvironment = {};
+        $scope.selectableEnvironments = _.map(environments, function(env) {
+          return {
+            driftmiljo: env
+          };
+        });
+        $scope.activeEnvironments = [];
+        $scope.natForEnvironment = _.clone(nets);
         $scope.tjanstekomponentValid = true;
         $scope.updateClicked = false;
         $scope.displayNatError = false;
-        $scope.nat = _.cloneDeep(nat);
+        $scope.environments = _.cloneDeep(environments);
         $scope.selectedNat = {};
         $scope.tjanstekomponent = {};
         $scope.selectedTjanstekomponent = null;
@@ -32,37 +40,48 @@ angular.module('avApp')
       $scope.$watch('selectedTjanstekomponent', function(newTjanstekomponent) {
         if (newTjanstekomponent && newTjanstekomponent.hsaId) {
           $scope.selectedNat = {};
+          $scope.activeEnvironments = [];
+          $scope.natError = {};
           Tjanstekomponent.getTjanstekomponent(newTjanstekomponent.hsaId).then(function (result) {
             $scope.tjanstekomponentValid = true;
             $scope.updateClicked = false;
             $scope.displayNatError = false;
-            if (_.isUndefined(result.nat) || _.isNull(result.nat)) {
-              result.nat = [];
-            }
             $scope.tjanstekomponent = result;
+            console.log(result);
+            if (_.isArray(result.serviceComponentDriftmiljos)) {
+              _.each(result.serviceComponentDriftmiljos, function(env) {
+                $scope.addEnvironment(env);
+              });
+            }
           });
         }
       });
 
-      $scope.selectNat = function(nat) {
-        if (nat && nat.id) {
-          $scope.tjanstekomponent.nat = nat;
-        }
-        _triggerNatError();
-        _recheckOrderValidity();
+      $scope.activeEnvironmentFilter = function() {
+        return function(environment) {
+          if (environment.driftmiljo) {
+            for (var i = 0; i < $scope.activeEnvironments.length; i += 1) {
+              if ($scope.activeEnvironments[i].driftmiljo.id === environment.driftmiljo.id) {
+                return false;
+              }
+            }
+          }
+          return true;
+        };
       };
 
       $scope.updateTjanstekomponent = function () {
         $scope.updateClicked = true;
-        _triggerNatError();
+        _natValidation();
         if (!_validateForms() || !_checkNatValidation()) {
           $scope.tjanstekomponentValid = false;
         } else {
           $scope.tjanstekomponentValid = true;
-          console.log($scope.tjanstekomponent);
-          var newForDb = $scope.createNew || _.isUndefined($scope.tjanstekomponent.id) || _.isNull($scope.tjanstekomponent.id);
+          var tjk = _.cloneDeep($scope.tjanstekomponent);
+          tjk.serviceComponentDriftmiljos = _.cloneDeep($scope.activeEnvironments);
+          var newForDb = $scope.createNew || _.isUndefined(tjk.id) || _.isNull(tjk.id);
           $scope.disableSubmitButton = true;
-          Tjanstekomponent.updateTjanstekomponent($scope.tjanstekomponent, newForDb).then(function(statusObj) {
+          Tjanstekomponent.updateTjanstekomponent(tjk, newForDb).then(function(statusObj) {
             if (Math.floor(statusObj.status/100) === 2) { //some 200 status
               reset();
               if (statusObj.action === 'none') { //regular confirm
@@ -89,8 +108,61 @@ angular.module('avApp')
         return deferred.promise;
       };
 
+      $scope.addEnvironment = function(env) {
+        if (env && env.driftmiljo) {
+          $scope.activeEnvironments.push(env);
+          $scope.selectedEnvironment = {};
+          if (env.nat && env.nat.id) { 
+            //set 'same' nat but other object to make ng-model work with an existing nat
+            //so that it is checked in UI
+            env.nat = _.find($scope.natForEnvironment[env.driftmiljo.id], {id: env.nat.id});
+          }
+        }
+      }
+
+      $scope.removeEnvironment = function(envId) {
+        if (envId) {
+          _.remove($scope.activeEnvironments, function(env) {
+            return envId === env.driftmiljo.id;
+          });
+        }
+      };
+
+      $scope.addSelectedEnvironment = function() {
+        console.info('addSelectedEnvironment');
+        console.log($scope.selectedEnvironment);
+        if ($scope.selectedEnvironment && $scope.selectedEnvironment.id) {
+          $scope.activeEnvironments.push({
+            driftmiljo: $scope.selectedEnvironment
+          });
+          _.remove($scope.selectableEnvironments, function(environment) {
+            return environment.id === $scope.selectedEnvironment.id;
+          });
+          $scope.natForEnvironment[$scope.selectedEnvironment.id] = [
+            {
+              id: 'internet',
+              namn: 'Internet'
+            },
+            {
+              id: 'sjunet',
+              namn: 'Sjunet'
+            },
+            {
+              id: 'regional',
+              namn: 'Regionalt nät'
+            }
+          ];
+          $scope.selectedEnvironment = {};
+        }
+      };
+
+      $scope.selectNatForEnvironment = function(nat, environmentId) {
+        _natValidation();
+        _recheckOrderValidity();
+      };
+
       var _triggerNatError = function() {
-        $scope.displayNatError = !_checkNatValidation() && $scope.updateClicked;
+        _natValidation();
       };
 
       function _recheckOrderValidity() {
@@ -109,16 +181,31 @@ angular.module('avApp')
       var _validateForms = function () {
         $scope.$broadcast('show-errors-check-validity');
         var formGroupElements = document.querySelectorAll('.form-group.has-error');
-        return formGroupElements.length === 0;
+        var error = formGroupElements.length === 0;
+        console.log('_validateForms error', !error);
+        return error;
       };
 
       var _checkGlobalValidation = function() {
         var formGroupElements = document.querySelectorAll('.form-group.gv-invalid');
-        return formGroupElements.length === 0;
+        var error = formGroupElements.length === 0;
+        console.log('_checkGlobalValidation error', !error);
+        return error;
       };
 
       var _checkNatValidation = function() {
-        return !!($scope.tjanstekomponent.nat && $scope.tjanstekomponent.nat.id);
+        var error = _.keys($scope.natError).length === 0;
+        console.log('_checkNatValidation error', !error);
+        return error;
+      };
+
+      var _natValidation = function() {
+        $scope.natError = {};
+        _.each($scope.activeEnvironments, function(environment) {
+          if (!environment.nat) {
+            $scope.natError[environment.driftmiljo.id] = true;
+          }
+        });
       };
 
       var reset = function() {
@@ -126,15 +213,24 @@ angular.module('avApp')
         $scope.updateClicked = false;
         $scope.createNew = true;
         $scope.displayNatError = false;
+        $scope.selectedNat = {};
         if ($scope.tjanstekomponentForm) {
           $scope.tjanstekomponentForm.$setPristine();
           $scope.tjanstekomponentForm.$setValidity();
         }
         $scope.tjanstekomponent = {
-          nat: []
         };
         $scope.$broadcast('show-errors-reset');
-        $scope.nat = _.cloneDeep(nat);
+        $scope.selectedEnvironment = {};
+        $scope.selectableEnvironments = _.map(environments, function(env) {
+          return {
+            driftmiljo: env
+          };
+        });
+        $scope.activeEnvironments = [];
+        // $scope.natForEnvironment = _.clone(nets);
+        $scope.natError = {};
+        // $scope.nat = _.cloneDeep(nat);
       };
 
       reset();

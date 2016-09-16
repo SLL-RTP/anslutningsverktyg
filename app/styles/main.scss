@@ -76,6 +76,16 @@ body {
 }
 
 //fix look in panels
+.panel-heading.closable {
+  h3.panel-title {
+    line-height: normal;
+  }
+  .btn-sm {
+    margin-top: -3px;
+    margin-bottom: -3px;
+  }
+}
+
 .panel-body .row {
   margin-left: 0;
   margin-right: 0;

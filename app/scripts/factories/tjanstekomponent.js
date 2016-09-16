@@ -7,15 +7,16 @@ angular.module('avApp')
         getFilteredTjanstekomponenter: function (query, driftmiljoId) {
           var deferred = $q.defer();
           $log.debug('getFilteredTjanstekomponenter query[' + query + '], driftmiljoId[' + driftmiljoId + ']');
+          var path = '/api/serviceComponents/withoutTakId';
+          var params = {};
           if (query) {
             var lowerCaseQuery = query.toLowerCase();
-            var params = {
-              query: lowerCaseQuery
-            };
+            params.query = lowerCaseQuery;
             if (driftmiljoId) {
+              path = '/api/serviceComponents/withTakId';
               params.takId = driftmiljoId;
             }
-            $http.get(configuration.basePath + '/api/serviceComponents', {
+            $http.get(configuration.basePath + path, {
               params: params
             }).success(function (data) {
               deferred.resolve(data);
@@ -44,10 +45,6 @@ angular.module('avApp')
         },
         updateTjanstekomponent: function (tjanstekomponent, isNew) {
           var cleanTjanstekomponent = cleanObj(tjanstekomponent);
-          cleanTjanstekomponent.huvudansvarigKontakt = cleanObj(cleanTjanstekomponent.huvudansvarigKontakt);
-          cleanTjanstekomponent.tekniskKontakt = cleanObj(cleanTjanstekomponent.tekniskKontakt);
-          cleanTjanstekomponent.tekniskSupportKontakt = cleanObj(cleanTjanstekomponent.tekniskSupportKontakt);
-          cleanTjanstekomponent.nat = cleanObj(cleanTjanstekomponent.nat);
           $log.debug(JSON.stringify(cleanTjanstekomponent, null, 2));
           var deferred = $q.defer();
 
@@ -70,8 +67,11 @@ angular.module('avApp')
         }
       };
 
-      var cleanObj = function(dtoObj) {
-        var cleaned = _.pick(dtoObj, function (value, propertyName) {
+      var cleanObj = function(obj) {
+        if (!_.isObject(obj)) {
+          return obj;
+        }
+        var cleaned = _.pick(obj, function (value, propertyName) {
           if (propertyName === 'errors') {
             return false;
           } else if (propertyName.indexOf('_') === 0) {
@@ -85,6 +85,16 @@ angular.module('avApp')
           }
           return true;
         });
+        cleaned = _.mapValues(cleaned, function(value, key, obj) {
+          if (_.isArray(value)) {
+            return _.map(value, function(arrayMember) {
+              return cleanObj(arrayMember);
+            });
+          } else if (_.isObject(value)) {
+            return cleanObj(value);
+          }
+          return value;
+        })
         return !_.isEmpty(cleaned) ? cleaned : null;
       };
 
