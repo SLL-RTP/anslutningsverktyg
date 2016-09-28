@@ -1,18 +1,9 @@
 'use strict';
 
 angular.module('avApp')
-  .controller('OrderMainCtrl', ['$scope', '$state', '$q', '$translate', '$log', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
-      function ($scope, $state, $q, $translate, $log, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
-        $scope.modes = [ //child states that define the two order modes
-          {
-            name: $translate.instant('order.main.komponent_panel.mode.order.producent'),
-            stateId: 'order.producent'
-          },
-          {
-            name: $translate.instant('order.main.komponent_panel.mode.order.konsument'),
-            stateId: 'order.konsument'
-          }
-        ];
+  .controller('OrderMainCtrl', ['$scope', '$state', '$q', '$timeout', '$translate', '$log', 'Tjanstekomponent', 'BestallningState', 'ServiceDomain', 'environments', 'mainOrder',
+      function ($scope, $state, $q, $timeout, $translate, $log, Tjanstekomponent, BestallningState, ServiceDomain, environments, mainOrder) {
+
         $scope.order = mainOrder;
         $scope.selectDriftmiljo = function () {
           _reset();
@@ -21,31 +12,33 @@ angular.module('avApp')
           });
         };
 
-        $scope.$watch('selectedMode.stateId', function(newValue) { //trigger child state
-          if (!newValue) return;
-          $scope.state = {
-            id: newValue
-          };
-          _.assign($scope, {
-            mep: {}
-          });
-          $scope.order.tjanstekomponent = {};
-          $state.go(newValue);
-        });
-
-        $scope.getFilteredTjanstekomponenter = function (query, removeFromResult) {
+        /**
+         * isEmptyIndicator must be null or an object. If the search result is empty,
+         * the empty property of the isEmptyIndicator object will be set to true, otherwise false
+         */
+        $scope.getFilteredTjanstekomponenter = function (query, isEmptyIndicator, removeFromResult) {
           var deferred = $q.defer();
           if (!_.isEmpty(query)) {
             Tjanstekomponent.getFilteredTjanstekomponenter(query, $scope.order.driftmiljo.id).then(function (result) {
               if (!removeFromResult) {
+                if (isEmptyIndicator !== null) {
+                  isEmptyIndicator.empty = !result.length;
+                }
                 deferred.resolve(result);
               } else {
-                deferred.resolve(_.filter(result, function (tjanstekomponent) {
+                var filteredResult = _.filter(result, function (tjanstekomponent) {
                   return removeFromResult.hsaId !== tjanstekomponent.hsaId;
-                }));
+                });
+                if (isEmptyIndicator !== null) {
+                  isEmptyIndicator.empty = !filteredResult.length;
+                }
+                deferred.resolve(filteredResult);
               }
             });
           } else {
+            if (isEmptyIndicator !== null) {
+              isEmptyIndicator.empty = false; //when search string is empty, do not say result is empty
+            }
             deferred.resolve();
           }
           return deferred.promise;
@@ -57,14 +50,18 @@ angular.module('avApp')
 
         $scope.$watch('mep.selectedTjanstekomponent', function (newValue) {
             if (newValue) {
-              if (angular.isDefined(newValue.beskrivning)) { //FIXME: fix until backend returns service components also from TAK on this query
-                Tjanstekomponent.getTjanstekomponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
-                  $scope.order.tjanstekomponent = result;
-                });
-              } else {
-                $log.debug('detected producer from TAK');
-                $scope.order.tjanstekomponent = _.clone(newValue);
-              }
+              Tjanstekomponent.getTjanstekomponent(newValue.hsaId, $scope.order.driftmiljo.id).then(function (result) {
+                $scope.order.tjanstekomponent = result;
+                $scope.currentServiceComponentDriftmiljo = {};
+                if (result.serviceComponentDriftmiljos && result.serviceComponentDriftmiljos.length) {
+                  var env = _.find(result.serviceComponentDriftmiljos, function(env) {
+                    return env.driftmiljo.id === $scope.order.driftmiljo.id;
+                  });
+                  $scope.currentServiceComponentDriftmiljo = env;
+                }
+              });
+            } else {
+              $scope.order.tjanstekomponent = {};
             }
           }
         );
@@ -81,6 +78,10 @@ angular.module('avApp')
           $scope.orderValid = newVal;
         });
 
+        $scope.resetMain = function() {
+          _reset();
+        };
+
         var _reset = function () {
           $log.debug('--- reset (main) ---');
           if ($scope.modeForm) {
@@ -90,12 +91,16 @@ angular.module('avApp')
             targetEnvironments: environments,
             serviceDomains: [],
             state: {},
-            mep: {},
+            mep: {
+              selectedTjanstekomponent: ''
+            },
             displayCommonEnding: false,
-            orderValid: false,
-            selectedMode: {}
+            orderValid: true,
+            selectedMode: {},
+            currentServiceComponentDriftmiljo: {}
           });
           $scope.order.tjanstekomponent = {};
+          $scope.mainComponentSearchEmpty = {empty: false}; //_.assign does not work with this one ;()
         };
         _reset();
       }

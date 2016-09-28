@@ -29,7 +29,8 @@ angular.module('avApp')
       document.body.appendChild(scrollDiv);
       var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
       document.body.removeChild(scrollDiv);
-      _scrollbarWidth = scrollbarWidth;
+      //adding 4 seems to make things line up better
+      _scrollbarWidth = scrollbarWidth + 4;
     };
     return {
       getWidth: function() {

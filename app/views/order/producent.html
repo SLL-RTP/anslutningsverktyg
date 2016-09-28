@@ -252,7 +252,8 @@
      ng-if="producentbestallning.tjanstekomponent && producentbestallning.producentanslutningar.length && orderMode === ORDER_MODE.ADD"
      ng-repeat="anslutning in producentbestallning.producentanslutningar | orderBy:'tjanstekontraktNamnrymd' | orderBy:'tjanstekontraktNamn'">
   <div class="panel-heading">
-    <h3 class="panel-title">{{'order.producent.connection_config_panel.title' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-if="!anslutning.tidigareRivtaProfil">{{'order.producent.connection_config_panel.title.new' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
+    <h3 class="panel-title" ng-if="anslutning.tidigareRivtaProfil">{{'order.producent.connection_config_panel.title.existing' | translate}} {{anslutning.tjanstekontraktNamn}} {{anslutning.tjanstekontraktMajorVersion}}.x ({{anslutning._tjanstedoman}})</h3>
   </div>
   <div class="panel-body">
     <div class="row">
@@ -317,7 +318,7 @@
                    ng-model="selectedTjanstekonsument.selected"
                    typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                    typeahead-editable="false"
-                   uib-typeahead="tjanstekomponent as (tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, producentbestallning.tjanstekomponent)"
+                   uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' -- ' : '') + tjanstekomponent.beskrivning + ' -- ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, null, producentbestallning.tjanstekomponent)"
                    class="form-control">
           </div>
         </div>

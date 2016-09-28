@@ -31,15 +31,15 @@
                    typeahead-wait-ms="200"
                    typeahead-template-url="templates/typeahead-tjanstekomponent-extended.html"
                    typeahead-editable="false"
-                   typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                   typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' -- ' : '') + tjanstekomponent.beskrivning + ' -- ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
                    class="form-control">
           </div>
         </div>
       </div>
       <form role="form" name="tjanstekomponentForm" ng-show="createNew || tjanstekomponent.hsaId">
         <div class="row">
-          <div class="col-md-5">
-            <h4>&nbsp;</h4> <!-- to align with right column -->
+          <div class="col-md-4">
+            <!--<h4>&nbsp;</h4>  to align with right column -->
             <div class="form-group">
               <label for="organisation" translate="komponent_admin.panel.organisation.label"></label>
               <input type="text" class="form-control" id="organisation"
@@ -51,6 +51,8 @@
                      name="beskrivning" ng-model="tjanstekomponent.beskrivning">
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.beskrivning.$error.required" translate="komponent_admin.panel.namn.error.required"></span>
             </div>
+          </div>
+          <div class="col-md-4">
             <div class="form-group">
               <label for="other" translate="komponent_admin.panel.other.label"></label>
               <input type="text" class="form-control" id="other" required
@@ -78,7 +80,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-4">
             <h4 translate="komponent_admin.panel.huvudansvarig.title"></h4>
             <div class="form-group" show-errors global-validation>
               <label for="huvudansvarigNamn" translate="komponent_admin.panel.huvudansvarig.namn.label"></label>
@@ -100,7 +102,7 @@
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.huvudansvarigTelefon.$error.required" translate="komponent_admin.panel.huvudansvarig.phone.error.required"></span>
             </div>
           </div>
-          <div class="col-md-5 col-md-offset-2">
+          <div class="col-md-4">
             <h4 translate="komponent_admin.panel.teknisk_kontaktperson.title"></h4>
             <div class="form-group" show-errors global-validation>
               <label for="tekniskKontaktNamn" translate="komponent_admin.panel.teknisk_kontaktperson.namn.label"></label>
@@ -122,8 +124,25 @@
               <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskKontaktTelefon.$error.required" translate="komponent_admin.panel.teknisk_kontaktperson.phone.error.required"></span>
             </div>
           </div>
+          <div class="col-md-4">
+            <h4 translate="komponent_admin.panel.teknisk_support.title"></h4>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskSupportEpost" translate="komponent_admin.panel.teknisk_support.email.label"></label>
+              <i class="fa fa-info-circle" popover="{{'komponent_admin.panel.teknisk_support.email.info' | translate}}" popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="email" class="form-control" id="tekniskSupportEpost" required
+                     name="tekniskSupportEpost" ng-model="tjanstekomponent.tekniskSupportKontakt.epost">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportEpost.$error.required" translate="komponent_admin.panel.teknisk_support.email.error.required"></span>
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportEpost.$error.email" translate="komponent_admin.panel.teknisk_support.email.error.email"></span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="tekniskSupportTelefon" translate="komponent_admin.panel.teknisk_support.phone.label"></label>
+              <input type="text" class="form-control" id="tekniskSupportTelefon" required
+                     name="tekniskSupportTelefon" ng-model="tjanstekomponent.tekniskSupportKontakt.telefon">
+              <span class="help-block hide-no-error" ng-if="tjanstekomponentForm.tekniskSupportTelefon.$error.required" translate="komponent_admin.panel.teknisk_support.phone.error.required"></span>
+            </div>
+          </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <div class="col-md-5">
             <h4 translate="komponent_admin.panel.teknisk_support.title"></h4>
             <div class="form-group" show-errors global-validation>
@@ -143,7 +162,7 @@
           </div>
           <div class="col-md-5 col-md-offset-2">
           </div>
-        </div>
+        </div>-->
       </form>
     </div>
   </div>
@@ -159,38 +178,21 @@
     </div>
     <div class="panel-body">
       <ng-form name="tiform">
-        <div class="col-md-5">
+        <div class="col-md-4">
             <h4 translate="komponent_admin.panel.teknisk_information.title"></h4>
-            <div class="form-group" show-errors global-validation>
-              <label for="{{environment.driftmiljo.id}}-producentIpadress"
-                     translate="komponent_admin.panel.teknisk_information.producent_ip.label"></label>
-              <i class="fa fa-info-circle"
-                 popover="{{'komponent_admin.panel.teknisk_information.producent_ip.info' | translate}}"
-                 popover-trigger="mouseenter" popover-placement="right"></i>
-              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentIpadress"
-                     name="producentIpadress" ng-model="environment.producentIpadress"
-                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
-              <span class="help-block hide-no-error" ng-if="tiform.producentIpadress.$error.pattern"
-                    translate="komponent_admin.panel.teknisk_information.producent_ip.error.pattern"></span>
-            </div>
-            <div class="form-group" show-errors global-validation>
-              <label for="{{environment.driftmiljo.id}}-producentDnsNamn"
-                     translate="komponent_admin.panel.teknisk_information.producent_dns.label"></label>
-              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentDnsNamn"
-                     name="producentDnsNamn" ng-model="environment.producentDnsNamn">
-            </div>
             <div class="form-group">
               <label translate="komponent_admin.panel.nat.title"></label>
               <div class="form-group" ng-class="{'has-error': natError[environment.driftmiljo.id]}">
                 <label ng-repeat="nat in natForEnvironment[environment.driftmiljo.id]" class="radio-inline">
-                  <input type="radio" name="nat" ng-model="environment.nat" ng-value="nat" ng-change="selectNatForEnvironment(nat, environment.driftmiljo.id)"> <!-- ng-checked="environment.nat && environment.nat.id == nat.id" -->
+                  <input type="radio" name="{{environment.driftmiljo.id}}-nat" ng-model="$parent.environment.nat" ng-value="nat" ng-change="selectNatForEnvironment(nat, environment.driftmiljo.id)">
+                  <!-- ng-checked="environment.nat && environment.nat.id == nat.id" -->
                   {{nat.namn}}
                 </label>
                 <span class="help-block manual-error" ng-if="natError[environment.driftmiljo.id]" translate="komponent_admin.panel.nat.error.empty"></span>
               </div>
             </div>
           </div>
-          <div class="col-md-5 col-md-offset-2">
+          <div class="col-md-4">
             <h4>&nbsp;</h4> <!-- to align with left column -->
             <div class="form-group" show-errors global-validation>
               <label for="{{environment.driftmiljo.id}}-konsumentIpadress"
@@ -211,6 +213,27 @@
               <span class="help-block hide-no-error" ng-if="tiform.pingForConfigurationURL.$error.url" translate="komponent_admin.panel.teknisk_information.pingForConfigurationURL.error.url"></span>
             </div>
           </div>
+          <div class="col-md-4">
+            <h4>&nbsp;</h4> <!-- to align with left column -->
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-producentIpadress"
+                     translate="komponent_admin.panel.teknisk_information.producent_ip.label"></label>
+              <i class="fa fa-info-circle"
+                 popover="{{'komponent_admin.panel.teknisk_information.producent_ip.info' | translate}}"
+                 popover-trigger="mouseenter" popover-placement="right"></i>
+              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentIpadress"
+                     name="producentIpadress" ng-model="environment.producentIpadress"
+                     ng-pattern="/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/">
+              <span class="help-block hide-no-error" ng-if="tiform.producentIpadress.$error.pattern"
+                    translate="komponent_admin.panel.teknisk_information.producent_ip.error.pattern"></span>
+            </div>
+            <div class="form-group" show-errors global-validation>
+              <label for="{{environment.driftmiljo.id}}-producentDnsNamn"
+                     translate="komponent_admin.panel.teknisk_information.producent_dns.label"></label>
+              <input type="text" class="form-control" id="{{environment.driftmiljo.id}}-producentDnsNamn"
+                     name="producentDnsNamn" ng-model="environment.producentDnsNamn">
+            </div>
+          </div>
         </form>
     </div>
   </div>
@@ -222,7 +245,7 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-5 form-group" ng-class="{'has-error': driftmiljoError}">
+        <div class="col-md-4 form-group" ng-class="{'has-error': driftmiljoError}">
           <label for="environment" translate="order.main.env_panel.label"></label>
           <select id="environment" class="form-control" ng-model="selectedEnvironment" ng-options="environment.driftmiljo.namn for environment in selectableEnvironments | filter:activeEnvironmentFilter()">
             <option value="" translate="komponent_admin.add_environment_panel.environment.select_placeholder"></option>

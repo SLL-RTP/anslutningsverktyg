@@ -4,12 +4,6 @@ angular.module('avApp')
   .controller('OrderKonsumentCtrl', ['$scope', '$state', '$log', '$timeout', '$uibModal', 'BestallningState', 'KonsumentbestallningState', 'AnslutningStatus', 'FormValidation', 'Bestallning',
       function ($scope, $state, $log, $timeout, $uibModal, BestallningState, KonsumentBestallningState, AnslutningStatus, FormValidation, Bestallning) {
 
-        if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
-          $log.warn('going to parent state');
-          $state.go('order');
-          return;
-        }
-
         $scope.updateAnslutningarIValdTjanstedoman = function () {
           if ($scope.konsumentbestallning.driftmiljo && $scope.konsumentbestallning.tjanstekomponent && $scope.selectedTjanstedoman) {
             var tjanstekomponentId = $scope.konsumentbestallning.tjanstekomponent.hsaId;
@@ -53,6 +47,7 @@ angular.module('avApp')
           } else {
             $scope.logiskaAdresser = $scope.logiskaAdresserIValdTjanstedoman;
           }
+          $scope.$broadcast('vsRepeatTrigger');
         };
 
         var populateScopeWithAnslutningData = function(environmentId, serviceDomainId, serviceConsumerHsaId) {
@@ -202,6 +197,8 @@ angular.module('avApp')
           $scope.$broadcast('show-errors-reset');
         };
 
+        $scope.resetMain();
+        BestallningState.current().driftmiljo = {};
         _reset();
 
         KonsumentBestallningState.init().then(function () {

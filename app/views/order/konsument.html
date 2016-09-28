@@ -41,8 +41,10 @@
             <tbody ng-if="logiskaAdresserIValdTjanstedoman.length">
             <tr>
               <td>
-                <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
-                <input id="laFilter" ng-model="laFilter" type="text" ng-model-options='{ debounce: 500 }' ng-change="filterLogiskaAdresser(laFilter)">
+                <div class="form-group form-group-sm la-filter-group">
+                  <label for="laFilter" translate="order.konsument.select_kontrakt_panel.logiska_adresser_filter_label"></label>
+                  <input type="text" class="form-control input-sm" id="laFilter" ng-model="laFilter" ng-model-options='{ debounce: 500 }' ng-change="filterLogiskaAdresser(laFilter)">
+                </div>
               </td>
               <td ng-repeat="kontrakt in kontraktIValdTjanstedoman"
                   class="la-checkbox-container"

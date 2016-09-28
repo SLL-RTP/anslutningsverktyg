@@ -4,15 +4,6 @@ angular.module('avApp')
   .controller('OrderProducentCtrl', ['$scope', '$state', '$q', '$timeout', '$log', '$uibModal', 'AnslutningStatus', 'LogicalAddress', 'Bestallning', 'BestallningState', 'ProducentbestallningState', 'FormValidation', 'intersectionFilter', 'flattenFilter', 'rivProfiles',
       function ($scope, $state, $q, $timeout, $log, $uibModal, AnslutningStatus, LogicalAddress, Bestallning, BestallningState, ProducentbestallningState, FormValidation, intersectionFilter, flattenFilter, rivProfiles) {
 
-        /**
-         * If user tries to navigate here without correct selections in parent state
-         */
-        if (!BestallningState.current().driftmiljo || !BestallningState.current().driftmiljo.id) {
-          $log.warn('going to parent state');
-          $state.go('order');
-          return;
-        }
-
         var ORDER_MODE = {
           ADD: 'ORDER_MODE_ADD',
           REMOVE: 'ORDER_MODE_REMOVE'
@@ -500,6 +491,8 @@ angular.module('avApp')
         /**
          * run on init
          */
+        $scope.resetMain();
+        BestallningState.current().driftmiljo = {};
         _reset();
 
         /**
@@ -566,8 +559,8 @@ angular.module('avApp')
          */
         $scope.$watch(function () {
           return $scope.orderMode !== ''
-            && $scope.producentbestallning.tjanstekomponent.hsaId
-            && $scope.producentbestallning.producentanslutningar.length;
+            && !!$scope.producentbestallning.tjanstekomponent.hsaId
+            && !!$scope.producentbestallning.producentanslutningar.length;
         }, function (newVal) {
           BestallningState.setSpecificOrderSatisfied(newVal);
         });

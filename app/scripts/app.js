@@ -45,7 +45,7 @@ angular
               return EnvironmentFactory.getAvailableEnvironments();
             }
           ],
-          nets: ['Nat', 
+          nets: ['Nat',
             function(Nat) {
               return Nat.getNetsForAllEnvironments();
             }
@@ -96,13 +96,35 @@ angular
         parent: 'order',
         url: '/producent',
         controller: 'OrderProducentCtrl',
-        templateUrl: 'views/order/producent.html'
+        templateUrl: 'views/order/producent.html',
+        views: {
+          header: {
+            templateUrl: 'views/order/producent-header.html'
+          },
+          search_heading: {
+            templateUrl: 'views/order/producent-search-heading.html'
+          },
+          main_child: {
+            controller: 'OrderProducentCtrl',
+            templateUrl: 'views/order/producent.html'
+          }
+        }
       })
       .state('order.konsument', {
         parent: 'order',
         url: '/konsument',
-        controller: 'OrderKonsumentCtrl',
-        templateUrl: 'views/order/konsument.html'
+        views: {
+          header: {
+            templateUrl: 'views/order/konsument-header.html'
+          },
+          search_heading: {
+            templateUrl: 'views/order/konsument-search-heading.html'
+          },
+          main_child: {
+            controller: 'OrderKonsumentCtrl',
+            templateUrl: 'views/order/konsument.html'
+          }
+        }
       })
       .state('order-confirmation', {
         url: '/order/confirmation',

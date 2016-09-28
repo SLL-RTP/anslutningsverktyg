@@ -1,8 +1,5 @@
 <div class="container-fluid">
-  <div class="page-header">
-    <h1 translate="order.main.title"></h1>
-    <div translate="order.main.p"></div>
-  </div>
+  <div ui-view="header"></div>
   <!-- välj driftmiljö panel -->
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -21,30 +18,19 @@
   </div>
   <!-- / välj driftmiljö panel -->
   <!-- välj tjänstekomponent panel -->
-  <div class="panel panel-primary" ng-show="order.driftmiljo">
-    <div class="panel-heading">
-      <h3 class="panel-title">{{'order.main.komponent_panel.title' | translate}}</h3>
-    </div>
+  <div class="panel panel-primary" ng-show="order.driftmiljo.id">
+    <div ui-view="search_heading" class="panel-heading"></div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-2 form-group">
-          <form name="modeForm" id="modeForm">
-            <div class="radio" ng-repeat="mode in modes">
-              <label>
-                <input type="radio" name="mepmode" ng-model="selectedMode.stateId" value="{{mode.stateId}}">
-                {{mode.name}}
-              </label>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-10" ng-if="state.id">
+        <div class="col-md-12">
           <div class="form-group">
             <input type="text" placeholder="{{'order.main.komponent_panel.select_placeholder' | translate}}"
                    ng-model="mep.selectedTjanstekomponent"
                    typeahead-wait-ms="200" typeahead-template-url="templates/typeahead-tjanstekomponent.html"
                    typeahead-editable="false"
-                   uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' - ' : '') + tjanstekomponent.beskrivning + ' - ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue)"
+                   uib-typeahead="tjanstekomponent as ((tjanstekomponent.organisation ? tjanstekomponent.organisation + ' -- ' : '') + tjanstekomponent.beskrivning + ' -- ' + tjanstekomponent.hsaId) for tjanstekomponent in getFilteredTjanstekomponenter($viewValue, mainComponentSearchEmpty)"
                    class="form-control">
+            <span class="help-block manual-error" ng-if="mainComponentSearchEmpty.empty" translate="order.main.komponent_panel.search_empty_info"></span>
           </div>
         </div>
       </div>
@@ -84,26 +70,26 @@
             <div class="row">
               <dl>
                 <dt translate="order.main.komponent_panel.teknisk_info.producent_ip"></dt>
-                <dd ng-show="order.tjanstekomponent.producentIpadress">{{order.tjanstekomponent.producentIpadress}}</dd>
-                <dd ng-hide="order.tjanstekomponent.producentIpadress">
+                <dd ng-show="currentServiceComponentDriftmiljo.producentIpadress">{{currentServiceComponentDriftmiljo.producentIpadress}}</dd>
+                <dd ng-hide="currentServiceComponentDriftmiljo.producentIpadress">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt translate="order.main.komponent_panel.teknisk_info.producent_dns"></dt>
-                <dd ng-show="order.tjanstekomponent.producentDnsNamn">{{order.tjanstekomponent.producentDnsNamn}}</dd>
-                <dd ng-hide="order.tjanstekomponent.producentDnsNamn">
+                <dd ng-show="currentServiceComponentDriftmiljo.producentDnsNamn">{{currentServiceComponentDriftmiljo.producentDnsNamn}}</dd>
+                <dd ng-hide="currentServiceComponentDriftmiljo.producentDnsNamn">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt translate="order.main.komponent_panel.teknisk_info.konsument_ip"></dt>
-                <dd ng-show="order.tjanstekomponent.konsumentIpadress">{{order.tjanstekomponent.konsumentIpadress}}</dd>
-                <dd ng-hide="order.tjanstekomponent.konsumentIpadress">
+                <dd ng-show="currentServiceComponentDriftmiljo.konsumentIpadress">{{currentServiceComponentDriftmiljo.konsumentIpadress}}</dd>
+                <dd ng-hide="currentServiceComponentDriftmiljo.konsumentIpadress">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
                 <dt>
                   <span translate="order.main.komponent_panel.teknisk_info.pingForConfigurationURL"></span>
                   <i class="fa fa-info-circle" popover="{{'order.main.komponent_panel.teknisk_info.pingForConfigurationURL_info' | translate}}" popover-trigger="mouseenter" popover-placement="bottom"></i>
                 </dt>
-                <dd ng-show="order.tjanstekomponent.pingForConfigurationURL">{{order.tjanstekomponent.pingForConfigurationURL}}</dd>
-                <dd ng-hide="order.tjanstekomponent.pingForConfigurationURL">
+                <dd ng-show="currentServiceComponentDriftmiljo.pingForConfigurationURL">{{currentServiceComponentDriftmiljo.pingForConfigurationURL}}</dd>
+                <dd ng-hide="currentServiceComponentDriftmiljo.pingForConfigurationURL">
                   <em translate="order.main.komponent_panel.teknisk_info.no_info"></em>
                 </dd>
               </dl>
@@ -115,7 +101,7 @@
   </div>
   <!-- / välj tjänstekomponent panel -->
   <!-- producent/konsument child state -->
-  <div ui-view></div>
+  <div ui-view="main_child"></div>
   <!-- / producent/konsument child state -->
   <div ng-show="displayCommonEnding">
     <!-- övrigt panel -->

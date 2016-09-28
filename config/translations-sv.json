@@ -6,7 +6,8 @@
   "sidebar": {
     "order": {
       "header": "Beställning",
-      "admin_link": "Administrera anslutning"
+      "producer_admin_link": "Administrera ansluten producent",
+      "consumer_admin_link": "Administrera ansluten konsument"
     },
     "system_information": {
       "header": "Systeminformation",
@@ -14,7 +15,7 @@
     }
   },
   "landing": {
-    "header": "Beställningsstöd för SLL:s regionala tjänsteplattform",
+    "header": "Beställningsstöd för tjänsteplattformarna",
     "p1": "I menyval Administrera anslutning beställer du: <p><ul><li>När system är tjänsteproducent, anslutning av producent till tjänstekontrakt som är installerat i plattformen samt anger logisk/a adress/er.</li><li>När systemet är tjänstekonsument, behörighet att adressera producenters befintliga logiska adresser (etablera samverkan).</li></ul></p>",
     "p2": "I menyval Administrera systeminformation registrerar du information om instans av system samt information om kontaktpersoner för instansen."
   },
@@ -36,6 +37,7 @@
           }
         },
         "select_placeholder": "Sök befintlig instans",
+        "search_empty_info": "Systemet är ej kopplat till vald miljö. Du kopplar systemet till miljön via vänstermeny Administrera systeminformation.",
         "update_info_p": "För uppdatering av uppgifter; välj \"Administrera systeminformation\" i menyn",
         "huvudansvarig_h": "Huvudansvarig",
         "teknisk_kontakt_h": "Teknisk kontaktperson",
@@ -104,6 +106,13 @@
       }
     },
     "producent": {
+      "header": {
+        "title": "Administrera ansluten producent",
+        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adressater samt anslutning till befintliga logiska adressater, som ska tillgängliggöra information."
+      },
+      "search_heading": {
+        "title": "Ange tjänsteproducent"
+      },
       "select_kontrakt_panel": {
         "title": "Välj tjänstekontrakt som omfattas",
         "tjanstedoman": {
@@ -181,7 +190,10 @@
         }
       },
       "connection_config_panel": {
-        "title": "Välj version av RIVTA-profil och URL för",
+        "title": {
+          "new": "Välj version av RIVTA-profil och URL för",
+          "existing": "Redigera version av RIVTA-profil och URL för"
+        },
         "rivta_version": {
           "label": "Version av RIVTA-profil",
           "info": "Välj den version av RIV TA Basic Profile som kontraktet implementerar."
@@ -244,13 +256,20 @@
       }
     },
     "konsument": {
+      "header": {
+        "title": "Administrera ansluten konsument",
+        "p": "Här beställer du anslutning av ett system till i plattformen redan installerade tjänstekontrakt. Du kan även beställa anslutning av nya logiska adressater samt anslutning till befintliga logiska adressater, som ska tillgängliggöra information."
+      },
+      "search_heading": {
+        "title": "Ange tjänstekonsument"
+      },
       "select_kontrakt_panel": {
         "title": "Välj tjänstekontrakt som omfattas",
         "tjanstedoman": {
           "label": "Tjänstedomän",
           "select_placeholder": "- Välj -"
         },
-        "matrix_info": "Installerade tjänstekontrakt visas nedan",
+        "matrix_info": "Installerade tjänstekontrakt med anslutning till producent/er visas nedan",
         "logiska_adresser_filter_label": "Filtrera adressater:",
         "check_all_kontrakt_label": "Välj alla",
         "check_all_disabled_info": "Val inaktiverat",
@@ -280,7 +299,7 @@
   },
   "komponent_admin": {
     "title": "Administrera systeminformation",
-    "info": "<p>Här registrerar du en ny instans av system/e-tjänst samt redigerar allmänna uppgifter för systemet/e-tjänsten. För att få anslutning att fungera behöver systemet ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppningar mellan systemet och Regional tjänsteplattform (RTP).</p> <p>RTP-förvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och RTP förvaltningen genomför åtkomsttester.</p>",
+    "info": "<p>Här registrerar du en ny instans av system/e-tjänst samt redigerar allmänna uppgifter för systemet/e-tjänsten. För att få anslutning att fungera behöver systemet ha installerat SITHS funktionscertifikat. Om du inte redan har certifikat, kan du läsa mer om certifikat <a href=\"http://www.inera.se/siths\" target=\"_blank\">här</a>. Ofta behövs även brandväggsöppningar mellan systemet och berörd tjänsteplattform.</p> <p>Tjänsteplattformsförvaltningen konfigurerar angiven producentanslutning i enlighet med beställning och tjänsteplattformsförvaltningen genomför åtkomsttester.</p>",
     "panel": {
       "title": "Välj instans av system/e-tjänst som agerar i roll som tjänsteproducent och/eller tjänstekonsument",
       "mode": {
@@ -289,12 +308,12 @@
       },
       "tjanstekomponent_select_placeholder": "Sök befintlig",
       "organisation": {
-        "label": "Organisation"
+        "label": "Organisationsnamn"
       },
       "namn": {
-        "label": "* Namn",
+        "label": "* Systemnamn",
         "error": {
-          "required": "Namn måste vara ifyllt"
+          "required": "Systemnamn måste vara ifyllt"
         }
       },
       "other": {
@@ -411,7 +430,9 @@
       "environment": {
         "label": "Miljö",
         "select_placeholder": "- Välj -",
-        "error": "Minst en driftmiljö måste läggas till",
+        "error": {
+          "empty": "Minst en driftmiljö måste läggas till"
+        },
         "add_btn": "Lägg till"
       }
     },
@@ -433,7 +454,7 @@
       "p": "Tack för din uppdatering av uppgifterna. Uppdaterade uppgifter har nu sparats."
     },
     "email": {
-      "p": "Beställningen har skickats till SLL IT, Servicedesk för vidare hantering. Servicedesk återkopplar till dig via mail då de mottagit ärendet. Efter godkännande kommer tjänsteplattformsförvaltningen bearbeta din beställning och när den är klar får du återkoppling att ärendet är stängt. Du kan behöva öppna brandvägg för tjänsteplattformen och detta är bra att förbereda så snart som möjligt. På <a href=\"https://skl-tp.atlassian.net/wiki/pages/viewpage.action?pageId=14090494\" target=\"_blank\">FAQ</a>-sidorna hittar du bland annat: Information kring de olika miljöerna, ip-adresser, portar m.m, Information kring certifikat Information om loggning, Felkoder"
+      "p": "Beställningen har skickats till tjänsteplattformens servicedesk för vidare hantering. Servicedesk återkopplar till dig via mail då de mottagit ärendet. Efter godkännande kommer tjänsteplattformsförvaltningen bearbeta din beställning och när den är klar får du återkoppling att ärendet är stängt. Du kan behöva öppna brandvägg för tjänsteplattformen och detta är bra att förbereda så snart som möjligt. På <a href=\"https://skl-tp.atlassian.net/wiki/pages/viewpage.action?pageId=14090494\" target=\"_blank\">FAQ</a>-sidorna hittar du bland annat: Information kring de olika miljöerna, ip-adresser, portar m.m, Information kring certifikat Information om loggning, Felkoder"
     }
   },
   "personkontakt": {

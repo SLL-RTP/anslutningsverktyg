@@ -305,6 +305,10 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
   .removed {
     background-color: #f5a7a4;
   }
+
+  .la-filter-group {
+    margin-bottom: 0;
+  }
 }
 
 
@@ -354,6 +358,10 @@ $contractSelectorDisabledTextColor: rgb(163, 163, 163);
       font-size: 12px;
       margin-bottom: -3px;
     }
+  }
+
+  .cancel-btn {
+    margin-right: 20px;
   }
 }
 

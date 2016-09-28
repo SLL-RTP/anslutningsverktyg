@@ -55,7 +55,6 @@ angular.module('avApp')
             $scope.tjanstekomponent.beskrivning = desc;
             $scope.tjanstekomponent.organisation = org;
             $scope.tjanstekomponent.other = other;
-            console.log(result);
             if (_.isArray(result.serviceComponentDriftmiljos)) {
               _.each(result.serviceComponentDriftmiljos, function(env) {
                 $scope.addEnvironment(env);
@@ -137,34 +136,6 @@ angular.module('avApp')
           });
         }
         _driftmiljoValidation();
-      };
-
-      $scope.addSelectedEnvironment = function() {
-        console.info('addSelectedEnvironment');
-        console.log($scope.selectedEnvironment);
-        if ($scope.selectedEnvironment && $scope.selectedEnvironment.id) {
-          $scope.activeEnvironments.push({
-            driftmiljo: $scope.selectedEnvironment
-          });
-          _.remove($scope.selectableEnvironments, function(environment) {
-            return environment.id === $scope.selectedEnvironment.id;
-          });
-          $scope.natForEnvironment[$scope.selectedEnvironment.id] = [
-            {
-              id: 'internet',
-              namn: 'Internet'
-            },
-            {
-              id: 'sjunet',
-              namn: 'Sjunet'
-            },
-            {
-              id: 'regional',
-              namn: 'Regionalt nät'
-            }
-          ];
-          $scope.selectedEnvironment = {};
-        }
       };
 
       $scope.selectNatForEnvironment = function(nat, environmentId) {
