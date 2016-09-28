@@ -8,3 +8,4 @@ npm-debug.log
 *.iml
 */*/services/config.js
 target
+.vscode
